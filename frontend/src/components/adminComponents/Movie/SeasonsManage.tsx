@@ -6,10 +6,18 @@ import { Season, TvSeries } from "../../apiCalls/types";
 import { FaEdit } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdOutlinePreview } from "react-icons/md";
+import Swal from "sweetalert2";
+import { deleteSeasonApi } from "../../apiCalls/updateData";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { useDispatch } from "react-redux";
+import { setCallApi } from "../../../redux/callApi";
 
 const SeasonsManage = () =>{
     const [seriesDetails, setSeriesDetails] = useState({title: "", order: 0, url: "", label:"", movie_id: 0});
-    const [seasonsEpisodes, setSeasonsEpisodes] = useState<TvSeries>()
+    const [seasonsEpisodes, setSeasonsEpisodes] = useState<TvSeries>();
+    const callApi = useSelector((state: RootState) => state.callApi);
+    const dispatch = useDispatch();
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -20,13 +28,32 @@ const SeasonsManage = () =>{
         getSerieSeasonsEpisodes(movie_id).then((data) =>{
             if(data.success){
                 setSeasonsEpisodes(data.details[0])
-                console.log(data.details)
             }
         })
-    }, []);
+    }, [callApi]);
 
     const handleManageSession = (season: Season) =>{
         navigate("/admin/episodes-manage", {state: {season, seriesDetails}});  
+    }
+
+    const handleDeleteSeason = (season: Season) =>{
+        Swal.fire({
+            title: `Are you sure you want to delete ${season.season_name} from ${seriesDetails.title}?`,
+            text: "All episodes related to the season will be deleted!",
+            showCancelButton: true,
+            confirmButtonText: "Delete",
+          }).then((result) => {
+            if (result.isConfirmed) {
+                deleteSeasonApi(season.season_id).then((data) =>{
+                    if(data.success){
+                        Swal.fire("Season deleted successfully")
+                        dispatch(setCallApi(!callApi));
+                    }else{
+                        Swal.fire(data.msg);
+                    }
+                });
+            };
+        });
     }
 
     return(
@@ -34,7 +61,8 @@ const SeasonsManage = () =>{
             <h3>{seriesDetails.title}</h3>
             <div className="bg-white m-4 p-4">
                 <div className="">
-                    <button className="btn btn-success btn-sm me-4">Back To List</button>
+                    <button onClick={() => navigate("/admin/all-series")}
+                    className="btn btn-success btn-sm me-4">Back To List</button>
                     <button type="button" className="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#seasonInfoModal">
                         Add Seasons
                     </button>
@@ -63,7 +91,7 @@ const SeasonsManage = () =>{
                                         <button onClick={() => handleManageSession(season)}
                                             className="btn btn-info btn-sm me-2 ">Manage Episodes</button>
                                         <FaEdit size={24} className="text-warning me-2"/>
-                                        <FaDeleteLeft size={24} className="text-danger"/>
+                                        <FaDeleteLeft size={24} className="text-danger" onClick={() =>handleDeleteSeason(season)}/>
                                     </td>
                                 </tr>
                                 ))

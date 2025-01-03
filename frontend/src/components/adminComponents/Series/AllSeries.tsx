@@ -15,6 +15,9 @@ import { FaRegEdit } from "react-icons/fa";
 import { FiDelete } from "react-icons/fi";
 import { baseUrl } from '../../Row/Row'
 import { useNavigate } from 'react-router-dom'
+import { deleteSeriesApi } from '../../apiCalls/updateData'
+import { useDispatch } from 'react-redux'
+import { setCallApi } from '../../../redux/callApi'
 
 const AllSeries = () =>{
     const title = "All Tv Series"
@@ -37,6 +40,7 @@ const AllSeries = () =>{
     const [seriesList, setSeriesList] = useState<SeriesListDetails[]>([]);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const filter_apistate = apistate.filter((val) => {
         return val.status !== "trash"
@@ -56,7 +60,8 @@ const AllSeries = () =>{
             <span>
                 <FaRegEdit role='button' onClick={() => manageSeasonsEpisodes(row)}
                     className=" text-warning mx-1"  size={24}/>
-                <FiDelete role='button' className=" text-danger mx-1"  size={24}/>
+                <FiDelete role='button' onClick={() => handleDeleteSeries(row)}
+                    className=" text-danger mx-1"  size={24}/>
             </span>
         }</>,
     }];
@@ -65,7 +70,7 @@ const AllSeries = () =>{
         // call api and response data set " setApiData(your res.data) " and column setApiCol( columns )
         setApiState(seriesList) 
         setApiCol(columns)
-            }, [rerendarApi, seriesList])
+    }, [rerendarApi, seriesList])
 
     useEffect(() =>{
         getSeriesList("videos/get-series", "").then((data) =>{
@@ -79,7 +84,28 @@ const AllSeries = () =>{
     const manageSeasonsEpisodes = (row: SeriesListDetails) =>{
         const state = [{...row, movie_id: row.video_id}];
         navigate("/admin/seasons-manage", {state});
-    }
+    };
+
+     const handleDeleteSeries = (series: SeriesListDetails) =>{
+            Swal.fire({
+                title: `Are you sure you want to delete ${series.title}?`,
+                text: "All seasons and episodes related to the series will be deleted!",
+                showCancelButton: true,
+                confirmButtonText: "Delete",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteSeriesApi(series.video_id).then((data) =>{
+                        if(data.success){
+                            Swal.fire("Season deleted successfully")
+                            dispatch(setCallApi(!callApi));
+                        }else{
+                            Swal.fire(data.msg);
+                        }
+                    });
+                };
+            });
+        }
+
     return(
         <div className='bg-light w-100 px-2 py-4'>
             <h3>Tv Series Management</h3>

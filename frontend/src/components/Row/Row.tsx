@@ -56,7 +56,6 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
     if(clickCount.id !== movie.video_id){
       setIsVideoReady(false);
     };
-    console.log(movie)
     setHoveredMovie({movie_id: movie.video_id, is_series: movie.is_series});
     setClickCount({count: 1, id: movie.video_id});
   }

@@ -11,6 +11,7 @@ export interface MovieFile {
     movie_id: number; // Foreign key referencing the movie
     title: string;
     movie_file_id: number;
+    video_id: number;
   }
 
 export  interface Episode {

@@ -35,7 +35,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
         if(hoveredMovie.movie_id){
           seriesListDetails.map((movie, i) =>{
             if(movie.video_id === hoveredMovie.movie_id) {
-              const video_url = movie.seasons[0].episodes[0].video_url;
+              const video_url = movie.seasons[0]?.episodes[0]?.video_url || "";
               setMovie({...movie, video_url});
             } 
           });
@@ -75,6 +75,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
     const handleAutoplay = () => {
       if (videoRef.current) {
         videoRef.current.play().catch((error) => {
+          setIsVideoReady(false)
           console.error("Autoplay failed:", error);
         });
       }
@@ -142,7 +143,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
             ref={videoRef}
             src={movie?.video_url}
             loop
-            muted
+            
             height="340px"
             width="100%"
             onLoadedData={handleVideoLoaded} // Fires when the video is ready to play

@@ -15,6 +15,9 @@ import { FiDelete } from "react-icons/fi";
 import { baseUrl } from '../../Row/Row'
 import { useNavigate } from 'react-router-dom'
 import { MovieListDetails } from '../../../redux/movieList'
+import { deleteMovieApi } from '../../apiCalls/updateData'
+import { useDispatch } from 'react-redux'
+import { setCallApi } from '../../../redux/callApi'
 
 const AllMovies = () =>{
     const title = "All Movies"
@@ -37,6 +40,7 @@ const AllMovies = () =>{
     const [seriesList, setSeriesList] = useState<MovieListDetails[]>([]);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const filter_apistate = apistate.filter((val) => {
         return val.status !== "trash"
@@ -55,7 +59,8 @@ const AllMovies = () =>{
             <span>
                 <FaRegEdit role='button' onClick={() => manageMovies(row)}
                     className=" text-warning mx-1"  size={24}/>
-                <FiDelete role='button' className=" text-danger mx-1"  size={24}/>
+                <FiDelete role='button' onClick={() => deleteMovie(row)}
+                className=" text-danger mx-1"  size={24}/>
             </span>
         }</>,
     }];
@@ -64,7 +69,7 @@ const AllMovies = () =>{
         // call api and response data set " setApiData(your res.data) " and column setApiCol( columns )
         setApiState(seriesList) 
         setApiCol(columns)
-            }, [rerendarApi, seriesList])
+    }, [rerendarApi, seriesList])
 
     useEffect(() =>{
         getMoviesList("videos/get-movies", "").then((data) =>{
@@ -79,6 +84,22 @@ const AllMovies = () =>{
         console.log(row);
         const state = [{...row, isEdit: true, url: row.video_url, order: row.file_order}];
         navigate("/admin/movie-upload", {state})
+    }
+    const deleteMovie = (row: MovieListDetails) =>{
+        Swal.fire({
+            title: `Are you sure you want to delete ${row.title}?`,
+            showCancelButton: true,
+            confirmButtonText: "Delete",
+          }).then((result) => {
+            if (result.isConfirmed) {
+                deleteMovieApi(row.video_id).then((data) =>{
+                    data.success?
+                    Swal.fire("Movie deleted successfully"):
+                    Swal.fire(data.msg);
+                    dispatch(setCallApi(!callApi))
+                });
+            };
+          });
     }
     return(
         <div className='bg-light w-100 px-2 py-4'>

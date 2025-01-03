@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { API_KEY } from "./AddNewMovie";
 import { MdOutlinePreview } from "react-icons/md";
+import { deleteEpisodeApi } from "../../apiCalls/updateData";
 
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
@@ -73,7 +74,26 @@ const EpisodeManage = () =>{
             }
         });
     }
-console.log(epidodeDetails);
+
+    const deleteEpisode = (episode: Episode) =>{
+        Swal.fire({
+             title: `Are you sure you want to delete ${episode.episode_name} from ${seriesDetails.title}?`,
+             showCancelButton: true,
+             confirmButtonText: "Delete",
+           }).then((result) => {
+             if (result.isConfirmed) {
+                 deleteEpisodeApi(episode.episode_id).then((data) =>{
+                     if(data.success){
+                         Swal.fire("Episode deleted successfully")
+                         dispatch(setCallApi(!callApi));
+                     }else{
+                         Swal.fire(data.msg);
+                     }
+                 });
+             };
+         });
+    }
+
     return(  
         <div className="w-100 bg-light p-4">
             <h3>Episodes For {seriesDetails?.title} - {season?.season_name}</h3>
@@ -161,12 +181,15 @@ console.log(epidodeDetails);
                                         value={episode.episode_order} style={{width: "60px"}} /></td>
                                     <td>{episode.url}</td>
                                     <td>
-                                        <FaEdit role="button" onClick={() =>setEpisodeDetails((obj) =>({...obj, ...episode, isEdit: true}))}
-                                            size={24} className="text-warning me-2"/>
-                                        <Link to={episode.url} target="_blank" className="">
-                                            <MdOutlinePreview  role="button" size={24} />
-                                        </Link>
-                                        <FaDeleteLeft role="button" size={24} className="text-danger"/>
+                                        <span className="d-flex">
+                                            <FaEdit size={32} onClick={() =>setEpisodeDetails((obj) =>({...obj, ...episode, isEdit: true}))} 
+                                                role="button" className="text-warning me-2 border border-warning p-1"/>
+                                            <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}`} target="_blank">
+                                                <MdOutlinePreview size={32} className="text-success me-2 border border-success p-1"/>
+                                            </Link>
+                                            <FaDeleteLeft onClick={() =>deleteEpisode (episode)} role="button" 
+                                                size={32} className="text-danger border border-danger p-1"/>
+                                        </span>
                                     </td>
                                 </tr>
                                  ))

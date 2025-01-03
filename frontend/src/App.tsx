@@ -19,6 +19,7 @@ import EpisodeManage from './components/adminComponents/Movie/EpisodesManage';
 import EpisodesAndMore from './components/Play/EpisodesAndMore';
 import AllSeries from './components/adminComponents/Series/AllSeries';
 import AllMovies from './components/adminComponents/Movie/AllMovies';
+import Preview from './components/adminComponents/Preview';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -39,6 +40,7 @@ function App() {
             <Route path='change-pass' element={<ChangePassword setIsLogin = {setIsLogin}/>} />
             {/* <Route path='register-shop' element={<RegisterShop />} /> */}
       
+            <Route path='preview' element ={<Preview />} />
             <Route path='/admin' element={<Sidebar />} >
               <Route path='dashboard' element ={<AdminDashboard />} />
               <Route path='new-movie' element ={<AddNewMovie type="movie"/>} />

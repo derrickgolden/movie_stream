@@ -4,26 +4,27 @@ import { movieDetailsInput, seoAndMarketingInput, UploadMovieInput } from "./mov
 import { FaEdit } from "react-icons/fa";
 import { MdOutlinePreview } from "react-icons/md";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { uploadMovieDetails } from "../../apiCalls/postData";
 import { MovieFile } from "../../apiCalls/types";
 import Swal from "sweetalert2";
+import { deleteMovieApi } from "../../apiCalls/updateData";
 
 const API_KEY = "086cfe05dd16828e37291d2f37293a38";
 
 const UploadMovie = () =>{
-    const [movieDetails, setMovieDetails] = useState({title: "", order: 1, url: "", isEdit: false});
+    const [movieDetails, setMovieDetails] = useState({title: "", label: "", order: 1, url: "", isEdit: false, video_id: 0});
     const [addedMovies, setAddedMovies] = useState<MovieFile[]>([])
     const location = useLocation();
+    const navigate = useNavigate();
+
     useEffect(() =>{
         const {title, movie_id, id, isEdit, url, order} = location.state[0];
-        console.log({isEdit})
         if(isEdit){
             setAddedMovies(location.state)
         }else{
             setMovieDetails((obj)=>({...obj, label: title,  title, movie_id, id}));
         }
-        console.log(location.state);
     }, [])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
@@ -49,8 +50,35 @@ const UploadMovie = () =>{
         })
     }
 
+    const handleEditMovie = (movie: MovieFile) =>{
+        const {label, order, title, url, movie_id, video_id} = movie;
+        setMovieDetails({ label, order, url, isEdit: true, movie_id:video_id, video_id, title  });
+        console.log({video_id, movie_id})
+    }
+
     const deleteVideo = (movie: MovieFile) =>{
-        console.log(movie);
+        Swal.fire({
+            title: `Are you sure you want to delete ${movie.label}?`,
+            showCancelButton: true,
+            confirmButtonText: "Delete",
+          }).then((result) => {
+            if (result.isConfirmed) {
+                deleteMovieApi(movie.video_id).then((data) =>{
+                    if(data.success){
+                        Swal.fire("Movie deleted successfully")
+                        setTimeout(() =>{
+                            navigate("/admin/all-movies")
+                        },2000);
+                    }else{
+                        Swal.fire(data.msg);
+                    }
+                });
+            };
+        });
+    }
+
+    const handlePreviewMovie = (movie: MovieFile) =>{
+        navigate(`/preview?movieUrl=${encodeURIComponent(movie.url || "")}`)
     }
 
     return(
@@ -66,7 +94,7 @@ const UploadMovie = () =>{
                             </Link>
                         {
                             addedMovies[0]?.url &&
-                            <Link to={addedMovies[0]?.url} target="_blank" className="btn btn-success btn-sm ">
+                            <Link to={`/preview?movieUrl=${encodeURIComponent(addedMovies[0]?.url || "")}`} target="_blank" className="btn btn-success btn-sm ">
                                 Preview
                             </Link>
                         }
@@ -103,7 +131,13 @@ const UploadMovie = () =>{
                     
                     </div>
                 </div>
-                <button type="submit" className="btn btn-success btn-sm ">Add</button>
+                {
+                    movieDetails.isEdit? (
+                        <button type="submit" className="btn btn-warning btn-sm ">Edit</button>
+                    ):(
+                        <button type="submit" className="btn btn-success btn-sm ">+ Add</button>
+                    )
+                }
             </form>
                 </div>
                     <p className="bg-success text-white text-uppercase p-2 mt-4">Video List</p>
@@ -126,10 +160,16 @@ const UploadMovie = () =>{
                                         value={movie.order} style={{width: "60px"}} /></td>
                                     <td>{movie.label}</td>
                                     <td>{movie.url}</td>
-                                    <td>
-                                        <FaEdit size={24} className="text-warning me-2"/>
-                                        <MdOutlinePreview size={24} className="text-success me-2"/>
-                                        <FaDeleteLeft onClick={() =>deleteVideo(movie)} size={24} className="text-danger"/>
+                                    <td >
+                                        <span className="d-flex">
+                                            <FaEdit size={32} onClick={() =>handleEditMovie(movie)} role="button"
+                                                className="text-warning me-2 border border-warning p-1"/>
+                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.url || "")}`} target="_blank">
+                                                <MdOutlinePreview size={32} className="text-success me-2 border border-success p-1"/>
+                                            </Link>
+                                            <FaDeleteLeft onClick={() =>deleteVideo(movie)} role="button" 
+                                                size={32} className="text-danger border border-danger p-1"/>
+                                        </span>
                                     </td>
                                 </tr>
                                 ))
