@@ -25,12 +25,10 @@ export const addMoviePath = async (movieFile: MovieFile ): Promise<universalResp
                 INSERT INTO movie_files (label, movie_id, \`order\`, url)
                 VALUES (?, ?, ?, ?)
             `, [label, movie_id, order, url]);
+            var insert_id = insert_res.insertID;
         }
 
-                
         await connection.commit();
-
-        const insert_id = insert_res.insertID;
 
         connection.release();
         return {

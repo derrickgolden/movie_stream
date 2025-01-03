@@ -12,6 +12,7 @@ import adminauth from './user/routes/auth';
 import shop from './user/routes/shop';
 import videos from './user/routes/movies/getMoviesList';
 import alterVideos from './user/routes/movies/uploadMovie';
+import deleteVideos from './user/routes/movies/deleteMovies';
 import { authenticateToken } from './user/middlewares/authenticateToken';
 
 const loadMime = async () => {
@@ -135,7 +136,7 @@ const laptopPath = path.join(__dirname, 'dist');
 
 app.use('/user', adminauth);
 app.use('/user', upload.single('logo'), authenticateToken, shop);
-app.use('/videos', [videos, alterVideos]);
+app.use('/videos', [videos, alterVideos, deleteVideos]);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(3000, '0.0.0.0', () => {

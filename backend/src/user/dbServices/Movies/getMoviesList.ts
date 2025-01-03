@@ -25,7 +25,7 @@ export const getMoviesList = async ( ): Promise<universalResponse> => {
                 movie_files.updated_at
             FROM 
                 movies
-            INNER JOIN 
+                LEFT JOIN 
                 movie_files 
             ON 
                 movies.movie_id = movie_files.movie_id;

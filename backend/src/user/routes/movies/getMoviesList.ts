@@ -42,7 +42,6 @@ router.get('/get-movies', async(req: Request, res: Response) =>{
 
 router.get('/get-seasons-episodes/:movie_id', async(req: Request, res: Response) =>{
     const {movie_id} = req.params;
-    console.log(movie_id);
     try {
         const response:universalResponse = await getSeriesSeasonsEpisodeById(movie_id);
         response.success ? 
