@@ -32,7 +32,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="d-flex"  style={{position: "relative"}}>
+    <div className="d-flex "  style={{position: "relative"}}>
       <div className="bg-dark text-light vh-100 p-3" style={{minWidth: "250px" }}>
         <div className="text-center mb-4">
             <img className="nav__logo" src={JAP_logo} alt="jap-logo" />

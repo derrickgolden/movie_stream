@@ -16,7 +16,6 @@ export const movieDetailsInput = [
     { label: "Publication", placeholder: "Enter publication", id: "publication", type: "text", inputType: "input", required: false },
     { label: "Enable Download", placeholder: "Enable download", id: "enable_download", type: "checkbox", inputType: "input", required: false },
     { label: "Free/Paid", placeholder: "Free", id: "free_paid", type: "text", inputType: "select", required: false },
-    { label: "Trailer URL", placeholder: "YouTube Only", id: "trailer_url", type: "url", inputType: "input", required: false },
 ];
 
 export const seoAndMarketingInput = [
@@ -89,5 +88,6 @@ export const seoAndMarketingInput = [
 export const UploadMovieInput = [
     { label: "Label", placeholder: "server #", id: "label", type: "text", inputType: "input", required: true },
     { label: "Order", placeholder: "0", id: "order", type: "number", inputType: "input", required: true },
-    { label: "URL", placeholder: "https://moviepath.mp4", id: "url", type: "text", inputType: "input", required: true },
+    { label: "Movie URL", placeholder: "https://moviepath.mp4", id: "url", type: "text", inputType: "input", required: true },
+    { label: "Trailer URL", placeholder: "https://moviepath.mp4", id: "trailer_url", type: "text", inputType: "input", required: true },
 ]

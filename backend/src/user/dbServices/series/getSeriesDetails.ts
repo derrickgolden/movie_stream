@@ -20,6 +20,7 @@ export const getSeriesDetails = async (): Promise<universalResponse> => {
                         'season_id', si.season_id,
                         'season_name', si.season_name,
                         'season_order', si.season_order,
+                        'trailer_url', si.trailer_url,
                         'episodes', COALESCE(
                             (
                                 SELECT 
@@ -48,7 +49,9 @@ export const getSeriesDetails = async (): Promise<universalResponse> => {
             LEFT JOIN 
                 season_info si ON ts.movie_id = si.movie_id
             GROUP BY 
-                ts.movie_id;
+                ts.movie_id
+            ORDER BY 
+                ts.id DESC;
         `);
 
         connection.release();

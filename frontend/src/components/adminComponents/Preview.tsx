@@ -12,10 +12,11 @@ const Preview = () => {
 
   const getYouTubeEmbedUrl = (url: string) => {
     const videoIdMatch = url.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([^&?]+)/);
-    return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}` : null;
+    console.log(videoIdMatch)
+    return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}?autoplay=1` : null;
   };
 
-  const embedUrl = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=LCiqHKe394c");
+  const embedUrl = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=naQr0uTrH_s");
 
   useEffect(() => {
     const handleAutoplay = () => {
@@ -44,7 +45,7 @@ const Preview = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white px-4">
       <div className="p-4">
         <h1 className="text-success">Preview Page</h1>
         {previewText && <p className="text-warning">{previewText}</p>}
@@ -55,7 +56,7 @@ const Preview = () => {
           src={movieUrl}
           loop
           controls
-          height="500px"
+          height="450px"
           width="100%"
           onError={handleVideoError}
         />

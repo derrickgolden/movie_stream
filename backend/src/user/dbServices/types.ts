@@ -20,12 +20,14 @@ export interface MovieDetails {
     movie_id: number; // Foreign key referencing the movie
     id: number;    // Unique identifier for the file
     isEdit: boolean;
+    trailer_url: string
   }
   
   interface SeasonInfo {
     season_id: number;
     season_name: string; // Name of the season
     order_no: string;    // Order number of the season
+    trailer_url: string;
   }
   
  export interface SeriesData {

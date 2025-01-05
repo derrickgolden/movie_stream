@@ -12,6 +12,7 @@ export interface MovieFile {
     title: string;
     movie_file_id: number;
     video_id: number;
+    trailer_url: string;
   }
 
 export  interface Episode {
@@ -28,6 +29,7 @@ export  interface Episode {
     season_name: string; // Name of the season
     season_order: number; // Order of the season
     episodes: Episode[]; // List of episodes in the season
+    trailer_url: string;
   }
   
 export  interface TvSeries {

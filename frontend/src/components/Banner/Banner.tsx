@@ -1,11 +1,7 @@
 import "./Banner.css";
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import requests from "../../request";
-import { Link, useNavigate } from "react-router-dom";
-import YouTube from "react-youtube";
+import { useNavigate } from "react-router-dom";
 import { getMoviesList } from "../apiCalls/getData";
-import { MovieListProps } from "../apiCalls/types";
 import { useDispatch } from 'react-redux';
 import { MovieListDetails, setMovieListDetails } from '../../redux/movieList';
 import { useSelector } from "react-redux";
@@ -28,6 +24,8 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
   const navigate = useNavigate();
   const movieListDetails = useSelector((state: RootState) => state.movieListDetails);
   const seriesListDetails = useSelector((state: RootState) => state.seriesListDetails);
+
+console.log(movie);
 
   useEffect(() => {
     if(hoveredMovie.is_series){
@@ -80,15 +78,24 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
         });
       }
     };
+    const handleVideoEnded = () => {
+      setIsVideoReady(false);
+    };
 
     // Add event listener to handle autoplay
     if (videoRef.current) {
       videoRef.current.addEventListener("canplay", handleAutoplay);
     }
+    if (videoRef.current) {
+      videoRef.current.addEventListener("ended", handleVideoEnded);
+    }
 
     return () => {
       if (videoRef.current) {
         videoRef.current.removeEventListener("canplay", handleAutoplay);
+      }
+      if (videoRef.current) {
+        videoRef.current.removeEventListener("canplay", handleVideoEnded);
       }
     };
   }, []);
@@ -141,9 +148,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
               display: isVideoReady ? "block" : "none", // Hide video until ready
             }}
             ref={videoRef}
-            src={movie?.video_url}
-            loop
-            
+            src={movie?.trailer_url}            
             height="340px"
             width="100%"
             onLoadedData={handleVideoLoaded} // Fires when the video is ready to play

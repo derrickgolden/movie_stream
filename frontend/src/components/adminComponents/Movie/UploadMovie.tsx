@@ -1,5 +1,7 @@
 import axios from "axios"; 
 import { useEffect, useState } from "react";
+import { TbCircleLetterM } from "react-icons/tb";
+import { TbCircleLetterT } from "react-icons/tb";
 import { movieDetailsInput, seoAndMarketingInput, UploadMovieInput } from "./movieDetailsInputs";
 import { FaEdit } from "react-icons/fa";
 import { MdOutlinePreview } from "react-icons/md";
@@ -19,11 +21,11 @@ const UploadMovie = () =>{
     const navigate = useNavigate();
 
     useEffect(() =>{
-        const {title, movie_id, id, isEdit, url, order} = location.state[0];
+        const {title, movie_id, id, isEdit, url, order, trailer_url} = location.state[0];
         if(isEdit){
             setAddedMovies(location.state)
         }else{
-            setMovieDetails((obj)=>({...obj, label: title,  title, movie_id, id}));
+            setMovieDetails((obj)=>({...obj, label: title,  title, movie_id, id, trailer_url}));
         }
     }, [])
 
@@ -51,9 +53,9 @@ const UploadMovie = () =>{
     }
 
     const handleEditMovie = (movie: MovieFile) =>{
-        const {label, order, title, url, movie_id, video_id} = movie;
-        setMovieDetails({ label, order, url, isEdit: true, movie_id:video_id, video_id, title  });
-        console.log({video_id, movie_id})
+        console.log({movie})
+        const {label, order, title, url, movie_id, video_id, trailer_url} = movie;
+        setMovieDetails({ label, order, url, isEdit: true, movie_id:video_id, video_id, title, trailer_url  });
     }
 
     const deleteVideo = (movie: MovieFile) =>{
@@ -76,14 +78,10 @@ const UploadMovie = () =>{
             };
         });
     }
-
-    const handlePreviewMovie = (movie: MovieFile) =>{
-        navigate(`/preview?movieUrl=${encodeURIComponent(movie.url || "")}`)
-    }
-
+console.log(addedMovies)
     return(
-        <div className="bg-light w-100 p-4 ">
-            <div>
+        <div className="bg-light w-100 py-4 ">
+            <div className="px-5">
                 <h1 className="h1">Video upload | {movieDetails.title} </h1>
             </div>
             <div className="d-flex flex-column gap-4 align-content-center justify-content-center bg-white py-4">
@@ -141,13 +139,14 @@ const UploadMovie = () =>{
             </form>
                 </div>
                     <p className="bg-success text-white text-uppercase p-2 mt-4">Video List</p>
-                    <table className="table">
+                    <table className="table col--12">
                         <thead>
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">Order</th>
                             <th scope="col">Label</th>
-                            <th scope="col">URL</th>
+                            <th scope="col">Movie URL</th>
+                            <th scope="col">Trailer URL</th>
                             <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -159,14 +158,20 @@ const UploadMovie = () =>{
                                     <td><input type="number" onChange={()=>{}} 
                                         value={movie.order} style={{width: "60px"}} /></td>
                                     <td>{movie.label}</td>
-                                    <td>{movie.url}</td>
-                                    <td >
+                                    <td className=" text-wrap text-break">{movie.url}</td>
+                                    <td className=" text-wrap text-break">{movie.trailer_url}</td>
+                                    <td className="d-flex flex-column gap-1" >
+                                        <span className="d-flex">
+                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.url || "")}`} target="_blank">
+                                                <TbCircleLetterM size={32} className="text-success me-2 border border-success p-1"/>
+                                            </Link>
+                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.trailer_url || "")}`} target="_blank">
+                                                <TbCircleLetterT size={32} className="text-info me-2 border border-info p-1"/>
+                                            </Link>
+                                        </span>
                                         <span className="d-flex">
                                             <FaEdit size={32} onClick={() =>handleEditMovie(movie)} role="button"
                                                 className="text-warning me-2 border border-warning p-1"/>
-                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.url || "")}`} target="_blank">
-                                                <MdOutlinePreview size={32} className="text-success me-2 border border-success p-1"/>
-                                            </Link>
                                             <FaDeleteLeft onClick={() =>deleteVideo(movie)} role="button" 
                                                 size={32} className="text-danger border border-danger p-1"/>
                                         </span>
