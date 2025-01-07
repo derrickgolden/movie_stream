@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MovieFile, Season, TvSeries } from "../../apiCalls/types";
 import { addSeasonsInfo } from "../../apiCalls/postData";
 import { useSelector } from "react-redux";
@@ -24,7 +24,7 @@ type SeasonInfo = {
 }
 
 const SeasonInfo: React.FC<SeasonInfo> = ({seriesDetails, editSeason, setEditSession}) =>{
-    const [seasonInfo, setSeasonInfo] = useState({})
+    const [seasonInfo, setSeasonInfo] = useState<Season | undefined>()
     const btnRef = useRef<HTMLButtonElement | null>(null);
     const dispatch = useDispatch()
     const callApi = useSelector((state: RootState) =>state.callApi);
@@ -35,11 +35,17 @@ const SeasonInfo: React.FC<SeasonInfo> = ({seriesDetails, editSeason, setEditSes
         setSeasonInfo((obj) => ({...obj, [name]: value}));
     };
 
+    useEffect(() =>{
+        if(editSeason){
+            const {season, isEdit} = editSeason;
+            setSeasonInfo((info) =>({...info, isEdit, ...season, order_no: season.season_order }))
+        }
+    }, [editSeason]);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
         const data =JSON.stringify({seriesDetails, seasonInfo});
         addSeasonsInfo(data).then((data)=>{
-            // console.log(data);
             if(data.success){
                 dispatch(setCallApi(!callApi));
                 btnRef.current ? btnRef.current.click() : null;
@@ -55,22 +61,22 @@ const SeasonInfo: React.FC<SeasonInfo> = ({seriesDetails, editSeason, setEditSes
                             <h1 className="modal-title fs-5" id="seasonInfoModalLabel">
                                 {seriesDetails?.title}
                             </h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            {/* <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
                         </div>
                         <div className="modal-body">
-                            <div className="mb-3">
+                            <div className="mb-3 ">
                                 <label htmlFor="season_name" className="form-label">Season Name</label>
-                                <input type="text" onChange={handleInputChange} required
+                                <input type="text" onChange={handleInputChange} required value={seasonInfo?.season_name}
                                     className="form-control" id="season_name" placeholder="Season 1"/>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="order_no" className="form-label">Order</label>
-                                <input type="number" onChange={handleInputChange} required
+                                <input type="number" onChange={handleInputChange} required value={seasonInfo?.order_no}
                                     className="form-control" id="order_no" placeholder="1"/>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="trailer_url" className="form-label">Season Trailer Url</label>
-                                <input type="text" onChange={handleInputChange} required
+                                <input type="text" onChange={handleInputChange} required value={seasonInfo?.trailer_url}
                                     className="form-control" id="trailer_url" placeholder="https://japtech.africa/series/"/>
                             </div>
                         </div>

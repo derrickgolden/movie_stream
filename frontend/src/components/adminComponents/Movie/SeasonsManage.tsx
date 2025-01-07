@@ -65,7 +65,6 @@ const SeasonsManage = () =>{
             btnRef.current.click();
         }
     }
-
     return(
         <div className="bg-light w-100 p-4">
             <h3>{seriesDetails.title}</h3>
@@ -73,7 +72,7 @@ const SeasonsManage = () =>{
                 <div className="">
                     <button onClick={() => navigate("/admin/all-series")}
                         className="btn btn-success btn-sm me-4">Back To List</button>
-                    <button type="button" ref={btnRef}
+                    <button type="button" ref={btnRef} 
                         className="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#seasonInfoModal">
                         Add Seasons
                     </button>
@@ -94,14 +93,14 @@ const SeasonsManage = () =>{
                                 seasonsEpisodes?.seasons?.map((season, i) =>(
                                 <tr key={i + 89293}>
                                     <th scope="row">{i + 1}</th>
-                                    <td>{season.season_name}</td>
+                                    <td className="text-wrap text-break">{season.season_name}</td>
                                     <td>{season.episodes.length}</td>
                                     <td>
                                         <input type="number" onChange={()=>{}} 
                                         value={season.season_order} style={{width: "60px"}} />
                                     </td>
-                                    <td>{season.trailer_url}</td>
-                                    <td>
+                                    <td className="text-wrap text-break">{season.trailer_url}</td>
+                                    <td className="d-flex flex-wrap gap-2">
                                         <button onClick={() => handleManageSession(season)}
                                             className="btn btn-info btn-sm me-2 ">Manage Episodes</button>
                                         <FaEdit size={32} className="text-warning p-1 border border-warning  me-2"

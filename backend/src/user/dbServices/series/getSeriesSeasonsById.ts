@@ -17,6 +17,7 @@ export const getSeriesSeasonsEpisodeById = async ( movie_id: string): Promise<un
                         'season_id', si.season_id,
                         'season_name', si.season_name,
                         'season_order', si.season_order,
+                        'trailer_url', si.trailer_url,
                         'episodes', COALESCE(
                             (
                                 SELECT 
@@ -50,7 +51,7 @@ export const getSeriesSeasonsEpisodeById = async ( movie_id: string): Promise<un
 
         return {
             success: true,
-            msg: `Tv Series List`,
+            msg: `Tv Series List by id`,
             details: res
         };
     } catch (error) {

@@ -14,6 +14,7 @@ import videos from './user/routes/movies/getMoviesList';
 import alterVideos from './user/routes/movies/uploadMovie';
 import deleteVideos from './user/routes/movies/deleteMovies';
 import { authenticateToken } from './user/middlewares/authenticateToken';
+import { RowDataPacket } from 'mysql2';
 
 const loadMime = async () => {
   const { default: mime } = await import('mime'); // Dynamic ESM import
@@ -133,6 +134,37 @@ const laptopPath = path.join(__dirname, 'dist');
 //     express.static(laptopPath)(req, res, next); // Serve Laptop content
 //   }
 // });
+const { pool } = require("./mysqlSetup");
+
+const addSeasonInfo = async () => {
+  const connection = await pool.getConnection(); // No need to type RowDataPacket here
+  try {
+    await connection.beginTransaction();
+
+    // Use the absolute path to the CSV file
+    const csvFilePath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/201903Jan2025_customers.csv";
+
+    await connection.query(`
+      LOAD DATA INFILE ?
+      INTO TABLE users
+      FIELDS TERMINATED BY ',' 
+      ENCLOSED BY '"'
+      LINES TERMINATED BY '\n'
+      IGNORE 1 ROWS
+    `, [csvFilePath]);
+
+    await connection.commit();
+    console.log("Data loaded successfully!");
+  } catch (error) {
+    console.error("Error loading data:", error);
+    await connection.rollback();
+  } finally {
+    connection.release();
+  }
+};
+
+// addSeasonInfo();
+
 
 app.use('/user', adminauth);
 app.use('/user', upload.single('logo'), authenticateToken, shop);

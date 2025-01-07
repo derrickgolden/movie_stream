@@ -6,6 +6,8 @@ import { JAP_logo } from "../../../assets";
 const Sidebar = () => {
   const [toggle, setToggle] = useState<string | null>(null);
 
+  const admintoken = sessionStorage.getItem("adminToken");
+
   // Sidebar links configuration
   const links = [
     { name: "Dashboard", icon: <FaHome />, href: "/admin/dashboard" },
@@ -29,55 +31,60 @@ const Sidebar = () => {
     { name: "Report", icon: <FaExclamationTriangle />, href: "/admin/report" },
     { name: "Subscription", icon: <FaMoneyBill />, href: "/admin/subscription" },
     { name: "Notification", icon: <FaBell />, href: "/admin/notification" },
+    { name: "Log Out", icon: <FaBell />, href: "/admin/logout" },
   ];
 
   return (
     <div className="d-flex "  style={{position: "relative"}}>
-      <div className="bg-dark text-light vh-100 p-3" style={{minWidth: "250px" }}>
-        <div className="text-center mb-4">
-            <img className="nav__logo" src={JAP_logo} alt="jap-logo" />
-        </div>
-        <ul className="list-unstyled pt-5">
-          {links.map((link, index) => (
-            <li key={index} className="mb-3">
-              {
-                !link?.href ? (
-                  <span
-                    className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
-                    onClick={() => link.sublinks && setToggle(toggle === link.name ? null : link.name)}
-                  >
-                    {link.icon} <span className="ms-2">{link.name}</span>
-                  </span>
-                ):(
-                  <Link
-                    to={link.href || "#"}
-                    className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
-                    onClick={() => link.sublinks && setToggle(toggle === link.name ? null : link.name)}
-                  >
-                    {link.icon} <span className="ms-2">{link.name}</span>
-                  </Link>
-                )
-              }
-
-              {/* Sublinks */}
-              {link.sublinks && toggle === link.name && (
-                <ul className="list-unstyled ms-3 fs-4 text-uppercase">
-                  {link.sublinks.map((sublink, subIndex) => (
-                    <li key={subIndex}>
-                      <Link
-                        to={sublink.href}
-                        className="nav-link text-light text-decoration-none"
+      {
+        admintoken && (
+          <div className="bg-dark text-light vh-100 p-3" style={{minWidth: "250px" }}>
+            <div className="text-center mb-4">
+                <img className="nav__logo" src={JAP_logo} alt="jap-logo" />
+            </div>
+            <ul className="list-unstyled pt-5">
+              {links.map((link, index) => (
+                <li key={index} className="mb-3">
+                  {
+                    !link?.href ? (
+                      <span
+                        className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
+                        onClick={() => link.sublinks && setToggle(toggle === link.name ? null : link.name)}
                       >
-                        {sublink.name}
+                        {link.icon} <span className="ms-2">{link.name}</span>
+                      </span>
+                    ):(
+                      <Link
+                        to={link.href || "#"}
+                        className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
+                        onClick={() => link.sublinks && setToggle(toggle === link.name ? null : link.name)}
+                      >
+                        {link.icon} <span className="ms-2">{link.name}</span>
                       </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+                    )
+                  }
+
+                  {/* Sublinks */}
+                  {link.sublinks && toggle === link.name && (
+                    <ul className="list-unstyled ms-3 fs-4 text-uppercase">
+                      {link.sublinks.map((sublink, subIndex) => (
+                        <li key={subIndex}>
+                          <Link
+                            to={sublink.href}
+                            className="nav-link text-light text-decoration-none"
+                          >
+                            {sublink.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
       {/* <div className="flex-grow-1 position-absolute top-bar">
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
           <div className="container-fluid">

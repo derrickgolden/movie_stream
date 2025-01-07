@@ -11,15 +11,12 @@ import ChangePassword from './components/auth/ChangePassword';
 import MoviePlayer from './components/Play/MoviePlayer';
 import LandingPage from './sections/LandingPage';
 import AdminDashboard from './sections/AdminDashboard';
-import Sidebar from './components/adminComponents/Navbar/SideBar';
-import AddNewMovie from './components/adminComponents/Movie/AddNewMovie';
-import UploadMovie from './components/adminComponents/Movie/UploadMovie';
-import SeasonsManage from './components/adminComponents/Movie/SeasonsManage';
-import EpisodeManage from './components/adminComponents/Movie/EpisodesManage';
+
 import EpisodesAndMore from './components/Play/EpisodesAndMore';
-import AllSeries from './components/adminComponents/Series/AllSeries';
-import AllMovies from './components/adminComponents/Movie/AllMovies';
-import Preview from './components/adminComponents/Preview';
+import { AddNewMovie, AllMovies, AllSeries, EpisodeManage, Logout, MovieRequests, Preview, 
+  Reports, SeasonsManage, Sidebar, UploadMovie 
+} from './components/adminComponents';
+
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -28,13 +25,13 @@ function App() {
     <div className='App'>
 
           <Routes>
-            <Route path='/' element={<LandingPage />} />
+            <Route path='viewer/dashboard' element={<LandingPage />} />
             <Route path='watch/:id' element={<MoviePlayer /> } />
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
 
-            <Route path="login" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} /> 
+            <Route path="/" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} /> 
             <Route path="login/:urltoken" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} />
-            <Route path="signup" element={<Signup prevelages="viewer"/>} />
+            <Route path="viewer/signup" element={<Signup prevelages="viewer"/>} />
             <Route path="reset-password/:urltoken" element={<ResetPassword />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path='change-pass' element={<ChangePassword setIsLogin = {setIsLogin}/>} />
@@ -50,8 +47,13 @@ function App() {
               <Route path='movie-upload' element ={<UploadMovie />} />
               <Route path='seasons-manage' element ={<SeasonsManage />} />
               <Route path='episodes-manage' element ={<EpisodeManage />} />
+              <Route path='movie-request' element ={<MovieRequests />} />
+              <Route path='report' element ={<Reports />} />
+              <Route path='subscription' element ={<Reports />} />
+              <Route path='notification' element ={<Reports />} />
               <Route path="signup" element={<Signup prevelages="admin"/>} />
               <Route path="login" element={<Login setIsLogin = {setIsLogin} prevelages="admin"/>} />
+              <Route path='logout' element={<Logout />}/>
             </Route>
           </Routes>
     </div>     

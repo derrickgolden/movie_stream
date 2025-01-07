@@ -2,7 +2,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface MovieListDetails {
-  video_id: number,
+  video_id: number, slug: string;
   trailer_url: string;
   title: string, name: string, original_name: string,
     url: string, movie: string, overview: string, backdrop_path: string, poster_path: string,

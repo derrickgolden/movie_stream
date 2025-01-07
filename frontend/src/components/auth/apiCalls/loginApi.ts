@@ -26,10 +26,13 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
         } )
         .then(data => {
             if(data.success){
-                sessionStorage.setItem("user", JSON.stringify(data?.details[0]));
-                sessionStorage.setItem("userToken", JSON.stringify(data?.token));
-                localStorage.setItem("user", JSON.stringify(data?.details[0]));
-                localStorage.setItem("userToken", JSON.stringify(data?.token));
+                if(data.details[0].prevelages === "viewer"){
+                    localStorage.setItem("viewer", JSON.stringify(data?.details[0]));
+                    localStorage.setItem("viewerToken", JSON.stringify(data?.token));
+                }else if(data.details[0].prevelages === "admin"){
+                    sessionStorage.setItem("admin", JSON.stringify(data?.details[0]));
+                    sessionStorage.setItem("adminToken", JSON.stringify(data?.token));
+                }
                 setIsLogin(true);
                 navigate(`/${prevelages}/dashboard`, {replace: true});
                 console.log(data);

@@ -28,6 +28,7 @@ export interface MovieDetails {
     season_name: string; // Name of the season
     order_no: string;    // Order number of the season
     trailer_url: string;
+    isEdit: boolean;
   }
   
  export interface SeriesData {

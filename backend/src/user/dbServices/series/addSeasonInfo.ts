@@ -5,7 +5,7 @@ const { pool } = require("../../../mysqlSetup");
 
 export const addSeasonInfo = async (seriesInfo: SeriesData ): Promise<universalResponse> => {
     const {seasonInfo, seriesDetails} = seriesInfo;
-    const {order_no, season_name, trailer_url} = seasonInfo;
+    const {order_no, season_name, trailer_url, isEdit, season_id} = seasonInfo;
     const {id, movie_id} = seriesDetails;
 
     const connection: RowDataPacket = await pool.getConnection();
@@ -13,11 +13,20 @@ export const addSeasonInfo = async (seriesInfo: SeriesData ): Promise<universalR
 
         await connection.beginTransaction();
 
-            // Insert movies
-            var [res] = await connection.query(`
-                INSERT INTO season_info (season_order, season_name, movie_id, trailer_url)
-                VALUES (?, ?, ?, ?)
-            `, [order_no, season_name, movie_id, trailer_url]);
+            if(isEdit){
+                // Insert movies
+                var [res] = await connection.query(`
+                        UPDATE season_info 
+                        SET season_order = ?, season_name = ?, movie_id = ?, trailer_url = ?
+                        WHERE season_id = ?
+                    `, [order_no, season_name, movie_id, trailer_url, season_id]);
+            }else{
+                // Insert movies
+                var [res] = await connection.query(`
+                        INSERT INTO season_info (season_order, season_name, movie_id, trailer_url)
+                        VALUES (?, ?, ?, ?)
+                    `, [order_no, season_name, movie_id, trailer_url]);
+            }
 
             // const movie_id = res.insertId;
                 
