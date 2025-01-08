@@ -2,74 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt = require('bcryptjs');
 const { pool } = require("../../mysqlSetup");
-const signupUser = async (signupDetails, auth_with) => {
-    const { email } = signupDetails;
+const signupUser = async (signupDetails) => {
+    const phone = signupDetails.phone;
+    console.log(signupDetails);
     const connection = await pool.getConnection();
     try {
         // Check if the user already exists
         const [existingUser] = await connection.query(`
-            SELECT * FROM user_details
-            WHERE email = ? 
-        `, [email]);
+            SELECT * FROM users
+            WHERE phone = ? 
+        `, [phone]);
         if (existingUser.length > 0) {
             connection.release();
-            return { success: true, rejectInput: "email", msg: "Email already registered, please log in" };
+            return { success: true, rejectInput: "phone", msg: "Phone already registered" };
         }
         // Insert user details
-        if (auth_with === "app" && "phone" in signupDetails) {
-            var { first_name, last_name, remember_me, country, hash, admin_email, phone, user_type, prevelages, admin_pass } = signupDetails;
-            if (user_type === "owner") {
-                var [insertUser] = await connection.query(`
-                    INSERT INTO user_details (first_name, last_name, email, remember_me, country, password, phone, prevelages, position)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `, [first_name, last_name, email, remember_me, country, hash, phone, prevelages, user_type]);
-                const user_id = insertUser.insertId;
-                var [insertUser] = await connection.query(`
-                    UPDATE user_details
-                    SET added_by = ?
-                    WHERE user_id = ?
-                `, [user_id, user_id]);
-            }
-            else {
-                // Confirm owner Details
-                const [getOwner] = await connection.query(`
-                    SELECT * FROM user_details
-                    WHERE email = ? 
-                `, [admin_email]);
-                if (getOwner.length <= 0) {
-                    connection.release();
-                    return { success: true, rejectInput: "email", msg: "Email Owner does not exist" };
-                }
-                else if (getOwner.length === 1) {
-                    const { user_id, password: passwordHash } = getOwner[0];
-                    const match = await bcrypt.compare(admin_pass, passwordHash);
-                    if (match) {
-                        var [insertUser] = await connection.query(`
-                        INSERT INTO user_details (first_name, last_name, email, remember_me, country, password, phone, added_by, prevelages, position)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                        `, [first_name, last_name, email, remember_me, country, hash, phone, user_id, prevelages, user_type]);
-                    }
-                    else {
-                        return { success: true, rejectInput: "Password", msg: "Owner password is incorrect" };
-                    }
-                }
-            }
+        if ("phone" in signupDetails) {
+            var { account, account2, apartment, email, expiry, house_number, house_number, ip, location, mac, name, password, hash } = signupDetails;
+            var [insertUser] = await connection.query(`
+                INSERT INTO users (account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, password)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `, [account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, hash]);
         }
-        // else if(auth_with === "google" && "picture" in signupDetails){
-        //     console.log("Inserting with google");
-        //     var {first_name, last_name, picture, id} = signupDetails;
-        //     var [insertUser] = await connection.query(`
-        //         INSERT INTO user_details (first_name, last_name, email, picture, google_id)
-        //         VALUES (?, ?, ?, ?, ?)
-        //     `, [first_name, last_name, email, picture, id]);
-        // }
         connection.release();
         const userId = insertUser.insertId;
         return {
             success: true,
             admin_id: userId,
             msg: "User Registered",
-            details: [{ first_name, last_name, email, remember_me, country }]
+            details: [{ name, email, account, account2, apartment }]
         };
     }
     catch (error) {
@@ -83,18 +44,26 @@ const signupUser = async (signupDetails, auth_with) => {
         }
     }
 };
-const loginUser = async (email) => {
+const loginUser = async (email, phone, prevelages) => {
     const connection = await pool.getConnection();
     try {
-        const [res] = await connection.query(`
-            SELECT * FROM user_details
-            WHERE email = ?
-        `, [email]);
+        if (prevelages === "admin") {
+            var [res] = await connection.query(`
+                SELECT * FROM admins
+                WHERE email = ?
+            `, [email]);
+        }
+        else if (prevelages === "viewer") {
+            var [res] = await connection.query(`
+                SELECT * FROM users
+                WHERE phone = ?
+            `, [phone]);
+        }
         connection.release();
         if (res.length === 1) {
-            const { user_id, first_name, last_name, email, remember_me, country, password, added_by, prevelages } = res[0];
+            const { name, account, account2, phone, id, email, remember_me, password } = res[0];
             return { userAvailable: true, passwordHash: password,
-                details: [{ user_id, first_name, last_name, email, remember_me, country, added_by, prevelages }]
+                details: [{ name, account, account2, phone, id, email, remember_me, prevelages }]
             };
         }
         else {
@@ -118,7 +87,7 @@ const resetPassword = async (password, email) => {
     const connection = await pool.getConnection();
     try {
         const [res] = await connection.query(`
-        UPDATE user_details 
+        UPDATE users 
         SET password = ?
         WHERE email = ?;
         `, [password, email]);

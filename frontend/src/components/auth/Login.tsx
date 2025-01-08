@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { setMovieListDetails } from "../../redux/movieList";
 import { baseUrl } from "../Row/Row";
 
-export interface PersonDetails{ email: string; password: string; acc_type: string }
+export interface PersonDetails{ email: string; password: string; acc_type: string, phone: string }
 type UserAcc = "admin" | "staff";
 type LoginProps = {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,7 +26,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
 
     const [acc_type, setAcc_type] =  useState<UserAcc>("admin");
     const [loginDetails, setLoginDetails] = useState<PersonDetails>({
-        email:"", password: "", acc_type
+        email:"", password: "", acc_type, phone: ""
     });
     const movieListDetails = useSelector((state: RootState) => state.movieListDetails);
     
@@ -43,10 +43,20 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const name = e.target.name
         const value = e.target.value
-        setLoginDetails((obj) =>({...obj, [name]: value}))
+        if(name === "phone"){
+            value.length < 10 ? setLoginDetails((obj) =>({...obj, [name]: value})) : null;
+        }else{
+            setLoginDetails((obj) =>({...obj, [name]: value}))
+        }
     };
 
     useEffect(() =>{
+        if(prevelages === "viewer"){
+            const viewerToken = localStorage.getItem("viewerToken");
+            if(viewerToken){
+                navigate("/viewer/dashboard")
+            }
+        }
         if(urltoken === "kjcc7BiGOqHZCw48zuEu82M0rHxImr1txrgkqqf"){
             let data = JSON.stringify({email:"goldenderrick95@gmail.com", password: "1234", auth_with: "app"});
 
@@ -54,10 +64,9 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
         }
         getMoviesList("videos/get-movies", "").then((res) =>{
             if(res.success){
-                  dispatch(setMovieListDetails(res.details));
-                  console.log(res)
-                }
-            });
+                dispatch(setMovieListDetails(res.details));
+            }
+        });
     }, []);
 
     useEffect(()=>{
@@ -66,7 +75,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     
     const handleLoginDetailsSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
-        let data = JSON.stringify({...loginDetails, auth_with: "app"});
+        let data = JSON.stringify({...loginDetails, prevelages, phone: "254" + loginDetails.phone, auth_with: "app"});
 
         loginApi({data, navigate, setLoginDetails, setIsLogin, prevelages});   
     }
@@ -84,26 +93,43 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                             <div className="col-lg-4 col-xl-3 col-xxl-1 d-flex text-center px- px-sm-3 py-5"
                             >
                                 <div className="form-bo text-light" >
-                                    <h4>Log in to Stream</h4>
-                                    <p className="dont-acc ">Don't have an account? 
+                                    <h4>Log in to Watch</h4>
+                                    {/* <p className="dont-acc ">Don't have an account? 
                                         <Link to={`/${prevelages}/signup`} className="text-info">&nbsp; Register</Link>
-                                    </p>
+                                    </p> */}
                                     <div className=" p-10 rounded" id="myTabContent" style={{ height: "100%" }}>
                                         <div className="tab-pane fade p-10 show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">                                
                                             <form onSubmit={handleLoginDetailsSubmit} action="#" className="mt-3" style={{ height: "100%" }}>
                                                 <div className="row h-100 ">
-                                                    <div className="col-12 d-flex ">
-                                                        <div className="form-group w-100 text-dark text-start my-3">
-                                                            <label htmlFor="email " className="text-light">Enter email</label>
-                                                            <input
-                                                                onChange={handleInputChange}
-                                                                name='email'
-                                                                type="email"
-                                                                className="form-control"
-                                                                placeholder={acc_type === "admin" ? "Email" : "Business Email"}
-                                                            />
-                                                        </div>
-                                                    </div>
+                                                    {
+                                                        prevelages === "viewer" && (
+                                                            <div className="mb-3">
+                                                                <label htmlFor="phone " className="text-light text-start w-100">Your Phone Number</label>
+                                                                <div className="input-group ">
+                                                                    <span className="input-group-text">+254</span>
+                                                                    <input onChange={handleInputChange} required value={loginDetails.phone}
+                                                                    type="number" name="phone" className="form-control" placeholder="714470000"/>
+                                                                </div>
+                                                                <div className="form-text text-warning" id="basic-addon4">After +254, continue with 7... or 1..</div>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {
+                                                        prevelages === "admin" && (
+                                                            <div className="col-12 d-flex ">
+                                                                <div className="form-group w-100 text-dark text-start my-3">
+                                                                    <label htmlFor="email " className="text-light">Enter email</label>
+                                                                    <input
+                                                                        onChange={handleInputChange}
+                                                                        name='email'
+                                                                        type="email"
+                                                                        className="form-control"
+                                                                        placeholder={acc_type === "admin" ? "Email" : "Business Email"}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
                                                     <div className="col-12 d-flex align-items-center text-dark ">
                                                         <div className="form-group w-100 text-start">
                                                         <label htmlFor="email" className="text-light">Your Password</label>
@@ -120,11 +146,11 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                 <div className=" my-3 text-start">
                                                     <button type='submit' className="btn btn-outline-primary">Log in</button>
                                                 </div>
-                                                <div className="remember-forgot d-flex justify-content-between pt-3">                                          
+                                                {/* <div className="remember-forgot d-flex justify-content-between pt-3">                                          
                                                     <div className="forget-pw">
-                                                        <Link className='a-link text-info' to="/forgot-password">Forgot your password?</Link>
+                                                        <Link className='a-link text-info' to="/forgot-password">Reset password?</Link>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </form>
                                         </div>
                                     </div>

@@ -26,7 +26,9 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
         } )
         .then(data => {
             if(data.success){
+                console.log(data)
                 if(data.details[0].prevelages === "viewer"){
+
                     localStorage.setItem("viewer", JSON.stringify(data?.details[0]));
                     localStorage.setItem("viewerToken", JSON.stringify(data?.token));
                 }else if(data.details[0].prevelages === "admin"){

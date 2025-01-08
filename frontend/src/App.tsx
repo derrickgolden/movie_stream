@@ -16,6 +16,8 @@ import EpisodesAndMore from './components/Play/EpisodesAndMore';
 import { AddNewMovie, AllMovies, AllSeries, EpisodeManage, Logout, MovieRequests, Preview, 
   Reports, SeasonsManage, Sidebar, UploadMovie 
 } from './components/adminComponents';
+import AddUsers from './components/adminComponents/Users/AddUsers';
+import AllUsers from './components/adminComponents/Users/AllUsers';
 
 
 function App() {
@@ -45,6 +47,8 @@ function App() {
               <Route path='new-series' element ={<AddNewMovie type="series"/>} />
               <Route path='all-series' element ={<AllSeries />} />
               <Route path='movie-upload' element ={<UploadMovie />} />
+              <Route path='add-client' element ={<AddUsers />} />
+              <Route path='all-clients' element ={<AllUsers />} />
               <Route path='seasons-manage' element ={<SeasonsManage />} />
               <Route path='episodes-manage' element ={<EpisodeManage />} />
               <Route path='movie-request' element ={<MovieRequests />} />

@@ -1,7 +1,8 @@
 import express, {Request, Response} from 'express';
 import { TokenResponse } from '../controllers/auth/generateToken';
 import {  GoogleUserProfile, LinkTokenRes, LoginResponse, 
-    PersonDetails, SignupDetails, SignupResponse } from 'user/type';
+    PersonDetails,  SignupResponse, 
+    User} from 'user/type';
 
 var bcrypt = require('bcryptjs');
 const router = express.Router();
@@ -27,11 +28,11 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> =>{
     
     try{
     if(auth_with === "app"){
-        const { password }: SignupDetails = req.body;
+        const { password }: User = req.body;
         const signupDetails = req.body;
 
         const hash = await bcrypt.hash(password, 10);
-        var response:SignupResponse = await signupUser({...signupDetails, hash}, auth_with);
+        var response:SignupResponse = await signupUser({...signupDetails, hash});
 
     }else if(auth_with === "google"){
         const { name, email, id, picture }: GoogleUserProfile = req.body;
@@ -40,7 +41,6 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> =>{
         var response:SignupResponse = await signupUser({first_name, last_name, 
             email, id, picture}, auth_with )    
     } 
-
 
         response.success ? 
             res.status(200).json(response) : 
@@ -51,40 +51,40 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> =>{
 });
 
 router.post('/login', async (req: Request, res: Response): Promise<void> =>{
-    const { email, password, auth_with}: PersonDetails = req.body;
+    const { email, prevelages, phone, password, auth_with}: PersonDetails = req.body;
 
-    const response: LoginResponse = await loginUser(email);
+    const response: LoginResponse = await loginUser(email, phone, prevelages);
     const { passwordHash, userAvailable, details } = response;
-
+    // console.log({email, prevelages, phone, password, auth_with})
     try {
         if(!userAvailable){
-            res.status(200).send({success: false, msg: "Email not registered", details: response});
+            res.status(200).send({success: false, msg: "Details not registered", details: response});
             return;
         }
 
         // generate JWT token
-        const expiresInDays: number = 1;
-        const { user_id, first_name, last_name, email, added_by } = details[0];
+        const expiresInDays: number = 60;
+        const { id, account, account2, phone, prevelages } = details[0];
         const { token, exp_date }: TokenResponse = await generateAuthToken(
-            user_id, first_name, last_name, email, added_by, expiresInDays
+            id, account, account2, phone, prevelages, expiresInDays
         );
 
         if(auth_with === "google"){
-            res.status(200).send({success: true, token, msg: "User Found", details}) ;
+            res.status(200).send({success: true, token, msg: "User Found", details});
             return; 
-        }
+        };
 
         const match: boolean = await bcrypt.compare(password, passwordHash);
         if(match) {
-            res.status(200).send({success: true, token, msg: "User Found", details}) ;
-            
+            console.log(details);
+            res.status(200).send({success: true, token, msg: "User Found", details});   
         }else{
             res.status(200).send({success: false, msg: "Incorrect Password"});
-        }
+        };
     } catch (error) {
-        console.log(error)
-        res.status(404).send({success: false, msg: error.message})
-    }
+        console.log(error);
+        res.status(404).send({success: false, msg: error.message});
+    };
 });
 
 router.patch('/change-pass', authenticateToken, async(req: ModifiedReq, res: Response) =>{

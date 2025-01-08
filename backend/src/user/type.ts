@@ -5,28 +5,36 @@ export interface DBServicesRes{
 
 export interface PersonDetails{
     email: string,
+    phone: string,
     password: string,
     confirm_password: string,
     auth_with?: "google" | "app",
+    prevelages: "admin" | "viewer";
 }
-export interface SignupDetails{
-    last_name: string, 
-    first_name: string, 
-    email: string, 
-    remember_me: boolean, 
-    country: string, 
-    hash: string, 
-    password: string, 
+// Define the TypeScript interface
+export interface User {
+    user_type: string;
+    email: string;
+    password: string;
+    houseNumber: string;
+    apartment: string;
+    location: string;
+    ip: string;
+    name: string;
     phone: string;
-    user_type: string, 
-    admin_email: string, 
-    admin_pass: string,
-    prevelages: 'admin' | 'viewer'
-}
+    mac: string;
+    account2: string;
+    account: string;
+    expiry: string; // Use Date type if you prefer working with Date objects
+    house_number: string;
+    auth_with: string;
+    hash: string;
+  }
+
 
 export interface LoginMysqlRes{
-    user_id: number, first_name:string, last_name:string, email:string, remember_me: boolean, 
-    country: string,  password?: string, added_by: number, prevelages: "admin" | "viewer"
+    id: number, account:string, name:string, email:string, remember_me: boolean, 
+    account2: string,  password?: string, phone: number, prevelages: "admin" | "viewer"
 }
 
 export interface LoginResponse{

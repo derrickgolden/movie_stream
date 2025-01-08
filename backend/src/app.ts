@@ -14,7 +14,10 @@ import videos from './user/routes/movies/getMoviesList';
 import alterVideos from './user/routes/movies/uploadMovie';
 import deleteVideos from './user/routes/movies/deleteMovies';
 import { authenticateToken } from './user/middlewares/authenticateToken';
-import { RowDataPacket } from 'mysql2';
+
+const SERIES_PATH=process.env.SERIES_PATH;
+const VIDEO_PATH=process.env.VIDEO_PATH;
+const PORT = Number(process.env.BACKEND_PORT);
 
 const loadMime = async () => {
   const { default: mime } = await import('mime'); // Dynamic ESM import
@@ -46,7 +49,7 @@ app.options('*', cors());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
   const { filename } = req.params;
-  const videoPath = getSafeFilePath('E:/videos', filename);
+  const videoPath = getSafeFilePath(VIDEO_PATH, filename);
   if (!videoPath) {
     return res.status(400).send('Invalid file path');
   }
@@ -55,7 +58,7 @@ app.get('/video/:filename(*)', (req, res) => {
 
 app.get('/series/:filename(*)', (req, res) => {
   const { filename } = req.params;
-  const videoPath = getSafeFilePath('E:/series', filename);
+  const videoPath = getSafeFilePath(SERIES_PATH, filename);
   if (!videoPath) {
     return res.status(400).send('Invalid file path');
   }
@@ -121,63 +124,11 @@ app.use(cookieParser());
 app.use('/js', express.static(path.join(__dirname, 'dist', 'assets', 'index-TSNK7VKS.js')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Define static paths for TV and other devices
-const tvPath = path.join(__dirname, 'dist');
-const laptopPath = path.join(__dirname, 'dist');
-
-// Uncomment this block if you'd like to serve different content for TVs
-// app.use((req, res, next) => {
-//   const userAgent = req.get('User-Agent');
-//   if (userAgent.includes('SmartTV') || userAgent.includes('Tizen') || userAgent.includes('WebOS') || userAgent.includes('AndroidTV')) {
-//     express.static(tvPath)(req, res, next); // Serve TV content
-//   } else {
-//     express.static(laptopPath)(req, res, next); // Serve Laptop content
-//   }
-// });
-const { pool } = require("./mysqlSetup");
-
-const addSeasonInfo = async () => {
-  const connection = await pool.getConnection(); // No need to type RowDataPacket here
-  try {
-    await connection.beginTransaction();
-
-    // Use the absolute path to the CSV file
-    const csvFilePath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/201903Jan2025_customers.csv";
-
-    await connection.query(`
-      LOAD DATA INFILE ?
-      INTO TABLE users
-      FIELDS TERMINATED BY ',' 
-      ENCLOSED BY '"'
-      LINES TERMINATED BY '\n'
-      IGNORE 1 ROWS
-    `, [csvFilePath]);
-
-    await connection.commit();
-    console.log("Data loaded successfully!");
-  } catch (error) {
-    console.error("Error loading data:", error);
-    await connection.rollback();
-  } finally {
-    connection.release();
-  }
-};
-
-// addSeasonInfo();
-
-
 app.use('/user', adminauth);
 app.use('/user', upload.single('logo'), authenticateToken, shop);
 app.use('/videos', [videos, alterVideos, deleteVideos]);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.listen(3000, '0.0.0.0', () => {
-  console.log(`Listening on http://<your-ip-address>:3000`);
+app.listen(PORT, () => {
+  console.log(`Listening on port :${PORT}`);
 });
-
-
-// Define your HTTPS server
-// const port = process.env.SERVERPORT || 8443;
-// https.createServer(sslOptions, app).listen(port, () => {
-//   console.log(`Listening on https://localhost:${port}`);
-// });

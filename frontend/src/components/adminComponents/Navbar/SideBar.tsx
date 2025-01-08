@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaFilm, FaTv, FaBell, FaMoneyBill, FaExclamationTriangle } from "react-icons/fa";
+import { FaHome, FaFilm, FaTv, FaBell, FaMoneyBill, FaExclamationTriangle, FaUsers } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
 import { JAP_logo } from "../../../assets";
 
@@ -25,6 +25,14 @@ const Sidebar = () => {
       sublinks: [
         { name: "New TV Series", href: "/admin/new-series" },
         { name: "All TV Series", href: "/admin/all-series" },
+      ],
+    },
+    {
+      name: "Clients",
+      icon: <FaUsers />,
+      sublinks: [
+        { name: "Add Client", href: "/admin/add-client" },
+        { name: "All Clients", href: "/admin/all-clients" },
       ],
     },
     { name: "Movie Request", icon: <FaExclamationTriangle />, href: "/admin/movie-request" },

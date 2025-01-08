@@ -22,7 +22,7 @@ router.post('/signup', async (req, res) => {
             const { password } = req.body;
             const signupDetails = req.body;
             const hash = await bcrypt.hash(password, 10);
-            var response = await signupUser({ ...signupDetails, hash }, auth_with);
+            var response = await signupUser({ ...signupDetails, hash });
         }
         else if (auth_with === "google") {
             const { name, email, id, picture } = req.body;
@@ -39,34 +39,39 @@ router.post('/signup', async (req, res) => {
     }
 });
 router.post('/login', async (req, res) => {
-    const { email, password, auth_with } = req.body;
-    const response = await loginUser(email);
+    const { email, prevelages, phone, password, auth_with } = req.body;
+    const response = await loginUser(email, phone, prevelages);
     const { passwordHash, userAvailable, details } = response;
+    // console.log({email, prevelages, phone, password, auth_with})
     try {
         if (!userAvailable) {
-            res.status(200).send({ success: false, msg: "Email not registered", details: response });
+            res.status(200).send({ success: false, msg: "Details not registered", details: response });
             return;
         }
         // generate JWT token
-        const expiresInDays = 1;
-        const { user_id, first_name, last_name, email, added_by } = details[0];
-        const { token, exp_date } = await (0, generateToken_1.generateAuthToken)(user_id, first_name, last_name, email, added_by, expiresInDays);
+        const expiresInDays = 60;
+        const { id, account, account2, phone, prevelages } = details[0];
+        const { token, exp_date } = await (0, generateToken_1.generateAuthToken)(id, account, account2, phone, prevelages, expiresInDays);
         if (auth_with === "google") {
             res.status(200).send({ success: true, token, msg: "User Found", details });
             return;
         }
+        ;
         const match = await bcrypt.compare(password, passwordHash);
         if (match) {
+            console.log(details);
             res.status(200).send({ success: true, token, msg: "User Found", details });
         }
         else {
             res.status(200).send({ success: false, msg: "Incorrect Password" });
         }
+        ;
     }
     catch (error) {
         console.log(error);
         res.status(404).send({ success: false, msg: error.message });
     }
+    ;
 });
 router.patch('/change-pass', authenticateToken_1.authenticateToken, async (req, res) => {
     const { newPassword, oldPassword } = req.body;

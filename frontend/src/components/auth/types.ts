@@ -1,4 +1,5 @@
 export interface PersonDetails{
+  phone:string;
     email: string;
     password: string;
     confirm_password: string;

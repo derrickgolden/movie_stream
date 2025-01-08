@@ -9,20 +9,20 @@ const addSeasonInfo = async (seriesInfo) => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
-
-        if(isEdit){
+        if (isEdit) {
             // Insert movies
             var [res] = await connection.query(`
-                    UPDATE season_info 
-                    SET season_order = ?, season_name = ?, movie_id = ?, trailer_url = ?
-                    WHERE season_id = ?
-                `, [order_no, season_name, movie_id, trailer_url, season_id]);
-        }else{
+                        UPDATE season_info 
+                        SET season_order = ?, season_name = ?, movie_id = ?, trailer_url = ?
+                        WHERE season_id = ?
+                    `, [order_no, season_name, movie_id, trailer_url, season_id]);
+        }
+        else {
             // Insert movies
             var [res] = await connection.query(`
-                    INSERT INTO season_info (season_order, season_name, movie_id, trailer_url)
-                    VALUES (?, ?, ?, ?)
-                `, [order_no, season_name, movie_id, trailer_url]);
+                        INSERT INTO season_info (season_order, season_name, movie_id, trailer_url)
+                        VALUES (?, ?, ?, ?)
+                    `, [order_no, season_name, movie_id, trailer_url]);
         }
         // const movie_id = res.insertId;
         await connection.commit();

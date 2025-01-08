@@ -17,6 +17,9 @@ const getMoviesList_1 = __importDefault(require("./user/routes/movies/getMoviesL
 const uploadMovie_1 = __importDefault(require("./user/routes/movies/uploadMovie"));
 const deleteMovies_1 = __importDefault(require("./user/routes/movies/deleteMovies"));
 const authenticateToken_1 = require("./user/middlewares/authenticateToken");
+const SERIES_PATH = process.env.SERIES_PATH;
+const VIDEO_PATH = process.env.VIDEO_PATH;
+const PORT = Number(process.env.BACKEND_PORT);
 const loadMime = async () => {
     const { default: mime } = await import('mime'); // Dynamic ESM import
     return mime;
@@ -43,7 +46,7 @@ app.options('*', (0, cors_1.default)());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
     const { filename } = req.params;
-    const videoPath = getSafeFilePath('E:/videos', filename);
+    const videoPath = getSafeFilePath(VIDEO_PATH, filename);
     if (!videoPath) {
         return res.status(400).send('Invalid file path');
     }
@@ -51,7 +54,7 @@ app.get('/video/:filename(*)', (req, res) => {
 });
 app.get('/series/:filename(*)', (req, res) => {
     const { filename } = req.params;
-    const videoPath = getSafeFilePath('E:/series', filename);
+    const videoPath = getSafeFilePath(SERIES_PATH, filename);
     if (!videoPath) {
         return res.status(400).send('Invalid file path');
     }
@@ -110,28 +113,11 @@ app.use((0, cookie_parser_1.default)());
 // Serve static files
 app.use('/js', express_1.default.static(path_1.default.join(__dirname, 'dist', 'assets', 'index-TSNK7VKS.js')));
 app.use(express_1.default.static(path_1.default.join(__dirname, 'dist')));
-// Define static paths for TV and other devices
-const tvPath = path_1.default.join(__dirname, 'dist');
-const laptopPath = path_1.default.join(__dirname, 'dist');
-// Uncomment this block if you'd like to serve different content for TVs
-// app.use((req, res, next) => {
-//   const userAgent = req.get('User-Agent');
-//   if (userAgent.includes('SmartTV') || userAgent.includes('Tizen') || userAgent.includes('WebOS') || userAgent.includes('AndroidTV')) {
-//     express.static(tvPath)(req, res, next); // Serve TV content
-//   } else {
-//     express.static(laptopPath)(req, res, next); // Serve Laptop content
-//   }
-// });
 app.use('/user', auth_1.default);
 app.use('/user', upload.single('logo'), authenticateToken_1.authenticateToken, shop_1.default);
 app.use('/videos', [getMoviesList_1.default, uploadMovie_1.default, deleteMovies_1.default]);
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, 'uploads')));
-app.listen(3000, '0.0.0.0', () => {
-    console.log(`Listening on http://<your-ip-address>:3000`);
+app.listen(PORT, () => {
+    console.log(`Listening on port :${PORT}`);
 });
-// Define your HTTPS server
-// const port = process.env.SERVERPORT || 8443;
-// https.createServer(sslOptions, app).listen(port, () => {
-//   console.log(`Listening on https://localhost:${port}`);
-// });
 //# sourceMappingURL=app.js.map

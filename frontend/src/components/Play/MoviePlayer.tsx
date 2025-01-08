@@ -139,7 +139,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
               d-flex align-items-center gap-2 justify-content-center text-center" >
                 <AiOutlinePicLeft /> Episodes & More
               </button>
-              <button onClick={() =>navigate("/")} className="btn btn-outline-secondary w-100 
+              <button onClick={() =>navigate("/viewer/dashboard")} className="btn btn-outline-secondary w-100 
               d-flex align-items-center gap-2 justify-content-center text-center" >
                 <RiArrowGoBackFill /> Back
               </button>

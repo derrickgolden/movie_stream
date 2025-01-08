@@ -8,12 +8,12 @@ import Swal from "sweetalert2";
 
 const ForgotPassword: React.FC = () =>{
     const [emailDetails, setEmailDetails] = useState<PersonDetails>({
-        email:"", password: "", confirm_password: ""
+        phone:"", password: "", confirm_password: ""
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const value: string = e.target.value;
-        setEmailDetails(emailDetails => ({...emailDetails, email: value}));
+        setEmailDetails(emailDetails => ({...emailDetails, phone: value}));
     }
     const handleEmailDetailsSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
@@ -46,7 +46,7 @@ const ForgotPassword: React.FC = () =>{
         .then((response) => {
             console.log(JSON.stringify(response.data));
             Swal.fire({
-                text: "Link sent to your email, use the link to reset your password",
+                text: "Link sent to your phone, use the link to reset your password",
                 showCloseButton: true,
                 showConfirmButton: false,
                 animation: false,
@@ -66,24 +66,8 @@ const ForgotPassword: React.FC = () =>{
         });
     }
     return(
-        <section className=" auth-bd"  style={{minHeight: "100vh"}}>
         <div className="">
             <div className="container">
-                <div className="top-head-area">
-                    <div className="row d-flex align-items-center">
-                        <div className="col-sm-5 col">
-                            <Link className="back-home" to="/">
-                                <img src={left_arrow} alt="image"/>
-                                Back To Paylio
-                            </Link>
-                        </div>
-                        <div className="col-sm-5 col">
-                            <Link to="/">
-                                <img src={logoIcon} alt="image" style={{width: "50px", height: "50px"}}/>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
                 <div className="row justify-content-center  ">
                     <div className="col-11 col-lg-6 text-center bg-white my-5 px-3 px-sm-5 py-5 rounded">
                         <div className="form-box d-flex flex-column gap-2">
@@ -91,16 +75,16 @@ const ForgotPassword: React.FC = () =>{
                                 <img src={forgot_password_illus} alt="image"/>
                             </div>
                             <h4>Forgot your password?</h4>
-                            <p>To reset your password, enter the email address that you used to set up your Paylio account. We'll send you a link to help you get back into your account.</p>
+                            <p>To reset your password, enter your phone number registered to JAP. Code will be sent to help you get back into your account.</p>
                             <form onSubmit={handleEmailDetailsSubmit} action="#">
                                 <div className="row">
                                     <div className="col-12">
                                         <div className="form-group w-100 text-dark text-left my-3">
-                                        <label htmlFor="email">Enter email</label>
+                                        <label htmlFor="phone">Enter phone</label>
                                                             <input
                                                                 onChange={handleInputChange}
-                                                                name='email'
-                                                                type="email"
+                                                                name='phone'
+                                                                type="phone"
                                                                 className="form-control"
                                                                 placeholder="Your Email"
                                                             />
@@ -108,16 +92,15 @@ const ForgotPassword: React.FC = () =>{
                                     </div>
                                 </div>
                                 <div className="btn-area col-12">
-                                    <button type="submit" className="cmn-btn btn btn-primary">Recover Password</button>
+                                    <button type="submit" className="cmn-btn btn btn-primary">Send Code</button>
                                 </div>
                             </form>
-                            <p className="back-login dont-acc">Go back to <Link to='/login'>Login</Link></p>
+                            <p className="back-login dont-acc">Go back to <Link to='/'>Login</Link></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
     )
 }
 

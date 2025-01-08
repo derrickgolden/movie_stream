@@ -16,6 +16,7 @@ const getSeriesSeasonsEpisodeById = async (movie_id) => {
                         'season_id', si.season_id,
                         'season_name', si.season_name,
                         'season_order', si.season_order,
+                        'trailer_url', si.trailer_url,
                         'episodes', COALESCE(
                             (
                                 SELECT 
@@ -47,7 +48,7 @@ const getSeriesSeasonsEpisodeById = async (movie_id) => {
         connection.release();
         return {
             success: true,
-            msg: `Tv Series List`,
+            msg: `Tv Series List by id`,
             details: res
         };
     }
