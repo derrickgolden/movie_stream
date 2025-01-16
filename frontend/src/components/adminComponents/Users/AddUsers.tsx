@@ -9,20 +9,23 @@ import { server_baseurl } from '../../../baseUrl';
 
 import Swal from 'sweetalert2'
 import { formFields } from './userInputs';
+import { formattedData, user } from './users';
+import { addUser } from '../../apiCalls/postData';
 
-type UserAcc = "owner" | "staff";
+type UserAcc = "viewer" | "admin";
 
 const AddUsers: React.FC<{}> = ({}) =>{
     const navigate = useNavigate()
 
     const [showPassword, setShowPassword] = useState(false);
-    const [user_type, setUser_type] =  useState<UserAcc>("owner");
+    const [user_type, setUser_type] =  useState<UserAcc>("viewer");
     // admin_email and admin_pass are only used when signing up a user.
     const [signupDetails, setSignupDetails] = useState({
         remember_me: true, password: "JAP_movies", phone: ""
     })
     useEffect(() =>{
-        setSignupDetails((obj) => ({...obj, user_type}))
+        setSignupDetails((obj) => ({...obj, user_type}));
+
     }, [user_type]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>{
@@ -43,7 +46,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
         const phone = "254" + signupDetails.phone
         let data = JSON.stringify({...signupDetails, phone, auth_with: "app"});        
 console.log(data);
-// return;
+return;
         let config = {
             method: 'post',
             maxBodyLength: Infinity,

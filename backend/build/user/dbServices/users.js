@@ -1,19 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const { pool } = require("../../mysqlSetup");
-const getUserDetailsByemail = async (email) => {
+const getUserDetailsByPhone = async (phone) => {
     const connection = await pool.getConnection();
     try {
         const [res] = await connection.query(`
-        SELECT * from user_details 
-        WHERE email = ?;
-        `, [email]);
+        SELECT * from users 
+        WHERE phone = ?;
+        `, [phone]);
         connection.release();
+        // console.log({res, phone})
         if (res.length) {
-            return { success: true, details: res, msg: "" };
+            return { success: true, details: res, msg: "Phone number registered" };
         }
         else {
-            return { success: false, msg: "email unavaible" };
+            return { success: false, msg: "Phone number not registered" };
         }
     }
     catch (error) {
@@ -86,7 +87,7 @@ const getUserDetailsByid = async (user_id) => {
     }
 };
 module.exports = {
-    getUserDetailsByemail,
+    getUserDetailsByPhone,
     getUserDetailsByid,
     getUserEmailById
 };

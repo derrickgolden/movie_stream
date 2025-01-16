@@ -7,7 +7,7 @@ import {  GoogleUserProfile, LinkTokenRes, LoginResponse,
 var bcrypt = require('bcryptjs');
 const router = express.Router();
 
-const { loginUser, resetPassword, storeLinkToken, getLinkToken, signupUser,
+const { loginUser, resetPassword, storeLinkToken, getLinkToken, signupUser, getCode
     } =  require('../dbServices/auth');
 // const { sendText } = require('../controllers/sendText');
 // const { generateRandomVerificationCode } = require('../controllers/randomCode');
@@ -18,10 +18,11 @@ import { SendEmailRes } from 'user/controllers/auth/sendEmail';
 import { StoreLinkTokenRes } from 'user/dbServices/auth';
 import { authenticateToken } from '../middlewares/authenticateToken';
 import { ModifiedReq } from 'user/types/universalResponse';
+import { sendSMS } from '../../user/controllers/auth/sendText';
 
-const { getUserDetailsByemail } = require('../dbServices/users');
+const { getUserDetailsByPhone } = require('../dbServices/users');
 const { sendEmail } = require('../controllers/auth/sendEmail');
-const { generateResetPasswordLink } = require('../controllers/auth/genResetPassLink');
+const { hashCode } = require('../controllers/auth/genResetPassLink');
 
 router.post('/signup', async (req: Request, res: Response): Promise<void> =>{
     const {auth_with} = req.body;
@@ -87,6 +88,30 @@ router.post('/login', async (req: Request, res: Response): Promise<void> =>{
     };
 });
 
+router.patch('/submit-code', async (req: Request, res: Response): Promise<void> =>{
+    const { id, user_id, code} = req.body;
+
+    const response = await getCode(id, user_id);
+    const { userAvailable, reset_code, updated_at } = response;
+    // console.log({email, prevelages, phone, password, auth_with})
+    try {
+        if(!userAvailable){
+            res.status(200).send({success: false, msg: "Something went wrong. Try to reset the password again", details: response});
+            return;
+        }
+
+        const match: boolean = await bcrypt.compare(code, reset_code);
+        if(match) {
+            res.status(200).send({success: true, msg: "Change password", details: response});   
+        }else{
+            res.status(200).send({success: false, msg: "Invalid Code"});
+        };
+    } catch (error) {
+        console.log(error);
+        res.status(404).send({success: false, msg: error.message});
+    };
+});
+
 router.patch('/change-pass', authenticateToken, async(req: ModifiedReq, res: Response) =>{
     const { newPassword, oldPassword } = req.body;
     const {email} = req.user;
@@ -115,22 +140,17 @@ router.patch('/change-pass', authenticateToken, async(req: ModifiedReq, res: Res
 });
 
 router.patch('/reset-password', async(req: Request, res: Response) =>{
-    const { password, email }: PersonDetails = req.body;
-    const token: string = req.header('Authorization');
+    const { password, phone }: PersonDetails = req.body;
 
     try {
-        const tokenResponce: LinkTokenRes = await getLinkToken(token)
         
-        if(tokenResponce.success){
             const hash = await bcrypt.hash(password, 10);
     
-            const response = await resetPassword(hash, email)
+            const response = await resetPassword(hash, phone)
             return response.success ?
                 res.status(200).send(response) :
                 res.status(400).send(response)
-        }else{
-            return res.status(400).send(tokenResponce);
-        }
+        
 
     } catch (error) {
         console.log(error)
@@ -138,29 +158,30 @@ router.patch('/reset-password', async(req: Request, res: Response) =>{
 });
 
 router.post('/forgot-password', async(req: Request, res: Response): Promise<void> =>{
-    const { email }: PersonDetails = req.body;
+    const { phone }: PersonDetails = req.body;
 
     try {
         interface UserDetailsRes2 extends UserDetailsRes{
             details?: Array<{
-                user_id: number;
+                id: number;
                 email: string;
+                phone: string;
             }>;
         }
 
-        const response: UserDetailsRes2 = await getUserDetailsByemail(email);
+        const response: UserDetailsRes2 = await getUserDetailsByPhone(phone);
 
         if(response.success ){
-            const {user_id,  email} = response.details[0];
-            const {link,token}: {link: string, token: string} 
-                = await generateResetPasswordLink('http://localhost:5173');
+            const {id,  phone} = response.details[0];
+            const {code, hashedCode}: {code: string, hashedCode: string} = await hashCode();
+            const storeCode: StoreLinkTokenRes= await storeLinkToken(id, hashedCode)
 
-            const storeTokens: StoreLinkTokenRes= await storeLinkToken(user_id,email,token)
-
-            if(storeTokens.success){
-                const resp: SendEmailRes  = await sendEmail(email, link);
+            if(storeCode.success){
+                const p = "+" + phone;
+                const msg = `Using the following code to reset JAP TECH movies password: ${code}`
+                const resp: SendEmailRes  = await sendSMS([p], msg);
                 resp.success ?
-                    res.status(200).send({success: true, msg: "Link sent"}):
+                    res.status(200).send({success: true, msg: "Code sent", details: storeCode.details}):
                     res.status(400).send(resp)
                 }
                 return;

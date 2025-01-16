@@ -4,7 +4,6 @@ import "./auth.css"
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 import loginApi from "./apiCalls/loginApi";
-import { forgot_pwd_2_illus, left_arrow, logoIcon } from "../../assets";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { getMoviesList } from "../apiCalls/getData";
@@ -21,7 +20,6 @@ type LoginProps = {
 
 const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     const navigate = useNavigate();
-    const {urltoken} = useParams();
     const dispatch = useDispatch();
 
     const [acc_type, setAcc_type] =  useState<UserAcc>("admin");
@@ -57,11 +55,6 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                 navigate("/viewer/dashboard")
             }
         }
-        if(urltoken === "kjcc7BiGOqHZCw48zuEu82M0rHxImr1txrgkqqf"){
-            let data = JSON.stringify({email:"goldenderrick95@gmail.com", password: "1234", auth_with: "app"});
-
-            loginApi({data, navigate, setLoginDetails, setIsLogin, prevelages});
-        }
         getMoviesList("videos/get-movies", "").then((res) =>{
             if(res.success){
                 dispatch(setMovieListDetails(res.details));
@@ -88,9 +81,9 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                     <div className="bg- d-fle  login-form h-100">
                         <h1 className="text-primary p-4">J<span className="text-warning px-2">A</span>P</h1>
                     
-                        <div className=" gap-5 d-flex form-title">
+                        <div className=" gap-5 d-flex flex-column flex-md-row form-title">
                             
-                            <div className="col-lg-4 col-xl-3 col-xxl-1 d-flex text-center px- px-sm-3 py-5"
+                            <div className="col-lg-4 col-xl-3 d-flex  text-center px- px-sm-3 py-5"
                             >
                                 <div className="form-bo text-light" >
                                     <h4>Log in to Watch</h4>
@@ -146,11 +139,11 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                 <div className=" my-3 text-start">
                                                     <button type='submit' className="btn btn-outline-primary">Log in</button>
                                                 </div>
-                                                {/* <div className="remember-forgot d-flex justify-content-between pt-3">                                          
+                                                <div className="remember-forgot d-flex justify-content-between pt-3">                                          
                                                     <div className="forget-pw">
                                                         <Link className='a-link text-info' to="/forgot-password">Reset password?</Link>
                                                     </div>
-                                                </div> */}
+                                                </div>
                                             </form>
                                         </div>
                                     </div>

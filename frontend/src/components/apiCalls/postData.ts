@@ -24,6 +24,10 @@ export const addEpisodeDetails = async (data: string): Promise<UploadMovieRes> =
     // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('videos/add/episode-info', 'post', data);
 };
+export const addUser = async (data: string): Promise<UploadMovieRes> => {
+    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
+    return await makeApiCall('user/signup', 'post', data);
+};
 
 const makeApiCall = async(url: string, method: string, data: string) =>{
     // const tokenString = sessionStorage.getItem("userToken");

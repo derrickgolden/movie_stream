@@ -7,7 +7,7 @@ const { pool } = require("../../mysqlSetup");
 
 export interface StoreLinkTokenRes extends DBServicesRes{
     details?:[{
-        link_tokens_id: number, user_id: number, email: string
+        link_tokens_id: number, id: number
     }]
 }
 
@@ -15,7 +15,6 @@ export interface StoreLinkTokenRes extends DBServicesRes{
 const signupUser = async (signupDetails: User): Promise<SignupResponse> => {
 
     const phone = signupDetails.phone;
-    console.log(signupDetails);
 
     const connection: RowDataPacket = await pool.getConnection();
     try {
@@ -106,24 +105,54 @@ const loginUser = async(email: string, phone: string, prevelages: "admin" | "vie
         }
     }
 }
+const getCode = async(id: string, user_id: string, ) => {
 
-const resetPassword = async(password:string, email: string): Promise<DBServicesRes> =>{
+    const connection: RowDataPacket = await pool.getConnection();
+    try {
+
+        var [res] = await connection.query(`
+            SELECT * FROM reset_codes
+            WHERE id = ? AND user_id = ?
+        `, [id, user_id]);
+        
+        connection.release();
+
+        if(res.length === 1){                
+            return {userAvailable: true, reset_code: res[0].reset_code, details: res};
+        }else{
+            return {userAvailable: false}
+        }
+    } catch (error) {
+        console.log(error)
+        connection.release();
+
+        if (error.sqlMessage) {
+            return {userAvailable: false,
+                res:{success: false,  msg: error.sqlMessage} };
+          } else {
+            return {userAvailable: false,
+                res:{success: false, msg: error.message }};
+        }
+    }
+}
+
+const resetPassword = async(password:string, phone: string): Promise<DBServicesRes> =>{
                             
     const connection: RowDataPacket = await pool.getConnection();
     try {
 
         const [res]: [{affectedRows: number}] = await connection.query(`
-        UPDATE users 
-        SET password = ?
-        WHERE email = ?;
-        `, [password, email])
+            UPDATE users 
+            SET password = ?
+            WHERE phone = ?;
+        `, [password, phone])
 
         connection.release();
         
         if(res.affectedRows === 1){
             return {success: true, msg: "pasword update successful"}
         }else{
-            return {success: false, msg: "password not updated, email maybe unavailable"}
+            return {success: false, msg: "password not updated, phone number maybe unavailable"}
         }
     } catch (error) {
         console.log(error)
@@ -138,34 +167,49 @@ const resetPassword = async(password:string, email: string): Promise<DBServicesR
     }
 }
 
-const storeLinkToken = async( user_id: number, email: string, token: string
-                        ): Promise<StoreLinkTokenRes> => {
-
-    const connection: RowDataPacket = await pool.getConnection();
+const storeLinkToken = async (id: number, code: number) => {
+    const connection = await pool.getConnection(); // Ensure you have a properly configured pool
     try {
+        // Check if the user already has a reset code entry
+        const [getRes]: [RowDataPacket[]] = await connection.query(`
+            SELECT * FROM reset_codes
+            WHERE user_id = ?
+        `, [id]);
 
-        const [res]: [{insertId: number}] = await connection.query(`
-        INSERT INTO link_tokens (user_id, email, token)
-        VALUES (?, ?, ?)
-        `, [user_id, email, token,]);
+        let insertId = getRes[0].id || null;
 
-        connection.release();
+        if (getRes.length) {
+            // If record exists, update the code
+            await connection.query(`
+                UPDATE reset_codes
+                SET reset_code = ?
+                WHERE user_id = ?
+            `, [code, id]);
+        } else {
+            // If no record exists, insert a new one
+            const [res]: [{ insertId: number }] = await connection.query(`
+                INSERT INTO reset_codes (user_id, reset_code)
+                VALUES (?, ?)
+            `, [id, code]);
+            insertId = res.insertId;
+        }
 
-        return {success: true, msg: "",
-            details: [{link_tokens_id:res.insertId, user_id, email}]
+        return {
+            success: true,
+            msg: "Code stored successfully",
+            details: [{ id: insertId, user_id: id }]
         };
-    } catch (error) {
-        console.log(error)
-        connection.release();
+    } catch (error: any) {
+        console.error("Error storing link token:", error);
 
-        if (error.sqlMessage) {
-            return { success: false, msg: error.sqlMessage };
-          } else {
-            console.error('Error:', error.message);
-            return { success: false, msg: error.message };
-          }
+        return {
+            success: false,
+            msg: error.sqlMessage || error.message
+        };
+    } finally {
+        connection.release(); // Ensure connection is released in all cases
     }
-}
+};
 
 const getLinkToken = async(token: string ): Promise<LinkTokenRes> => {
 
@@ -208,7 +252,7 @@ const getLinkToken = async(token: string ): Promise<LinkTokenRes> => {
 module.exports = {
     signupUser,
     loginUser,
-    // loginAdmin,
+    getCode,
     resetPassword,
     storeLinkToken,
     getLinkToken,

@@ -4,7 +4,6 @@ var bcrypt = require('bcryptjs');
 const { pool } = require("../../mysqlSetup");
 const signupUser = async (signupDetails) => {
     const phone = signupDetails.phone;
-    console.log(signupDetails);
     const connection = await pool.getConnection();
     try {
         // Check if the user already exists
@@ -83,20 +82,48 @@ const loginUser = async (email, phone, prevelages) => {
         }
     }
 };
-const resetPassword = async (password, email) => {
+const getCode = async (id, user_id) => {
+    const connection = await pool.getConnection();
+    try {
+        var [res] = await connection.query(`
+            SELECT * FROM reset_codes
+            WHERE id = ? AND user_id = ?
+        `, [id, user_id]);
+        connection.release();
+        if (res.length === 1) {
+            return { userAvailable: true, reset_code: res[0].reset_code, details: res };
+        }
+        else {
+            return { userAvailable: false };
+        }
+    }
+    catch (error) {
+        console.log(error);
+        connection.release();
+        if (error.sqlMessage) {
+            return { userAvailable: false,
+                res: { success: false, msg: error.sqlMessage } };
+        }
+        else {
+            return { userAvailable: false,
+                res: { success: false, msg: error.message } };
+        }
+    }
+};
+const resetPassword = async (password, phone) => {
     const connection = await pool.getConnection();
     try {
         const [res] = await connection.query(`
-        UPDATE users 
-        SET password = ?
-        WHERE email = ?;
-        `, [password, email]);
+            UPDATE users 
+            SET password = ?
+            WHERE phone = ?;
+        `, [password, phone]);
         connection.release();
         if (res.affectedRows === 1) {
             return { success: true, msg: "pasword update successful" };
         }
         else {
-            return { success: false, msg: "password not updated, email maybe unavailable" };
+            return { success: false, msg: "password not updated, phone number maybe unavailable" };
         }
     }
     catch (error) {
@@ -111,28 +138,46 @@ const resetPassword = async (password, email) => {
         }
     }
 };
-const storeLinkToken = async (user_id, email, token) => {
-    const connection = await pool.getConnection();
+const storeLinkToken = async (id, code) => {
+    const connection = await pool.getConnection(); // Ensure you have a properly configured pool
     try {
-        const [res] = await connection.query(`
-        INSERT INTO link_tokens (user_id, email, token)
-        VALUES (?, ?, ?)
-        `, [user_id, email, token,]);
-        connection.release();
-        return { success: true, msg: "",
-            details: [{ link_tokens_id: res.insertId, user_id, email }]
+        // Check if the user already has a reset code entry
+        const [getRes] = await connection.query(`
+            SELECT * FROM reset_codes
+            WHERE user_id = ?
+        `, [id]);
+        let insertId = getRes[0].id || null;
+        if (getRes.length) {
+            // If record exists, update the code
+            await connection.query(`
+                UPDATE reset_codes
+                SET reset_code = ?
+                WHERE user_id = ?
+            `, [code, id]);
+        }
+        else {
+            // If no record exists, insert a new one
+            const [res] = await connection.query(`
+                INSERT INTO reset_codes (user_id, reset_code)
+                VALUES (?, ?)
+            `, [id, code]);
+            insertId = res.insertId;
+        }
+        return {
+            success: true,
+            msg: "Code stored successfully",
+            details: [{ id: insertId, user_id: id }]
         };
     }
     catch (error) {
-        console.log(error);
-        connection.release();
-        if (error.sqlMessage) {
-            return { success: false, msg: error.sqlMessage };
-        }
-        else {
-            console.error('Error:', error.message);
-            return { success: false, msg: error.message };
-        }
+        console.error("Error storing link token:", error);
+        return {
+            success: false,
+            msg: error.sqlMessage || error.message
+        };
+    }
+    finally {
+        connection.release(); // Ensure connection is released in all cases
     }
 };
 const getLinkToken = async (token) => {
@@ -170,7 +215,7 @@ const getLinkToken = async (token) => {
 module.exports = {
     signupUser,
     loginUser,
-    // loginAdmin,
+    getCode,
     resetPassword,
     storeLinkToken,
     getLinkToken,

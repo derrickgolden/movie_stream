@@ -1,14 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const crypto = require('crypto');
-const { generateAuthToken } = require('./generateToken');
-const generateResetPasswordLink = (base_url, length = 16) => {
-    const token = crypto.randomBytes(length).toString('hex');
-    console.log(typeof token);
-    const link = `${base_url}/user/reset-password/${token}`;
-    return { link, token };
-};
+var bcrypt = require('bcryptjs');
+async function hashCode() {
+    const code = generateCode();
+    const saltRounds = 10; // Cost factor
+    const hashedCode = await bcrypt.hash(code, saltRounds);
+    return { hashedCode, code };
+}
+;
+function generateCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+;
 module.exports = {
-    generateResetPasswordLink,
+    hashCode,
 };
 //# sourceMappingURL=genResetPassLink.js.map

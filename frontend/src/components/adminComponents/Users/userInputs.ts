@@ -1,7 +1,7 @@
 export const formFields = [
     { name: "email", label: "Email", type: "email", placeholder: "Enter your email", required:false },
-    { name: "house_number", label: "House Number", type: "text", placeholder: "House Number", required:true },
-    { name: "apartment", label: "Apartment", type: "text", placeholder: "Apartment", required:true },
+    { name: "house_number", label: "House Number", type: "text", placeholder: "House Number", required:false },
+    { name: "apartment", label: "Apartment", type: "text", placeholder: "Apartment", required:false },
     { name: "location", label: "Location", type: "text", placeholder: "Location", required:true },
     { name: "ip", label: "IP Address", type: "text", placeholder: "IP Address", required:false },
     { name: "mac", label: "MAC Address", type: "text", placeholder: "MAC Address", required:true },

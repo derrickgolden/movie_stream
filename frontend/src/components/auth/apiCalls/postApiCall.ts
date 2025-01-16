@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 interface ResponseData {
     success: boolean;
-    details: [];
+    details: [] | any;
 }
 
 export const loginApi = async (data: string): Promise<ResponseData> => {
@@ -16,19 +16,11 @@ export const updateInvoiceDetails = async (data: string): Promise<ResponseData> 
     return await makeApiCall('user/invoice/update', 'post', data);
 };
 
-const makeApiCall = async(url: string, method: string, data: string) =>{
-    const tokenString = sessionStorage.getItem("userToken");
+export const submitCodeApi = async (data: string): Promise<ResponseData> =>{
+    return await makeApiCall('user/submit-code', 'patch', data);
+};
 
-    if (tokenString !== null) {
-        var token = JSON.parse(tokenString);
-    } else {
-        Swal.fire({
-            title: "Token not Found",
-            text: "Log out and log in then try again.",
-            icon: "warning"
-        });
-        return {success: false, details: []};
-    }
+const makeApiCall = async(url: string, method: string, data: string) =>{
 
     let config = {
         method: method,
@@ -36,7 +28,6 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
         url: `${server_baseurl}/${url}`,
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `${token}`
         },
         data : data
     };
@@ -44,11 +35,6 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
     return await axios.request(config)
     .then((response) => {
         if(response.data.success){
-            Swal.fire({
-                title: "Success",
-                text: `${response.data.msg}`,
-                icon: "success"
-            });
             return {success: true, details: response.data.details};
         }else{
             Swal.fire({

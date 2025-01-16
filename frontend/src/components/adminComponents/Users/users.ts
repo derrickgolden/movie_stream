@@ -1,0 +1,544 @@
+export const user = 
+[
+  {
+    auth_with: "app",
+    remember_me: true,
+    password: "JAP_movies",
+    phone: "254745331976",
+    house_number: "",
+      apartment: "Bustan 1 St floor",
+      location: "Naivas",
+      mac: "3C:84:6A:53:51:15",
+      expiry: "2024-12-16T08:03",
+      name: "Shalom Shalom",
+      account: "JTS000001",
+      account2: "Shalom"
+  },
+  {
+      remember_me: true,
+      password: "JAP_movies",
+      phone: "254721555178",
+      house_number: "111",
+      apartment: "Ngara",
+      location: "Ngara",
+      mac: "B0:BE:76:B0:BA:4B",
+      expiry: "2025-01-17T16:33",
+    "auth_with": "app",
+      name: "George George",
+      account: "JTS000002",
+      account2: "George111"
+  }
+]
+
+function csvToJson(csv) {
+  const lines = csv.split("\n"); // Split the CSV into lines
+  const headers = lines[0].split(","); // Extract the header row
+  const result = [];
+
+  for (let i = 1; i < lines.length; i++) {
+      const obj = {};
+      const values = lines[i].split(",");
+
+      headers.forEach((header, index) => {
+          const key = header.trim();
+          obj[key] = values[index] ? values[index].trim() : null; // Handle empty values as null
+      });
+// console.log({date: obj["Expiry"], i});
+      // Add additional processing for the output format
+      result.push({
+          remember_me: true,
+          ip: obj["Ip"] || null,
+          email: obj["Email"] || null,
+          password: "JAP_movies",
+          phone: obj["Phone"] || null,
+          house_number: obj["HouseNumber"] || null,
+          apartment: obj["Apartment"] || null,
+          location: obj["Location"] || null,
+          mac: obj["Mac"] || null,
+          expiry: obj["Expiry"] ? new Date(obj["Expiry"]).toISOString().slice(0, 16).replace("T", "T") : null,
+          name: obj["Name"] || null,
+          account: obj["Account"] || null,
+          account2: obj["Account2"] || null,
+          auth_with: "app"
+      });
+  }
+
+  return result;
+}
+
+// Example CSV input
+const csvData = `
+Email,HouseNumber,Apartment,Location,Ip,Mac,Expiry,Name,Account,Account2,Password,Phone
+,,Bustan 1 St floor,Naivas,,3C:84:6A:53:51:15,2024-12-16T08:03:00Z,Shalom Shalom,JTS000001,Shalom,shAlom,254745331976
+,111,Ngara,Ngara,,B0:BE:76:B0:BA:4B,2025-01-17T16:33:00Z,George George,JTS000002,George111,geOrge111,254721555178
+,E1,Next Redsky,Naivas,,6C:5A:B0:74:2F:45,2025-01-06T18:31:26.872Z,Brian Mathenge,JTS000004,Mathenge,maThenge,254703393826
+,3rd,Next Huruma Hospital,Naivas,,64:23:15:40:F1:6F,2024-11-27T19:36:44.359Z,Samuel Kariuki,JTS000006,Kariuki,kaRiuki,254723070477
+,,Naivas,,,50:91:E3:23:E0:DD,2025-01-20T16:59:00Z,Purity Mutunga,JTS000007,Purity,puRity,254795095842
+,,Naivas,,,C4:2B:44:6F:7E:88,2025-02-03T11:51:59.378Z,Nick ,JTS000008,Nick,niCk,254794070549
+,Ground floor,Kinyua,Naivas,,A8:42:A1:31:B9:51,2024-08-09T18:19:14.17Z,Margaret  Langat,JTS000009,Langat,laNgat,254726810552
+,,Naivas,,,AC:F1:DF:C8:24:6D,2025-01-08T20:16:24.958Z,Abraham ,JTS000010,1056,abRaham,254793890180
+,A5,Simba house,Naivas,,50:0F:F5:89:5C:18,2024-12-10T15:05:30.502Z,Collins Mwendwa,JTS000012,Collins,coLlins,254791939151
+,,Area2,Area2,,68:07:15:84:8C:A3,2025-04-30T15:40:00Z,Derrick Golden Arts,JTS000013,Golden Arts,Golden Arts,254714475702
+,4B,Edu,Naivas,,50:91:E3:23:E2:81,2025-01-10T09:00:29.872Z,Tom Mulusa,JTS000015,Mulusa,muLusa,254748815613
+,,Naivas,,,50:0F:F5:AA:F7:20,2024-11-08T18:36:03.043Z,Brian Tonny,JTS000016,Tony,toNy,254790153107
+,D6,Next Barcelona,Naivas,,C8:3A:35:27:C7:C0,2024-10-12T18:23:00Z,Chrispine  Odhiambo,JTS000018,Odhiambo,odHiambo,254712161232
+,209,Naivas,Ngara,,B0:BE:76:B0:79:A5,2025-01-11T09:00:00Z,sam sam,JTS000019,Sam209,saM209,254727892238
+,,Naivas,,,D8:0D:17:25:F6:37,2025-01-08T10:50:22.96Z,Cosmas ,JTS000020,1010,coSmas,254768347177
+,BS5,Empire fitness,Naivas,,5C:62:8B:D6:B5:E1,2025-01-05T09:21:00Z,Tabitha Omahe,JTS000022,Omahe,omAhe,254799124392
+,,Redsky,,,04:95:E6:C6:31:9F,2024-05-02T16:00:04.024Z,Eugene Kimani,JTS000024,Eugene,euGene,254705525955
+,B1,Opposite red sky,Naivas,,10:27:F5:57:A0:B5,2024-08-08T17:14:35.845Z,Maryanne Nyambura,JTS000025,Maryanne,maRyanne,254701122137
+,,Naivas,,,08:86:3B:23:F0:54,2025-01-12T09:45:00Z,Harrison ,JTS000026,Harrison,haRrison,254757141670
+,N2,Maasai,Naivas,,50:0F:F5:D4:6D:78,2025-01-10T18:23:44.406Z,Ann Kelly,JTS000027,Ann,anN,254713110991
+,Hospital,Empire,Naivas,,50:0F:F5:D4:F1:80,2024-10-28T09:13:06.911Z,Moonlight Medical,JTS000028,Moonlight,moOnlight,254797628021
+,202,Mvuli,Ngara,,1C:61:B4:A6:26:63,2025-01-19T08:59:37.007Z,Celine Mvuli 202,JTS000030,Celine202,ceLine202,254113461021
+,2f23,Naivas,Naivas,,00:31:92:7C:85:FF,2025-01-26T09:52:04.521Z,Mama joy Mama joy,JTS000031,maMa joy,maMa joy,254721682598
+,,Naivas,,,10:27:F5:57:6B:19,2025-02-01T14:25:00Z,Tepela ,JTS000032,Tepela,tePela,254746449160
+,512,Bluehouse,Naivas,,D8:47:32:8F:C0:1B,2025-02-02T19:11:56.937Z,Elijah Elijah,JTS000033,Elijah,elIjah,254710938027
+,,Blue house,,,5C:A6:E6:6E:67:49,2024-12-19T16:57:50.091Z,Janet Ndugu,JTS000034,Janet,jaNet,254745169062
+,402,Emeli,Ngara,,C0:06:C3:10:49:4B,2025-01-02T16:02:00Z,Omondi Omondi,JTS000035,Omondi402,omOndi402,254728939413
+,,Naivas,,,E8:65:D4:02:29:B8,2025-02-03T16:11:00Z,Cyrus sammy,JTS000036,Cyrus,cyRus,254743936237
+,,Naivas,,,B0:4E:26:CC:03:73,2024-12-28T20:35:37.67Z,Lambic ,JTS000037,Lambic,laMbic,254743607781
+,,Limax,Area4,,E8:65:D4:B6:E8:60,2025-08-31T09:00:00Z,Matthew ,JTS000038,MATTHEW,MATTHEW,254743463990
+,F2,Westgate ,Naivas,,B4:0F:3B:B4:8B:20,2025-01-16T19:17:32.977Z,Caroline Njoki,JTS000039,Njoki,njOki,254726484768
+,,Naivas,,,10:27:F5:57:6B:3B,2025-01-17T07:04:00.974Z,Macharia Samuel,JTS000040,Macharia,maCharia,254743120045
+,,Naivas,,,60:32:B1:51:AD:49,2024-08-01T08:29:27.617Z,Haval Tattos,JTS000041,Haval,haVal,254743096793
+,,Naivas,,,50:0F:F5:3E:58:38,2025-01-27T20:58:54.937Z,Regina ,JTS000042,1041,elIzabeth,254742386422
+,,Naivas,,,C0:06:C3:2D:2A:A7,2025-01-06T08:43:11.286Z,Alpha Loise Mwaro,JTS000043,Mwaro,mwAro,254740428388
+,05,Naivas,Naivas,,9C:53:22:DA:BB:CD,2025-01-04T17:33:50.783Z,Mbapi Nasieku,JTS000044,Mbapi,mbApi,254729117571
+,,Naivas,Naivas,,28:EE:52:F7:F9:05,2024-05-06T17:17:32.168Z,Mwita  Wambura,JTS000045,Wambura,waMbura,254759750101
+,P34,Regan ,Naivas,,50:0F:F5:36:8D:70,2024-12-16T16:26:34.03Z,Muturi Peter,JTS000047,Muturi,muTuri,254708604850
+,,Naivas,,,28:EE:52:F7:E4:47,2024-10-06T16:53:46.307Z,Cecelia Kangethe,JTS000048,Cecilia,ceCilia,254729442555
+,,Naivas,,,50:0F:F5:50:C8:70,2025-02-02T16:29:24.341Z,FAITH NGWENO,JTS000049,Faith,faIth,254729152065
+,,Naivas,,,1C:3B:F3:07:6C:19,2025-01-15T04:16:58.061Z,Nathan ,JTS000050,Nathan,naThan,254728562485
+,,Naivas,,,6C:5A:B0:74:2F:53,2025-01-04T16:09:15.491Z,Otieno ,JTS000051,Otieno,otIeno,254728432219
+,,Naivas,,,D8:32:14:B1:F8:70,2025-02-03T06:46:10.229Z,Kipkogeih ,JTS000052,Kipkogeih,kiPkogeih,254728224569
+,,Naivas,,,CC:2D:21:D4:4A:F0,2024-07-06T16:55:32.555Z,Pius mwendwa,JTS000053,Pius,piUs,254727766231
+,,Naivas,,,B0:95:75:5A:7D:FB,2025-06-30T09:00:00Z,Kamau ,JTS000054,1065,kaMau,254727410314
+,303,Redsky,Naivas,,CC:2D:21:75:19:A0,2025-01-18T17:31:00.979Z,Charles Wainaina,JTS000056,Wainaina,waInaina,254792518054
+,07,,Kasarani,,28:EE:52:F7:E9:59,2025-01-20T17:19:23.705Z,Muli Muli,JTS000057,Muli,muLi,254723812073
+,,Naivas,,,50:0F:F5:C1:11:48,2025-01-03T09:00:00Z,Edu ,JTS000058,Edu,edU,254726442978
+,,Naivas,,,58:6D:8F:A7:8B:2A,2024-02-14T20:05:05.399Z,Carolyne Mwihaki,JTS000059,Carolyne,caRolyne,254725380789
+,,Naivas,,,14:D6:4D:36:D4:FB,2025-01-13T09:00:38.934Z,Sabrina ,JTS000061,Sabrina,saBrina,254724671896
+,,Naivas,,,28:EE:52:F7:E4:6B,2025-01-14T10:53:28.094Z,Mwende Yvonne,JTS000062,YvonneMwende,YvonneMwende,254724588292
+,,Naivas,,,04:95:E6:CF:EB:F0,2025-01-05T18:53:22.12Z,Francis ,JTS000063,Francis,frAncis,254724473083
+,,Naivas,Naivas,,28:EE:52:FA:3F:E3,2025-01-03T09:28:54.138Z,Rosemary Nyambura,JTS000064,Rosemary,roSemary,254112578173
+,,Naivas,,,E8:65:D4:1A:88:68,2025-01-02T21:47:33.316Z,Benard ,JTS000065,Benard,beNard,254724240723
+,,Naivas,,,1C:3B:F3:89:C6:89,2025-01-06T09:00:00Z,Triza ,JTS000066,Triza,trIza,254723885284
+,,Naivas,,,3C:84:6A:6C:03:AB,2025-01-08T09:00:00Z,Wanja ,JTS000067,Wanja,waNja,254723859859
+,51,John,Naivas,,B0:4E:26:F8:4B:69,2025-01-06T18:43:13.533Z,James Kamau,JTS000068,Jameskamau,jaMeskamau,254724920396
+,,Naivas,,,28:EE:52:30:50:AB,2025-01-29T19:10:53.75Z,Ibrahim Luta,JTS000069,Luta,luTa,254723316337
+,,Naivas,naivas,,3C:84:6A:6C:02:39,2025-01-29T17:37:55.45Z,Diana Biwott,JTS000071,BIWOTT,Diana@21,254722591610
+,Shop 1,Ben,Naivas,,6C:19:8F:5E:18:56,2023-12-14T09:00:00Z,Kimathi Erustus,JTS000073,Kimathi,kiMathi,254722463565
+,8,westgate,Naivas,,,2024-10-27T13:49:14.713Z,Jap ,JTS000074,JAPTECHNOLOGIES,jaPtech,254722463565
+,,Naivas,,,B0:95:75:A1:2A:15,2024-06-07T18:41:00Z,Barasa ,JTS000075,Barasa,baRasa,254722216016
+,31,Naivas,Naivas,,9C:53:22:DA:A6:45,2025-01-22T19:17:46.774Z,Elizabeth Jane,JTS000076,Jane,jaNe,254768637192
+,,Naivas,,,00:5F:67:0C:58:8D,2025-01-03T19:38:54.073Z,Odipo Simon,JTS000077,Odipo,odIpo,254721627352
+,,Marura,,,,2025-06-30T09:00:00Z,Godfrey kihonge,JTS000078,Kihonge,kiHonge,254721296197
+,,Naivas,,,14:4D:67:0A:B6:9D,2023-11-19T16:01:23.95Z,Muthoni ,JTS000080,Muthoni,muThoni,254720880646
+,P48,Rigan,Naivas,,D8:0D:17:7D:95:8F,2025-01-03T16:40:41.397Z,Steve Zico,JTS000081,Zico,ziCo,254795884985
+,,Naivas,,,78:8C:B5:5A:50:39,2024-12-14T10:36:00Z,Jack Wahome,JTS000082,Wahomejack,waHomejack,254716314483
+,,Naivas,,,1C:3B:F3:07:62:77,2025-01-03T17:56:34.063Z,Dorcas ,JTS000083,Dorcas,doRcas,254720327067
+,,Naivas,,,08:40:F3:CC:B4:C8,2025-01-26T13:53:59.301Z,Peninah wambui,JTS000084,Wambui,waMbui,254720250597
+,,Naivas,,,00:5F:67:0C:4C:E3,2025-01-27T10:38:31.572Z,Marzden kamadi,JTS000086,Marzden,maRzden,254718964964
+,,Naivas,,,D8:32:14:7F:F5:F0,2025-01-17T07:35:14.089Z,1026 ,JTS000087,1026,keLvin,254718941332
+,3f42,Kamau,Naivas,,60:32:B1:0B:A4:E9,2025-01-08T08:34:13.879Z,Jamila Mohammud,JTS000088,Mohammud,moHammud,254707620748
+,E4,Jambo house,Naivas,,58:D9:D5:2D:CE:78,2025-02-03T15:24:36.289Z,Joram Kapala,JTS000089,Kapala,kaPala,254745664545
+,,Naivas,,,3C:52:A1:2E:D2:65,2024-11-21T11:27:55.112Z,Mitchelle Mumbi Wanjau,JTS000090,Mumbi,muMbi,254718009154
+,,Naivas,,,74:4D:28:7E:6E:E8,2025-01-09T17:31:03.405Z,Joseph ,JTS000091,Jose,joSe,254717464584
+,B1,Naomi safcom,Naivas,,50:0F:F5:2D:BE:78,2024-06-19T17:27:07.473Z,Laurence Muingai,JTS000092,Lawrence,laWrence,254715492909
+,,Naivas,,,60:E3:27:A3:01:FF,2025-01-21T19:43:51.897Z,Njuguna ,JTS000093,Njuguna,njUguna,254716718206
+,,Naivas,,,5C:A6:E6:6E:67:2D,2025-01-07T09:00:00Z,Catherine Munyoki,JTS000094,Catherine,caTherine,254716291934
+,,Naivas,,,1C:3B:F3:07:92:EF,2025-01-09T21:11:32.613Z,Getu ,JTS000095,Getu,geTu,254716181518
+,,Naivas,,,5C:A6:E6:39:8D:A7,2024-02-10T14:18:54.313Z,Caleb Joshua,JTS000096,Caleb,caLeb,254716036893
+,506,Solai,Naivas,,9C:53:22:DA:A6:43,2024-12-19T12:05:54.552Z,Patricia  Wanjiru,JTS000097,Wanjiru,waNjiru,254794661463
+,,Naivas,,,14:4D:67:0A:B9:65,2025-01-21T13:47:00Z,Linet nyambura,JTS000098,Nyambura,nyAmbura,254715536818
+,,naivas,,,28:EE:52:F9:EB:4D,2024-10-12T12:20:00.97Z,Flavian ,JTS000099,Flaviane,flAviane,254715341466
+,,Naivas,,,10:27:F5:57:98:6D,2024-07-28T09:00:00Z,Ndungu Benard,JTS000100,Ndungu,ndUngu,254714184947
+,G4,Reagan,Naivas,,58:D9:D5:2C:A5:60,2024-07-13T09:28:40.699Z,Shareen Chebet,JTS000101,Shareen,shAreen,254706324586
+,,Naivas,,,E8:65:D4:59:FE:89,2025-01-28T09:00:41.571Z,kennedy Nyakoe,JTS000102,1068,keN1,254712240233
+,D4,,Lumumba,,04:33:89:9B:47:3B,2025-01-30T18:15:50.225Z,Sandra Gakii,JTS000104,Sandrah,saNdrah,254713216484
+,507,Naivas,Naivas,,9C:53:22:DA:A6:2F,2024-11-02T20:49:05.171Z,Manasseh Lobumu,JTS000105,Manasseh,maNasseh,254790912104
+,3F11,Naivas,Naivas,,D8:32:14:5C:0F:F8,2024-12-23T09:00:00Z,Vincent Mutuku,JTS000106,Mutuku,muTuku,254725731000
+,103,Chenge,Naivas,,40:ED:00:F7:6F:A9,2025-01-05T14:38:00Z,Ruth Ruth,JTS000107,Ruth,ruTh,254724231208
+,,Naivas,,,10:FE:ED:70:4F:C5,2025-01-07T06:49:34.366Z,Andrew Mutua,JTS000108,Andrew,anDrew,254712102668
+,,Naivas,,,5C:A6:E6:6E:44:A7,2025-01-15T10:17:00.679Z,Dennis Bwire,JTS000109,Bwire,bwIre,254711996386
+,,Naivas,,,1C:3B:F3:89:F9:C5,2024-12-30T22:38:13.633Z,Peter ,JTS000110,Peter,peTer,254711795254
+,,Naivas,,,04:5E:A4:D6:AB:50,2024-06-20T09:00:00Z,Agnes Kanario,JTS000111,Agnes,kaNario,254711327399
+,,Naivas,,,D4:6E:0E:33:C5:17,2024-02-10T14:25:16.591Z,Matt Ngama,JTS000113,Matt,maTt,254710853985
+,610,Redsky,Naivas,,58:D9:D5:2D:CC:68,2025-01-06T12:24:14.309Z,Clinton Clinton,JTS000114,Clinton,clInton,254701503449
+,,Naivas,,,C4:AD:34:D5:80:06,2024-12-31T09:33:00Z,james mucira mbogo,JTS000115,Admin,adMin,254710446980
+,,Naivas,,,C0:06:C3:10:49:3D,2025-01-07T06:13:02.197Z,Joseph mapea,JTS000117,Mwapea,mwApea,254710119630
+,A2,Empire fitness,Naivas,,40:ED:00:F7:29:E1,2025-01-18T18:21:16.265Z,Faith Mwikya,JTS000118,Mwikya,mwIkya,254720624384
+,D3,Arena flats,Naivas,,E4:FA:C4:70:FE:6D,2025-01-27T16:04:43.139Z,Rodgers ,JTS000119,Rodgers,roDgers,254706282652
+,,Naivas,,,50:0F:F5:50:E0:B8,2025-01-08T06:59:46.218Z,Diana ,JTS000120,Diana,diAna,254707961574
+,D1,Francis,Naivas,,9C:53:22:DA:C0:E9,2025-01-15T19:06:18.223Z,Atbanus  Kiplimo,JTS000121,Kiplimo,kiPlimo,254701898362
+,,Naivas,,,50:0F:F5:24:65:28,2024-11-06T16:26:11.114Z,Mitch ,JTS000122,1071,miTch,254707519043
+,,Naivas,,,CC:2D:21:5C:FA:E8,2025-01-05T09:00:00Z,Magoya ,JTS000123,Magoya,maGoya,254707173489
+,,Naivas,Naivas,,C4:6E:1F:68:38:2B,2024-03-12T09:00:00Z,Jackson Aruta,JTS000124,Jackson,jaCkson,254707022861
+,,Naivas,,,1C:3B:F3:07:C6:DD,2025-01-13T18:39:23.815Z,Mwendwa John,JTS000125,Mwendwah,mwEndwah,254706299339
+,,Naivas,,,5C:A6:E6:6E:44:E1,2025-01-20T19:23:16.421Z,Laureen ,JTS000126,Laureen,laUreen,254706209428
+,27,Mama Alex,Naivas,,3A:67:FC:F3:3A:0C,2025-01-28T05:01:22.12Z,Charles Momanyi,JTS000127,Momanyi,moManyi,254707421499
+,010,Redsky,Naivas,,C8:3A:35:1F:6E:98,2024-02-07T14:46:56.672Z,Daniel Kiseke,JTS000129,Daniel,daNiel,254794255692
+,,Naivas,,,90:9A:4A:27:64:7F,2024-05-11T09:00:00Z,Nicholas ,JTS000130,Nicholass,niCholass,254703182323
+,Salon,Naivas,,,00:5F:67:67:01:E1,2025-01-18T16:32:08.918Z,Akoth Yvonne,JTS000131,Akoth,akOth,254702981784
+,,Naivas,,,E4:72:E2:E5:DA:88,2025-01-10T09:00:00Z,Mwas ,JTS000132,Mwas,mwAs,254702308688
+,818,Naivas,Naivas,,50:0F:F5:2E:0D:B0,2025-01-04T09:00:10.869Z,Pauline Chess,JTS000133,Chess,chEss,254702251916
+,,naivas,,,E8:65:D4:8F:9C:08,2024-05-09T08:14:54.59Z,Silvia Kenya,JTS000134,Silvia,siLvia,254701999783
+,,Naivas,,,C0:06:C3:0F:B6:45,2025-01-07T09:12:48.263Z,Baraka ,JTS000135,Baraka,baRaka,254701851947
+,A5,Next redsky,Naivas,,C0:06:C3:96:D0:65,2025-01-06T12:21:04.672Z,Jeff Karanja,JTS000136,Jeff,jeFf,254799925843
+,,Naivas,,,C0:06:C3:0F:86:25,2025-01-03T13:02:06.18Z,Gitonga Steve Mutethia,JTS000137,Mutethia,muTethia,254701448453
+,,Naivas,,,1C:3B:F3:A1:F3:49,2025-01-09T16:09:01.949Z,ABDINASIR MOHAMED,JTS000138,Abdinasir,abDinasir,254701392034
+,Redsky,Naivas,,,3C:84:6A:27:1F:17,2024-12-31T17:18:00Z,Shem ,JTS000140,1020,shEm,254700639111
+,Next Kimathi,Naivas,Naivas,,AC:84:C6:F3:AE:79,2024-10-02T10:33:42.121Z,Bunge sacco  NCBS,JTS000141,NCBS,NCBS,254703308222
+,Shop,Salon,Naivas,,5C:62:8B:D6:B5:73,2025-01-18T12:59:12.104Z,Pinchez Pinchez,JTS000142,Pinchez,piNchez,254725246715
+,,Naivas,,,D8:32:14:2C:DB:58,2025-01-09T09:00:09.902Z,Kevin Njoki,JTS000143,Kelvin,keLvin,254115565377
+,,Naivas,,,5C:A6:E6:6E:68:03,2023-12-26T16:55:32.786Z,Victor Kilonzo,JTS000144,Victor,viCtor,254115110684
+,713,Redsky,Naivas,,58:D9:D5:2D:22:C8,2025-01-08T19:32:20.181Z,Charity Charity,JTS000145,Charity,chArity,254114089952
+,18,Mogaka,Naivas,,9C:53:22:DA:BF:0D,2025-01-07T09:10:12.485Z,Lucy Mutinda,JTS000146,Mutinda,muTinda,254716703403
+,,Naivas,,,60:32:B1:AB:A0:B3,2024-07-10T12:11:09.409Z,Cyprian Yego,JTS000147,Yego,cyPrian,254110031954
+,012,redsky,Naivas,,CC:2D:21:67:26:E0,2023-12-26T09:00:00Z,Tzar Tzar,JTS000148,Tzar,tzAr,254714324131
+,room 2 3rd floor,,Naivas,,00:5F:67:0C:5A:43,2024-05-27T03:05:13.167Z,Joseph Gichuki,JTS000149,Gichuki,giChuki,254722824250
+,,,Naivas,,20:AA:4B:46:F5:70,2024-07-01T05:00:36.987Z,Solomon Muchoki,JTS000150,Solomon,muChoki,254720852134
+,,Kamanu,Naivas,,00:5F:67:0C:58:39,2024-08-02T12:04:47.65Z,Beauty  Bounty,JTS000151,Beauty,beAuty,254718392202
+,,Naivas ,Naivas,,28:EE:52:F7:FE:03,2025-01-20T07:35:23.239Z,Vincent  Ogutu,JTS000152,Vincent,viNcent,254727750382
+,P48,,Naivas,,00:5F:67:0C:59:DF,2024-08-28T10:56:23.598Z,Julius  Odhiambo ,JTS000153,Julius,juLius,254716436389
+,510,Solai,Naivas,,50:0F:F5:C0:2E:D0,2024-11-21T18:51:18.412Z,Elssie  Elssie,JTS000154,Elssie,elSsie,254718728492
+,,,Naivas,,00:5F:67:63:43:A3,2025-01-04T18:24:32.3Z,Sitoya Godfrey,JTS000155,Sitoya,siToya,254705464588
+,1FR12,Bustani,Naivas,,58:D9:D5:A2:69:18,2024-02-18T10:49:22.6Z,Munene Brian,JTS000156,Munene,muNene,254748774301
+,608,Redsky,Naivas,,00:5F:67:63:43:8D,2024-10-02T07:14:38.382Z,Christine Bilha,JTS000157,Christine ,chRistine,254111323609
+,G1,Barcelona,Naivas,,B4:0F:3B:B3:B5:78,2025-01-19T09:29:50.759Z,Brian Kirimi,JTS000158,Kirimi,kiRimi,254724315246
+,1st floor Room 7,,Naivas,,D8:47:32:51:AB:79,2024-12-19T13:16:00Z,Muthokia Owen,JTS000159,Muthokia,muThokia,254794510909
+,ACP3-1,City plaza,Naivas,,CC:2D:21:D3:FD:78,2024-09-13T09:00:00Z,Milicent Milicent,JTS000160,Milicent,miLicent,254741129036
+,P2,,Naivas,,D8:47:32:8F:6C:87,2025-01-23T09:33:25.178Z,Faith Paul,JTS000161,Paul,paUl,254713560030
+,Fr7,Bustani,Naivas,,,2024-06-18T17:24:36.475Z,Mevian Mevian,JTS000162,Mevian,meVian,254797840033
+,3f41,Kamau katikati,Naivas,,60:A4:B7:DC:8B:D5,2025-01-15T16:51:59.442Z,Joshua Boyo,JTS000163,Boyo,boYo,254701087926
+,1 floor,Benhim,Naivas,,,2025-01-13T18:15:34.11Z,Wendy Karimi,JTS000164,Wendy,weNdy,254112918743
+,C5,Luhisi,Naivas,,DC:2C:6E:AF:F5:FA,2024-10-12T09:00:00Z,Antony gikera Gikera,JTS000166,Jerri,jeRri,254742126972
+,,,Naivas,,28:EE:52:F7:F9:13,2023-12-02T05:33:00Z,Benard Githinji,JTS000167,Githinji,giThinji,254748424326
+,209,Redsky,Naivas,,00:5F:67:0C:5A:71,2024-12-16T19:02:52.33Z,Gloria Gloria,JTS000168,Gloria,glOria,254798197013
+,F33,Kamau ,Naivas,,28:EE:52:F7:F8:EB,2025-01-05T18:54:38.385Z,Kennedy Ochieng,JTS000169,Kennedy,keNnedy,254727980000
+,B502,Solai (next kamau),Naivas,,C8:3A:35:34:1D:88,2025-01-09T10:47:26.512Z,Mary Kimani,JTS000170,Mary,maRy,254712491399
+,3F31,Kamau,Naivas,,00:23:69:A2:1C:E8,2025-01-25T05:40:40.876Z,Boniface Musee,JTS000171,Boniface,boNIFACE,254793001018
+,B51,,Naivas,,1C:61:B4:A6:25:77,2024-12-14T09:00:00Z,Tabbiee Alexis,JTS000172,Tabbiee,taBbiee,254718831551
+,3F53,Kamau ,Naivas,,D8:32:14:2C:BF:C8,2024-07-12T12:12:32.07Z,Rodney Mwirigi,JTS000173,Rodney,roDney,254769492556
+,104,Redsky,Naivas,,1C:61:B4:A6:20:B3,2025-01-21T20:52:36.94Z,Haron Maisiba,JTS000174,Haron,haRon,254745980372
+,D11,,Naivas,,D8:32:14:B0:C9:E8,2025-01-10T14:00:57.15Z,Jane Maria,JTS000175,Jane Maria,jaNemaria,254794909092
+,E15,Next Redsky,Naivas,,D8:32:14:8B:98:50,2024-04-21T09:00:00Z,Ripoi Agnes,JTS000176,Ripoi,riPoi,254717364831
+,GF1,Kamau,Naivas,,28:EE:52:FA:82:41,2025-01-12T18:30:55.588Z,Luke Opeto,JTS000177,Luke,luKe,254729856933
+,14,Opposite kamau,Naivas,,9C:A2:F4:0A:DC:4B,2025-01-13T15:30:18.711Z,Gideon Gideon,JTS000178,Gideon,giDeon,254728844446
+,D21,Benhin,Naivas,,50:0F:F5:A9:EA:80,2024-02-11T12:52:13.97Z,Geoffrey Geoffrey,JTS000179,Geoffrey,geOffrey,254745293841
+,E4,Ben,Naivas,,9C:53:22:36:B8:CD,2024-07-08T07:29:03.482Z,Visca Mwende,JTS000180,Visca,viSca,254797643334
+,,Redsky 2,Naivas,,04:95:E6:F4:8F:88,2025-01-14T06:46:44.266Z,Susan Awili,JTS000181,Awili,awIli,254745454148
+,,Rigan,Naivas,,00:31:92:7C:6D:DF,2025-01-28T13:29:07.264Z,Mercy Mercy,JTS000182,Mercy,meRcy,254743857511
+,18,Mama alex,Naivas,,00:31:92:7C:4A:BF,2024-06-14T06:43:49.056Z,Kering Kering,JTS000183,Kering,keRing,254715404451
+,3f32,Kamau katikati,Naivas,,C0:06:C3:0F:CB:73,2024-12-25T15:39:18.686Z,Collins  Kiptoo,JTS000184,Kiptoo,kiPtoo,254740838368
+,,Blue hse,Naivas,,D8:32:14:47:03:E0,2024-01-04T10:35:11.665Z,Joy Gatwiri ,JTS000185,Joy,joY,254799659704
+,44,Mogaka,Naivas,,E8:65:D4:82:EE:80,2024-10-13T14:46:00.491Z,Ruth Kimeli,JTS000186,Kimeli,kiMeli,254746421346
+nicholusmwiti993@gmail.com,63,Mogaka,Naivas,,C8:3A:35:53:24:70,2024-12-06T18:34:05.316Z,Nicholus Mwiti,JTS000187,Mwiti,mwIti,254713597919
+,121,Chenge,Naivas,,68:FF:7B:C8:17:41,2024-08-13T19:05:54.492Z,Josphine Munyira,JTS000188,Josphine,joSphine,254717510843
+,D1,Daveline,Naivas,,A8:42:A1:98:4F:E9,2024-10-13T18:58:12.284Z,Wamuyu Eunice,JTS000189,Wamuyu,waMuyu,254792321182
+,21,Next reddiamond,Naivas,,2C:C8:1B:2E:92:9A,2025-01-30T12:00:28.816Z,Tisher Keziah,JTS000190,Tisher,tiSher,254799493554
+,G8,Blessed Angel,Naivas,,D8:32:14:8B:47:08,2024-12-25T17:31:24.075Z,Maube Nelson,JTS000191,Nelson,neLson,254728568518
+,311,Redsky,naivas,,B4:0F:3B:B3:09:A8,2024-12-13T10:23:18.779Z,Kimani Kim,JTS000192,Kimani,kiMani,254700540694
+,HSE 61,Mugaka corner,Naivas,,B4:0F:3B:B3:F9:D8,2025-01-12T17:34:58.812Z,Allan Kibet,JTS000193,Allan,alLan,254722509885
+,B8,Moseh,Naivas,,40:ED:00:F7:2B:1B,2024-09-03T20:35:43.809Z,Michael Caleb,JTS000194,Michael,miChael,254112988767
+,015,redsky,Naivas,,5C:62:8B:D6:B6:49,2025-01-07T12:53:16.117Z,Lydia Lydia,JTS000195,Lydia,lyDia,254725581714
+robertrithi67@gmail.com,P25,,Naivas,,04:95:E6:DD:8B:E0,2025-01-14T08:04:38.647Z,Robert Kinyua,JTS000196,Robert,roBert,254742882354
+mangeracarlmax@gmail.com,615,Redsky properties,Allsops,,28:EE:52:FA:8A:ED,2024-02-11T06:00:44.531Z,Carlmax Mangera,JTS000197,Carlmax,caRlmax,254722615559
+,F18,Kamau,Naivas,,00:31:92:7C:6E:E9,2025-01-15T07:26:42.61Z,Reginald Odhiambo,JTS000198,Reginald,reGinald,254799868543
+,205,Red sky ,Naivas,,1C:61:B4:A5:CB:8D,2024-12-28T09:23:19.551Z,Mitchel Mawehu,JTS000199,Mitchel,miTchel,254728538572
+, B3,Mozart house,Naivas,,00:2E:C7:3E:AD:45,2025-01-17T07:56:46.143Z,  Naomi Omollo,JTS000200,Naomi,naOmi,254705720551
+,A7,Ben,Naivas,,04:95:E6:A4:20:D0,2024-03-12T11:12:13.359Z,Triza Njoroge,JTS000201,Njoroge,njOroge,254798030099
+,1F1,David Mogaka,Allsops,,5C:62:8B:D6:B6:2B,2024-11-21T11:11:19.756Z,Milem Milem,JTS000202,My_Very,My_Very,254704401803
+,F1,Westgate,Naivas,,E8:65:D4:D6:75:F8,2025-01-04T09:00:00Z,Melody Mugabe,JTS000203,Melody ,meLody,254704293170
+,,Mvuli,Ngara,,B0:BE:76:05:0B:4B,2025-08-31T09:00:00Z,Mutugi Silas,JTS000204,Mutugi,muTugi,254712480886
+,004,Mvuli,Ngara,,B0:95:75:40:A6:AD,2025-01-12T09:00:00Z,Munene Mvuli,JTS000205,Munene004,muNene004,254722900046
+,Mezzanine 114,Emeli,Emeli Ngara,,D8:47:32:1E:52:DB,2023-10-11T09:34:00Z,Trizza Wanja,JTS000206,Trizzah,trIzzah,254729434317
+,508,Mvuli,Ngara,,CC:32:E5:E3:34:1B,2025-01-06T11:41:06.039Z,Timase Timase,JTS000207,Tonny508,toNny,254722444779
+,313,Mvuli,Ngara,,40:ED:00:F7:2B:2B,2024-12-23T09:00:00Z,Susan Waliaula,JTS000208,Susan313,suSan313,254721220578
+,103,Mvuli,Ngara,,00:31:92:7C:8D:93,2025-01-12T09:18:00Z,Valentine Valentine,JTS000209,Valentine103,vaLentine103,254726167914
+,302,Mvuli,Ngara,,CC:2D:21:0F:20:50,2025-01-05T09:00:00Z,Martin Martin,JTS000211,Martin302,maRtin302,254722452592
+,403,Mvuli,Ngara,,E4:FA:C4:70:FE:5B,2025-01-11T09:00:00Z,Maria Maria,JTS000212,Maria403,maRia403,254727828787
+,110,Mvuli,Ngara,,68:FF:7B:7C:EE:E7,2023-03-05T14:58:00Z,Cate Mvuli,JTS000213,Cate110,caTe110,254715094950
+,403,Emeli,Ngara,,6C:5A:B0:F4:BE:DB,2024-12-24T09:00:00Z,Lilian Emeli,JTS000214,Lilian403,liLian403,254724092354
+,214,Emeli,Ngara,,1C:3B:F3:07:AA:0F,2023-06-05T09:00:00Z,Mulika Emeli,JTS000215,Mulika214,muLika214,254721520271
+,109,Near bet shop,Mirema,,E4:FA:C4:70:FE:AB,2024-11-12T07:09:21.649Z,Celestine Imali,JTS000216,Celestine ,ceLestine,254799773827
+,211,Mvuli,Ngara,,CC:32:E5:E3:34:C1,2025-01-12T11:47:12.153Z,Wilson Mvuli,JTS000217,Wilson211,wiLson211,254722759328
+,302,Emeli,Ngara,,D8:32:14:B1:80:50,2025-01-25T16:14:00Z,Fatuma  Emeli,JTS000218,Fatuma302,faTuma302,254745708712
+,801,Emeli 7,Ngara,,00:31:92:7C:8F:35,2024-09-17T09:00:00Z,Nina Nina,JTS000219,Nina801,niNa801,254794421179
+,S6,mose,Naivas,,50:0F:F5:D4:52:A8,2024-02-10T16:36:53.836Z,Madina Madina,JTS000220,Madina,maDina,254790168482
+,406,Mvuli,Ngara,,50:0F:F5:CE:C6:08,2025-01-06T09:00:00Z,Hadassah Wanjiku,JTS000221,Hadassah406,haDassah406,254743300102
+,408,Mvuli,Ngara,,68:FF:7B:70:5D:4F,2025-01-11T09:00:00Z,Edith Makena,JTS000222,Edith408,edIth408,254715760761
+,207,Mvuli,Ngara,,1C:3B:F3:07:92:B3,2025-01-18T10:36:16.669Z,Tonny West,JTS000224,West207,weSt207,254723412745
+,Bet shop,Nishmart,Naivas,,5C:62:8B:D6:71:33,2024-10-28T13:11:49.196Z,Eunice Mueni,JTS000225,Mueni,muEni,254797423704
+,,Opposite redsky,Allsops,,28:EE:52:F7:E4:11,2024-02-17T16:52:00Z,Wycliffe Kiplangat,JTS000227,Kiplangat,kiPlangat,254794454337
+,D1,Kwa Edu,Naivas,,28:EE:52:FA:38:91,2025-01-03T17:41:53.706Z,Wambua Wambua,JTS000228,Wambua,waMbua,254799610176
+,117,redsky,Allsops,,D8:32:14:B0:A3:E8,2025-01-05T20:06:00Z,Samuel Njogu,JTS000229,Njogu,njOgu,254792690288
+,1fl,Fitness Empire,Naivas,,9C:53:22:DA:D3:8F,2025-02-02T15:44:01.639Z,Roseline Roseline,JTS000230,Roseline,roSeline,254710242264
+,3rd floor near redsky,Near Redsky,Naivas,,D8:32:14:5A:CA:10,2025-01-27T18:57:32.138Z,Augustus  Nyakiba,JTS000231,Augustus,auGustus,254791677501
+,,,Naivas,,5C:A6:E6:6E:44:31,2024-12-20T09:00:03.293Z,Mike Mikr,JTS000232,Mike,miKe,254715570413
+,,,Naivas,,40:ED:00:F7:2B:1B,2024-12-31T09:49:00Z,Gladys Wanja,JTS000233,Gladys,glAdys,254796023444
+,,Mugaka,Naivas,,50:0F:F5:24:F2:38,2024-11-26T17:01:54.703Z,Geoffrey Chemjor,JTS000234,Chemjor,chEmjor,254717637985
+,Cosmetic,Opposite salon,Naivas,,00:31:92:7C:59:DD,2025-01-18T14:50:55.324Z,Anne  Mwanzia,JTS000235,Anne,anNe,254716514385
+,F1,Next nishmart,Naivas,,04:95:E6:24:B3:28,2025-01-25T08:31:25.846Z,Pedro Otiga,JTS000236,Pedro,peDro,254720687416
+,G4,,Allsoaps,,28:EE:52:F7:E9:59,2023-12-08T16:38:40.349Z,Rachael Mutindi,JTS000237,Muli,muLi,254723812073
+,3A,Edu,Naivas,,B4:0F:3B:B3:AD:C8,2025-01-05T10:39:00Z,Jedidah Makasi,JTS000238,Jedidah,jeDidah,254746854823
+,F1,Kimathi,Naivas,,58:D9:D5:A3:31:B0,2024-12-05T16:03:09.509Z,George Mackenzie,JTS000239,Mackenzie,maCkenzie,254110075662
+,412,Emeli,Ngara,,D8:32:14:2F:0D:80,2025-01-14T09:54:00Z,Maurice Maurice,JTS000240,Maurice412,maUrice412,254703140860
+,,Next to Dan duka,naivas,,E8:65:D4:00:56:70,2024-02-27T17:21:38.465Z,Simon Macharia,JTS000241,Simon,siMon,254724362133
+,1FL,Next redsky,Naivas,,CC:2D:21:41:F7:48,2024-12-17T18:56:48.899Z,Raynell Manoti,JTS000242,Raynell,raYnell,254740629669
+,GP2,City plaza,Naivas,,9C:53:22:36:B9:B9,2024-12-26T20:28:28.709Z,David Kitong'o,JTS000243,Kitong'o,kiTong'o,254711251495
+,B2,John,naivas,,5C:62:8B:D6:64:71,2025-01-20T07:17:00Z,Martin  Mwangi,JTS000244,Martin,maRtin,254726641277
+geofreybitoyo@gmail.com,70,Mugaka corner ,naivas,,50:0F:F5:36:4C:D0,2025-01-29T17:32:36.317Z,Geofrey  Bitoyo,JTS000245,Bitoyo,biToyo,254712060077
+,017,Redsky,Naivas,,58:D9:D5:2D:93:68,2025-01-15T11:39:47.689Z,Alex Alex,JTS000246,Alex,Alex,254790566902
+,E1,Kimathi caretaker,naivas,,9C:53:22:36:AB:0F,2025-01-01T06:32:02.399Z,Bakhita Jerop,JTS000247,Bakhita,baKhita,254795102777
+,17,Nicho DSTV,Naivas,,9C:53:22:36:AA:FF,2025-02-02T12:16:21.178Z,Grace Wanjiru,JTS000248,Grace,grAce,254718521087
+,GR_5,Bustani,Allsops,,CC:2D:21:42:B8:38,2024-12-17T19:16:47.171Z,Eric Kibet,JTS000249,Kibet,kiBet,254796110368
+muthuigachau5@gmail.com,315,Redsky,Allsops,,9C:53:22:36:B9:ED,2024-08-28T17:48:50.238Z,Antony Gachau,JTS000250,Gachau,gaChau,254794271210
+,Shop (bar),Mogaka,Naivas,,E4:FA:C4:70:FC:4D,2024-09-26T14:23:22.06Z,Angeline Musau,JTS000251,Musau,muSau,254723980445
+,68,Mogaka,Mirema,,E8:65:D4:82:EE:58,2024-10-07T09:00:00Z,David Kamau,JTS000252,David,daVid,254769088259
+,G1,Next Mogaka,Naivas,,70:4F:57:85:20:45,2025-01-18T07:55:27.472Z,Maikan Manoah,JTS000253,Maikan,maIkan,254792003105
+,M3,Maasai,Naivas,,CC:2D:21:6C:62:F8,2025-01-06T11:23:00.435Z,Ronald Mogaka,JTS000254,Ronald,roNald,254717215355
+,GYM,GYM,Naivas,,D8:32:14:2C:F1:08,2025-02-03T02:23:24.058Z,Empire Fitness,JTS000255,Empire,emPire,254795079791
+,G19,Next Simavade,Naivas,,40:ED:00:F7:2B:1B,2024-01-10T09:00:00Z,Eunice Kimunu,JTS000256,Kimunu,kiMunu,254748287097
+,F4,opp Hurama Anex,Naivas,,CC:2D:21:41:6E:40,2024-04-11T12:34:33.4Z,Joy Wairimu,JTS000258,Wairimu,waIrimu,254796150984
+,16,Near mama Alex,Naivas,,50:0F:F5:2F:60:50,2025-01-30T06:41:43.232Z,Alban Oyaro,JTS000259,Alban,alBan,254726574118
+,,Hunters,Naivas,,B4:0F:3B:BE:08:C8,2025-01-10T15:16:19.393Z,Faith Nyutu,JTS000260,Nyutu,nyUtu,254796777098
+,D1,Mugendi,Naivas,,78:8C:B5:5A:50:5B,2025-01-28T19:05:33.767Z,Kenneth Kipruto,JTS000261,Kipruto,kiPruto,254714657847
+,,Kamau,Naivas,,50:0F:F5:D4:2C:98,2024-11-14T13:40:42.926Z,Isaac Milkau,JTS000262,Milkau,miLkau,254714810682
+,214,Emeli,Mvuli,,9C:53:22:DA:C0:EF,2025-02-03T12:43:24.367Z,Edna 214,JTS000263,Edinah214,edInah214,254748845184
+,6,Next reddiamond,Naivas,,00:31:92:7C:55:CD,2025-01-01T13:36:24.942Z,Nelson Njati,JTS000264,Njati,njAti,254791565507
+,207,Bensloft,naivas,,58:D9:D5:2C:7C:E0,2024-12-21T18:11:38.108Z,Veronica Mutungi,JTS000265,Mutungi,muTungi,254743698827
+,,,Naivas,,B4:B0:24:F8:64:43,2024-03-23T10:30:50.705Z,Stallone Opondo,JTS000266,Stallone,stAllone,254718475853
+,3f48,Kamau katikati,naivas,,58:D9:D5:2D:92:60,2024-05-08T10:19:06.58Z,Bradley Opiyo,JTS000267,Bradley,brAdley,254724252882
+,B13,Naivas true life dispensary,Naivas,,,2024-02-14T16:30:10.24Z,Mercy Wanjiru,JTS000268,Kingori,kiNgori,254700472437
+,32,Kamau ,Naivas,,50:91:E3:23:E1:F1,2025-01-06T12:15:01.603Z,Kayssie Kayssie,JTS000269,Kayssie,kaYssie,254757636602
+,,Redsky,Naivas,,50:91:E3:23:E0:45,2024-09-13T19:34:20.319Z,Kelvin Kilonzo,JTS000270,Kilonzo,kiLonzo,254702256183
+,,,naivas,,04:95:E6:DD:DD:C0,2024-11-25T19:02:14.713Z,Kelvin Mutai,JTS000272,Mutai ,muTai,254722861884
+,C3,,naivas,,50:91:E3:23:E1:45,2024-11-29T09:12:37.918Z,Millicent  Jerotich,JTS000273,Jerotich,jeRotich,254704302782
+,,Near Gym ,naivas,,50:91:E3:23:E2:61,2025-01-30T17:29:24.196Z,Stecy Stecy,JTS000274,Stecy,stEcy,254798109791
+,44,Magaka,Naivas,,04:95:E6:24:DD:20,2024-05-14T06:13:56.476Z,Elkanah Mark,JTS000276,Elkanah,elKanah,254101260589
+,,Francis near red diamond ,Naivas,,3C:52:A1:9A:BF:D5,2025-01-12T21:15:42.845Z,Bernard Kibet,JTS000277,Kibett,kiBett,254723236533
+,,,Naivas,,D8:32:14:5A:51:80,2024-11-10T17:36:15.806Z,Mercy  Cheptoo,JTS000278,Cheptoo,chEptoo,254799049641
+,A1,Near red diamond ,Naivas,,B4:0F:3B:B4:8B:90,2025-01-15T19:15:15.683Z,Ruth  Kwambokah,JTS000279,Kwambokah,kwAmbokah,254701352956
+,,Near Barcelona container,,,D8:32:14:5B:EE:D0,2025-02-02T17:33:36.131Z,Ann Mbai,JTS000280,Mbai ,mbAi,254720471437
+,308,Redsky,Naivas,,D8:32:14:46:AC:90,2024-03-13T14:08:51.41Z,Ryan Kiplimo,JTS000281,Ryan,ryAn,254799135939
+,,City plaza,Naivas,,B4:0F:3B:B3:1A:E8,2025-01-12T13:48:30.177Z,Samuel  Irungu,JTS000282,Irungu,irUngu,254702681828
+,,Mvuli,Ngara,,28:EE:52:FA:83:F3,2025-01-25T09:00:00Z,Lucy Lucy,JTS000283,Lucy308,luCy308,254702964526
+,,,Naivas,,50:0F:F5:AB:B9:C0,2024-06-22T15:41:21.573Z,Moses Maketa,JTS000284,Maketa,maKeta,254726342505
+,,,Naivas,,04:95:E6:25:45:68,2025-02-01T19:01:06.078Z,Elizabeth  Mwikali,JTS000285,Mwikali,mwIkali,254715193797
+,,,,,CC:2D:21:67:CF:A0,2024-12-26T20:36:58.715Z,Hailo Hailo,JTS000286,Hailo,haIlo,254792074558
+,,Redsky ,Naivas,,B4:0F:3B:68:EC:68,2024-05-02T19:33:03.613Z,Alvin Al in,JTS000287,Alvin,alVin,254714881295
+,,,,,04:95:E6:24:68:B0,2024-04-09T13:46:45.039Z,Faith Maombo,JTS000289,Maombo,maOmbo,254718801075
+,,,,,78:8C:B5:5A:50:55,2024-12-31T10:00:00Z,Dan Redsky ,JTS000290,Redsky,reDsky,254702158435
+,,,,,74:83:C2:4D:4A:7C,2025-01-23T09:00:00Z,Charles Charles,JTS000291,Charles,chArles,254740267323
+,,Bustani,,,40:ED:00:F7:6F:1D,2025-01-15T15:39:07.549Z,Joe Joe ,JTS000292,Joe,joE,254702186051
+,,Bustani,Naivas,,04:95:E6:25:49:50,2025-06-30T10:01:00Z,David Bustani,JTS000293,Bustani,buStani,254722932610
+,E3,Reo fresh,Naivas,,CC:2D:21:3E:5B:B8,2024-04-03T17:24:31.213Z,Isaiah Isaiah,JTS000294,Isaiah,isAiah,254715692757
+,,,Naivas,,04:95:E6:25:2F:D0,2025-01-06T17:58:57.456Z,Talanta Talanta,JTS000295,Talanta,taLanta,254758188600
+,,Redsky,Naivas,,D8:32:14:B0:89:B8,2024-01-14T09:00:00Z,Adan Fakansa,JTS000296,Adan,adAn,254717369689
+,,Redsky,Naivas ,,58:D9:D5:A2:9E:58,2025-02-03T08:04:57.417Z,Ayubarry  Ayubarry,JTS000297,Ayubarry,ayUbarry,254737494979
+,E6,Westgate,,,6C:5A:B0:E7:15:FB,2025-01-07T17:07:56.792Z,Orumi Orumi,JTS000298,Orumi,orUmi,254726366912
+,807,Redsky,Naivas,,04:95:E6:C6:D3:A0,2025-01-10T23:48:46.707Z,Loreen Loreen,JTS000299,Loreen,loReen,254740669870
+,102,Redsky,Naivas ,,5C:62:8B:D6:7A:CF,2024-12-08T14:53:26.732Z,Christine  Mukiri,JTS000300,Mukiri ,muKiri,254728995530
+,,next Joseh,Naivas,,58:D9:D5:1A:F6:F0,2024-12-18T05:54:00Z,Loyama Loyama,JTS000301,Loyama,loYama,254703439144
+,,Bustani,Naivas ,,D8:47:32:7E:CE:4D,2025-01-06T06:49:15.526Z,Brian Mutati,JTS000302,Mutati,muTati,254741119867
+,,Blue house,,,00:5F:67:0C:59:4F,2024-06-15T09:00:00Z,Dan Dan,JTS000303,Dan,daN,254743223261
+,Ground floor,Near noni hostel ,Naivas ,,3C:52:A1:2F:1F:CD,2024-12-23T07:46:00Z,Charles Muteti,JTS000304,Muteti,muTeti,254790766271
+,,Redsky,Naivas,,D8:32:14:2C:B2:18,2025-01-30T15:36:37.803Z,Stephen  Maaya,JTS000305,Maaya,maAya,254790934436
+,Office,,Naivas,,18:FD:74:A1:30:00,2025-07-31T09:00:00Z,Japtech Japtech,JTS000306,Japtech,jaPtech,254726786182
+,P31,Rigan Barcelona shop,Naivas,,C8:3A:35:34:13:08,2025-02-03T14:47:53.877Z,Thaddeus  Maundu,JTS000307,Maundu,maUndu,254707893771
+,36,Mugaka,Naivas ,,CC:2D:21:6C:62:F8,2024-10-18T18:20:55.894Z,Danvas  Anyona,JTS000308,Danvas,daNvas,254706770002
+,110,Red sky,,,40:ED:00:F7:31:7D,2024-10-04T09:02:00.573Z,Judy  Kimani,JTS000309,Judy,juDy,254797871925
+,,Redsky,,,40:ED:00:F7:31:25,2024-04-07T09:54:00Z,Vincent Kipkemoi,JTS000310,Kipkemoi,kiPkemoi,254741629685
+,,Near noni hostel ,Naivas ,,34:60:F9:2B:7D:B7,2025-01-06T17:18:10.98Z,Eunice Mayasa,JTS000311,Mayasa,maYasa,254702341673
+,3rd floor,Kamau katikati,naivas,,E8:65:D4:B7:15:D0,2024-06-14T09:00:00Z,Nicholas Githinji,JTS000312,Nicholas,niCholas,254723876405
+,312,Redsky ,Naivas,,50:91:E3:24:3F:01,2024-12-18T17:09:13.849Z,Shilla Mumbi,JTS000313,Shilla,shIlla,254790071762
+,,,naivas,,D8:32:14:2E:BD:40,2024-12-14T13:52:54.215Z,Bruno Kiplangat,JTS000314,Bruno,brUno,254703961655
+,,,Naivas,,50:0F:F5:89:53:98,2025-01-11T10:38:11.554Z,Brian Malaki,JTS000315,Malaki,maLaki,254706325531
+,,,,,50:0F:F5:30:00:60,2024-06-15T09:00:00Z,Kipkorir  Vincent ,JTS000316,Kipkorir,kiPkorir,254746956606
+,,Near red diamond ,,,04:95:E6:A3:26:C0,2025-01-04T09:00:00Z,Joy Ann,JTS000317,Joyann,joYann,254114987450
+,Room 3,Rhoda,Lumumba,,90:9A:4A:27:70:77,2025-01-16T19:47:41.805Z,Yvonne Wambui,JTS000318,Yvonne,yvOnne,254746604986
+,,,Naivas,,28:EE:52:F9:DB:05,2024-07-23T04:41:04.741Z,Brian  Mugendi,JTS000319,Brian,brIan,254795464641
+,T4,Blue house,Naivas,,40:ED:00:F7:20:71,2025-01-02T10:31:11.939Z,Simon Kamau,JTS000320,Kamau,kaMau,254768580220
+,809,Blue house,naivas,,04:95:E6:F3:CF:D8,2024-07-18T15:12:57.973Z,Linnus Lesley  ,JTS000321,Linnus,liNnus,254716570854
+,,Near red diamond,Naivas,,D8:32:14:5B:E7:E0,2024-10-17T19:32:34.129Z,Teacey Sinyoo,JTS000322,Tracey,trAcey,254708776166
+,C6,Opp.Rigan,Naivas,,58:D9:D5:A3:A4:78,2024-12-04T10:05:47.436Z,Richard  Kaparo,JTS000323,Kaparo,kaParo,254794043257
+,,Near salon,naivas,,40:ED:00:F7:4D:CD,2024-08-07T09:00:03.904Z,Amos  Chege,JTS000324,Chege,chEge,254728411479
+,,Next redsky,Naivas,,BC:62:CE:52:B6:C6,2024-03-26T07:14:30.335Z,Lucy Gathoni,JTS000325,Gathoni,gaThoni,254723866239
+,Cyber,Mose,Naivas,,B4:0F:3B:69:10:90,2024-04-01T13:07:32.462Z,Woocomputers Woocomputers,JTS000326,Woocomputers,woOcomputers,254720730434
+,,Near pork palace ,naivas,,24:2F:D0:FC:4D:8B,2025-01-31T07:03:00Z,William Opaka,JTS000327,Opaka,opAka,254769909924
+,109,Redsky,Naivas,,40:ED:00:F7:7B:F3,2024-09-11T08:34:06.862Z,Quresho Mohamed,JTS000328,Quresho,quResho,254702422504
+,,Mose,Naivas ,,6C:5A:B0:F4:C2:8F,2024-12-28T22:07:48.251Z,Jelnice Jelnice,JTS000329,Jelnice,jeLnice,254712123822
+,141,Chenge,Naivas,,D8:07:B6:CB:8E:81,2025-01-19T10:23:09.446Z,Muriithi Francis,JTS000330,Muriithi,muRiithi,254712483319
+,T12,Mose,Naivas,,BC:62:CE:4E:75:50,2025-01-16T00:33:50.026Z,Caroline Mutai,JTS000331,Caroline,caRoline,254726763991
+,,Near red diamond ,Naivas ,,84:16:F9:58:8D:D1,2025-01-31T11:14:50.231Z,Dennis  Matobori,JTS000332,Matobori,maTobori,254728921813
+,,,,,C8:3A:35:1F:DA:48,2025-01-11T10:43:14.748Z,Veronica  Jacinta,JTS000333,Jacinta,jaCinta,254721328803
+,Rooftop,Kinyua,Naivas,,40:ED:00:F7:0F:05,2024-12-24T10:43:31.213Z,Joseph  Mumba,JTS000334,Mumba,muMba,254110932593
+,B2,Next Mama Alex,Naivas,,DC:2C:6E:B0:16:55,2025-01-05T15:39:42.011Z,Anne Jebiwott,JTS000335,Jebiwott,jeBiwott,254746169335
+,10,,Lumumba,,1C:3B:F3:07:61:C1,2025-05-31T09:00:00Z,Rhodah Ngure,JTS000337,Rhodah,rhOdah,254700282458
+,B4,Kinyua,Naivas,,E4:FA:C4:FD:5B:69,2024-10-18T17:24:29.549Z,Sam Mugweru,JTS000338,Mugweru,muGweru,254702924753
+,,Dan,Naivas,,04:95:E6:25:06:D0,2024-08-10T16:47:16.071Z,Lian Lian,JTS000339,Lian,liAn,254720000733
+,Office,Mvuli,Ngara,,A8:42:A1:98:40:31,2025-01-04T10:55:34.244Z,Madanga Cleaning,JTS000340,Madanga,maDanga,254735866022
+bettgodfrey84@gmail.com,601,Redsky,Naivas,,9C:53:22:DA:A6:67,2025-01-10T19:10:12.083Z,Godfrey Bett,JTS000342,Bett,beTt,254729762028
+,607,Redsky,Naivas,,40:ED:00:F7:3E:3F,2025-01-30T06:50:58.306Z,Tewin Likhanga,JTS000343,Tewin,teWin,254792656754
+,218,Redsky,Naivas,,40:ED:00:F6:DD:71,2025-01-16T09:00:00Z,Richmonds Richmonds,JTS000344,Richmonds,riChmonds,254707435464
+,B503,Solai next Kamau,Naivas,,C4:AD:34:C3:8C:40,2024-12-23T09:22:00Z,Vincent Nyang'aya,JTS000345,Nyang'aya,nyAng'aya,254710774058
+,106,Redsky,Naivas,,A8:42:A1:31:B7:B9,2024-12-03T16:55:35.068Z,Leonard  Kiprotich,JTS000346,Kiprotich,kiProtich,254713101993
+,513,Mvuli,Ngara,,40:ED:00:F7:3F:67,2025-01-15T09:00:00Z,Joseph Abuga,JTS000347,Abuga,abUga,254710766861
+,210,Redsky,naivas,,E4:FA:C4:FD:5B:5B,2025-01-31T20:52:50.792Z,Alphonse  Katua,JTS000348,Katua,kaTua,254721415377
+,.4,Blessed Angel,Naivas,,90:9A:4A:24:8F:53,2025-01-08T15:27:43.215Z,Collins  Opata,JTS000349,Opata,opAta,254705027251
+,A17,Opp.Bensloft,Naivas,,E4:FA:C4:FD:5B:93,2025-02-03T08:37:19.565Z,Joshua Otieno,JTS000350,Joshua,joShua,254790841455
+,,Rigan,Naivas,,40:ED:00:F7:4E:DD,2025-02-03T13:28:53.245Z,Mike  Mwiti,JTS000351,Mikeh,miKeh,254723907421
+,G24,Rigan,Naivas,,40:ED:00:F7:4E:A9,2025-01-28T06:21:39.345Z,Andycole Omolo,JTS000352,Andycole,anDycole,254701908490
+,,Blessed Angel,Naivas,,40:ED:00:F7:4E:89,2024-08-03T19:15:26.927Z,Samuel Owino,JTS000353,Samwel,saMwel,254742127699
+chebichichsandra@gmail.com,ACP6-3,CITY PLAZA,Naivas,,40:ED:00:F7:4E:85,2025-02-02T12:37:37.32Z,Sandra Wandera,JTS000354,Wandera,waNdera,254727255011
+,,Barcelona,naivas,,40:ED:00:F7:4E:BB,2025-01-12T13:33:20.868Z,Jane Wangari,JTS000355,Wangari,waNgari,254702927446
+,3.8,Blessed,Naivas,,D8:32:14:EA:B3:F8,2025-01-14T14:59:31.126Z,Moreen Moreen,JTS000356,Moreen,moReen,254713592090
+,4.7,Blessed,Naivas,,B4:0F:3B:B3:E2:50,2025-01-11T19:13:58.571Z,Eva Warigia,JTS000357,Warigia,waRigia,254791604025
+,506,Redsky,Naivas,,D8:32:14:5A:D0:78,2025-01-04T12:00:11.9Z,Mike  Wamalwa,JTS000358,Wamalwa,waMalwa,254705030341
+,E3,,Naivas,,B4:0F:3B:C3:AA:50,2025-01-07T17:25:44.793Z,Joan  Malova,JTS000359,Malova,maLova,254721163280
+,B2,Next Alliance,Naivas,,B4:0F:3B:68:B2:20,2025-01-15T12:49:36.742Z,Samson Nzivo,JTS000360,Nzivo,nzIvo,254727111366
+,212,Redsky,Naivas,,40:ED:00:F7:4E:C7,2024-08-09T16:28:52.671Z,Joy Njeru,JTS000361,Njeru,njEru,254795163534
+,E3.2,Blessed ,Naivas,,40:ED:00:F7:4E:71,2025-01-10T14:19:30.726Z,Alex Kyali,JTS000362,Kyali,kyAli,254740569496
+,3,Opp. Kamaa,Naivas,,CC:2D:21:F1:3D:38,2024-12-05T14:58:38.666Z,Erick Andalia,JTS000363,Andalia,anDalia,254706553168
+,30,Opp.Jim,Naivas,,E4:FA:C4:70:FE:13,2024-12-07T06:54:39.841Z,Holfin Ngugi,JTS000364,Holfin,hoLfin,254725696071
+,503,Redsky,Naivas,,E4:FA:C4:70:F9:AF,2024-12-14T15:18:51.256Z,Benedict Masila,JTS000365,Masila,maSila,254708695071
+,303,Redsky,Naivas,,E4:FA:C4:70:FA:C3,2024-10-22T10:21:10.759Z,Yvonne  Gitari,JTS000366,Gitari,giTari,254743070900
+,509,Redsky,Naivas,,E4:FA:C4:2B:53:15,2024-09-26T15:50:01.629Z,Sanaipei Joy,JTS000367,Sanaipei,saNaipei,254790260702
+,4.5,Blessed Apartment,Naivas,,E4:FA:C4:70:FE:89,2025-01-31T20:55:31.932Z,Atiema Vincent,JTS000368,Atiema,atIema,254705077543
+,Bluehouse,Blue house,Naivas,,B4:0F:3B:B3:E2:70,2024-06-24T17:39:21.807Z,Hasan Mumina,JTS000369,Hasan,haSan,254724363801
+,4.4,Blessed Angel,Naivas,,04:95:E6:DD:62:20,2024-08-25T09:23:03.368Z,Eric Mwambi,JTS000370,Mwambi,mwAmbi,254702893379
+,,Francis,Mirema,,C8:3A:35:34:1E:58,2025-01-11T03:12:53.349Z,Maina Maina,JTS000371,Mainah,maInah,254701128310
+,2,Stanley,Kasarani,,C0:06:C3:10:34:4B,2025-01-03T15:14:00Z,Stanley  Stanley,JTS000372,Stanley,stAnley,254722593994
+,419,Redsky,Naivas,,50:91:E3:23:E2:67,2024-12-19T16:46:06.789Z,Ian Dan,JTS000373,Ian,iaN,254717976656
+,3.1,Blessed Angel,Naivas,,E4:FA:C4:FD:5A:FD,2025-01-14T13:03:32.442Z,Isaac  Ouko,JTS000374,Ouko,ouKo,254720274040
+,F3,Bustani,Naivas,,50:91:E3:24:6E:87,2025-01-01T18:29:43.412Z,Meshack Njogu,JTS000375,Meshack,meShack,254745205507
+,,Near redsky,naivas,,C8:3A:35:38:61:08,2025-02-02T16:04:50.489Z,Kirtsy  Oloo,JTS000376,Kirtsy,kiRtsy,254739786435
+athomolu84@gmail.com,2.6,Blessed Angel ,Naivas,,50:0F:F5:AC:14:30,2024-11-18T11:04:15.144Z,Ado Molu,JTS000377,Molu,moLu,254111996372
+,308,Redsky,Naivas,,C8:3A:35:5A:04:80,2024-09-04T10:36:54.944Z,Duncan Muriuki,JTS000378,Duncan,duNcan,254111687888
+,5.8,Blessed Angel,Naivas,,C8:3A:35:43:3F:48,2024-12-09T08:00:48.922Z,Kalu Gabriel,JTS000379,Kalu,kaLu,254796252078
+,710,Redsky,Naivas,,B4:0F:3B:68:F6:B0,2024-12-23T19:22:36.788Z,Alfred Alfred ,JTS000380,Alfred,alFred,254726368405
+,118,Redsky,Naivas,,50:91:E3:23:E2:99,2024-12-23T17:55:18.303Z,Perez Letia,JTS000381,Letia,leTia,254708399688
+,Baby Kids shop,Mogaka,Naivas,,50:91:E3:23:E2:97,2025-01-07T13:40:18.681Z,Noble  Kids,JTS000382,Noble,noBle,254727017639
+,A8,Mama Alex,Naivas,,50:91:E3:23:E2:73,2025-01-14T08:49:33.075Z,Muema Ancent,JTS000383,Muema,muEma,254714514512
+,117,Redsky,Naivas,,A8:42:A1:98:4F:AB,2024-12-23T15:02:02.098Z,Fidel Odhiambo,JTS000384,Fidel,FiDel,254716286551
+rhozzahkens@gmail.com,508,Solai,outering RD,Naivas,,,2024-12-20T11:17:00Z,Rosalyn Maore,JTS000385,Maore,maOre,254768046007
+,5.2,Blessed Angel,Naivas,,D8:32:14:2F:18:E0,2025-01-18T05:11:53.17Z,Luko Ibrahim,JTS000386,Luko,luKo,254757211883
+,517,Redsky,Naivas,,50:0F:F5:36:8B:30,2025-01-08T13:55:52.599Z,Ohon Joan,JTS000387,Ohon,ohOn,254772679017
+,Barber shop,Diana Biwott,Naivas,,E8:65:D4:00:20:40,2024-11-23T05:47:43.279Z,Rose Muoki,JTS000388,Muoki,muOki,254768642622
+,5.7,Blessed Angel,Naivas,,E4:FA:C4:70:FE:91,2025-01-04T19:39:45.295Z,Francis  Oloo,JTS000389,Oloo,olOo,254790125083
+gideonlenkai2021@gmail.com,D8,Alliance,Allsops naivas,,C8:3A:35:48:B0:00,2024-12-12T11:27:29.951Z,Gideon Lenkai,JTS000390,Lenkai,leNkai,254746901564
+,C5,Dan,Naivas,,00:31:92:7C:6E:A7,2025-01-29T19:12:10.914Z,Wanjiru Njoroge,JTS000391,JTS000391,waNjiru,254708884537
+,120,Getu,Naivas,,CC:2D:21:B5:4B:A8,2025-01-26T08:40:17.576Z,Kipchumba Alfonce,JTS000392,Kipchumba,kiPchumba,254724101406
+ceceliamwaka3@gmail.com,114,Emeli,Ngara,,D8:32:14:72:D0:88,2024-09-28T09:00:00Z,Cecilia Kuza,JTS000393,Cecilia114,ceCilia114,254707454917
+victorndegwa254@gmail.com,5.6,Blessed Angel,Naivas,,50:91:E3:23:E0:D9,2025-02-02T12:23:19.936Z,Paul Victor Ndegwa,JTS000394,Ndegwa,ndEgwa,254707760144
+,Naomi nail arts,Opp.Leo fresh,Naivas,,50:0F:F5:AB:B9:C0,2024-12-29T10:40:26.772Z,Mutunga Naomi,JTS000395,Mutunga,muTunga,254792600824
+,9,Stanley,Kasarani,,40:ED:00:F7:14:F5,2025-01-28T08:12:23.836Z,Peninah Muya,JTS000396,Muya,muYa,254722918734
+,,Next redsky,Naivas,,50:91:E3:23:E2:9F,2024-12-27T16:59:12.65Z,Pauline Pauline,JTS000397,Mutambo,muTambo,254719707557
+,,Kamau,,,54:55:D5:5C:77:FC,2025-01-28T16:07:14.925Z,Mercy Nyaboke,JTS000398,Nyaboke,nyAboke,254714471292
+,P38,Rigan,Naivas,,58:D9:D5:20:43:F0,2024-12-04T09:00:00Z,Sharon Ongoro,JTS000399,Ongoro,onGoro,254700831111
+,47,Kamau Katikati,Naivas,,50:91:E3:23:E1:7F,2025-01-03T18:42:33.66Z,Phoebe Pilaso,JTS000400,Pilaso,piLaso,254724034571
+,5.3,Blessed Angel,Naivas,,50:91:E3:24:26:9D,2025-02-02T14:22:23.876Z,Nyawara Terry,JTS000401,Nyawara,nyAwara,254758500587
+,217,Redsky,Naivas,,E8:65:D4:D1:A3:00,2025-01-09T17:06:06.145Z,Victor  Kibet,JTS000402,Victorkibet,viCtorkibet,254729216438
+,017,Redsky,Naivas,,D8:32:14:2F:40:40,2024-11-07T16:31:34.877Z,Lawrence Kiarie,JTS000403,Kiarie,kiArie,254796365423
+,2F22,Kamau Katikati,Naivas,,04:95:E6:C7:04:C8,2024-09-03T18:54:02.408Z,Rebecca  Maina,JTS000404,Rebecca,reBecca,254705461060
+,110,Redsky,Naivas,,50:0F:F5:C6:33:98,2024-11-30T15:29:00Z,Qabale Galgalo,JTS000405,Galgalo,gaLgalo,254759484635
+,F62,,Naivas,,50:91:E3:24:26:65,2025-02-03T15:58:38.911Z,Christina  Odieki,JTS000406,Odieki,odIeki,254797223810
+,5.5,Blessed Angel,Naivas,,14:EB:B6:D4:9F:5B,2025-01-04T12:45:51.47Z,Margaret  Akinyi,JTS000407,Margaret,maRgaret,254703322425
+,413,Mvuli,Ngara,,50:91:E3:24:22:7F,2025-01-09T15:05:58.864Z,Grace Tunza,JTS000408,Tunza413,tuNza413,254741139888
+,114,Mvuli,Ngara,,40:ED:00:F7:15:1B,2025-01-13T09:00:00Z,Joyce Ashema,JTS000409,Ashema114,asHema114,254710748283
+,2.4,Blessed Angel,Naivas,,24:2F:D0:FC:4D:B3,2024-12-08T17:09:11.022Z,Peter Kimani,JTS000410,JTS000410,peTer,254708150960
+,11,Kamu Rose,Naivas,,D8:32:14:2E:7C:90,2024-12-27T19:12:00Z,Mary Wangare,JTS000411,JTS000411,waNgare,254794044794
+,,Imani plaza,Mirema,,30:FB:B8:02:A8:88,2025-02-02T18:39:00Z,Pauline Wangui,JTS000412,JTS000412,waNgui,254748588879
+,,,,,B0:BE:76:04:FD:4F,2025-03-30T17:09:00Z,Chief Chief,JTS000413,Chief,chIef,254706734395
+,3.6,Blessed Angel,Naivas,,5C:A6:E6:39:74:E1,2025-01-13T16:19:54.682Z,Esha Omar,JTS000414,Omar,omAr,254711468885
+,E1,Westgate,Naivas ,,B8:3A:08:0B:00:78,2025-01-03T17:30:15.229Z,Shadrack Kimanzi,JTS000415,Kimanzi,kiManzi,254719388903
+,307,Emeli,Ngara,,0C:80:63:9D:45:F1,2025-01-03T09:00:00Z,Nakola Nakola,JTS000416,Nakola,naKola,254721748958
+,5.1,Blessed Angel,Naivas,,CC:2D:21:B5:6F:48,2025-02-02T09:05:42.438Z,Mwadine Nyange,JTS000417,Nyange,nyAnge,254706849399
+judithobuya04@gmail.com,5.4,BLESSED ANGEL,RUARAKA - NAIVAS,,24:2F:D0:FC:4D:8F,2025-01-30T15:19:43.542Z,JUDITH OBUYA,JTS000418,Obuya,obUya,254797792699
+,G4,John,Naivas,,24:2F:D0:FC:4D:DF,2025-02-02T18:39:00.793Z,Patrick Okomo,JTS000419,Okomo,okOmo,254720066311
+,410,Redsky,Naivas,,58:D9:D5:A3:9B:E8,2024-08-29T16:57:54.825Z,Wamwaya Emmanuel,JTS000420,Wamwaya,waMwaya,254700591225
+thomasmaroa94@gmail.com,S2,Imani plaza,Lumumba,,F4:4C:7F:03:B5:ED,2025-02-02T09:00:32.145Z,Thomas Kohera,JTS000421,Kohera,koHera,254791497327
+sheillahnyarangi@gmail.com,16,Stanley,Kasarani,,04:95:E6:DD:9D:38,2024-10-01T10:20:16.494Z,Sheillah Ombati,JTS000422,Ombati,omBati,254757700875
+,D3,,Naivas,,3C:52:A1:2F:03:81,2025-01-04T09:09:17.373Z,Joseph Nyongesa,JTS000423,Nyongesa,nyOngesa,254792431825
+,3.7,BLESSED ANGEL,Naivas,,24:2F:D0:A3:AA:1D,2025-01-12T16:11:52.806Z,James Amoro,JTS000424,Amoro,amOro,254720160327
+,F11,Bustani,Naivas,,B8:3A:08:4D:6B:A8,2024-09-12T17:19:32.806Z,Okumu Faith,JTS000425,Okumu,okUmu,254708556695
+,B5,Francis ,Lumumba,,C4:AD:34:D5:80:06,2025-01-18T14:19:45.633Z,Flora Murungi,JTS000426,Flora ,flOra,254726245566
+,C3,Nehema,Naivas,,28:EE:52:FA:80:5B,2025-01-17T18:02:00Z,Maria Maria,JTS000427,Maria,maRia,254727150895
+,302,Redsky,Naivas,,AC:84:C6:CE:6C:D1,2025-01-20T06:20:46.126Z,Sharon Obiri,JTS000428,Obiri,obIri,254719299752
+,B17,Muniu,Allsops-Naivas,,D8:32:14:B0:F6:10,2024-12-26T17:13:55.111Z,Yvette Chao,JTS000429,Yvette,yvEtte,254112338868
+,Next Jelnice,Kwa mose,Naivas,,B4:0F:3B:27:36:00,2025-01-17T19:37:26.03Z,Esther Simon,JTS000430,Esther,esTher,254728135173
+,F10,Westgate,Naivas,,58:D9:D5:21:6B:CF,2024-12-23T15:31:45.19Z,Harold Blair,JTS000431,Harold,haRold,254794298885
+,Shop1,Dawanol,Naivas,,D8:32:14:FD:FC:F8,2025-01-22T11:18:24.846Z,Magdalene Nyawira,JTS000432,Nyawira,nyAwira,254728931920
+,214,Redsky,Naivas,,3C:52:A1:2F:05:A9,2024-09-24T15:48:27.548Z,Abdirahman Hassan,JTS000433,Abdirahman,abDirahman,254114054572
+,6.4,BLESSED ANGEL,Naivas,,24:2F:D0:A3:C6:57,2025-01-26T10:49:40.55Z,Samwel Ogara,JTS000434,Ogara,ogAra,254726977993
+,504,Bensloft,Naivas,,24:2F:D0:A3:C6:63,2024-12-27T14:37:12.935Z,Xavier Biwott,JTS000435,Xavier,xaVier,254759252255
+,G2,BLESSED ANGEL,Naivas,,24:2F:D0:A3:BF:5D,2025-01-31T17:07:17.679Z,Ada Ntinyari,JTS000436,Ntinyari,ntInyari,254710676396
+,F1,Sabrina,Naivas,,CC:2D:21:F7:3A:E0,2025-01-04T16:53:31.533Z,John Likami,JTS000437,Likami,liKami,254794400567
+,6.6,BLESSED ANGEL,Naivas,,98:25:4A:33:F4:65,2025-02-02T19:22:43.698Z,Alex Angulo,JTS000438,Angulo,anGulo,254718927177
+,1,Dan2,Naivas,,24:2F:D0:A3:C2:37,2025-01-04T12:34:34.829Z,Wanyaga Wanyaga,JTS000439,Wanyaga,waNyaga,254725691890
+,112,Redsky,Naivas,,50:0F:F5:88:CB:88,2024-10-02T14:31:22.237Z,Velma Scott,JTS000440,Velma,veLma,254758577748
+,3F3,Bustani,Naivas,,24:2F:D0:A3:C6:35,2025-01-05T18:14:30.705Z,Elizabeth Wambui,JTS000441,Elizabeth,elIzabeth,254711650162
+,011,Redsky,Naivas,,24:2F:D0:A3:C6:4F,2025-01-03T12:22:43.639Z,Emmanuel Too,JTS000442,Too,toO,254768524027
+,310,Redsky,Naivas,,24:2F:D0:A3:C5:D5,2025-01-03T11:55:41.762Z,Caleb Tarno,JTS000443,Tarno,taRno,254792550851
+,109,Redsky,Naivas,,58:D9:D5:21:48:58,2025-01-05T16:55:40.512Z,Brandon Ouma,JTS000444,Ouma,ouMa,254113254357
+,ACP1-4,City plaza,Naivas,,3C:52:A1:2F:05:CF,2024-11-10T06:05:57.138Z,Allan Jacob,JTS000445,Jacob,jaCob,254705477153
+,6,Rhoda,Lumumba,,A0:A3:3B:24:A5:75,2025-05-31T08:38:00Z,Christine  Betty,JTS000446,Betty,beTty,254713311131
+,6.7,BLESSED ANGEL,Naivas,,58:D9:D5:1A:7B:88,2024-12-09T16:11:19.004Z,Ron Limo,JTS000447,Limo,liMo,254714854431
+mwendwakithinji72@gmail.com,102,Glasses,RUARAKA - NAIVAS,,10:27:F5:57:A1:6D,2024-12-17T10:15:27.179Z,Paula Mwendwa,JTS000448,Paula,paUla,254794681797
+,105,BLESSED ANGEL,RUARAKA - NAIVAS,,3C:52:A1:2F:05:AD,2024-12-15T09:00:00Z,Moses Paul,JTS000449,Moses,moSes,254712161472
+,106,Bensloft,RUARAKA - NAIVAS,,3C:52:A1:2F:05:99,2025-01-09T16:20:54.613Z,Joanne Miami,JTS000450,Miami,miAmi,254715454832
+,6.7,BLESSED ANGEL,RUARAKA - NAIVAS,,3C:52:A1:2E:A6:1B,2025-01-31T09:00:06.354Z,Robert  Mribu,JTS000451,Mribu,mrIbu,254724927204
+,E7,Ben,RUARAKA - NAIVAS,,04:95:E6:CF:28:A8,2025-02-02T14:00:45.253Z,Mary Waithaka,JTS000452,Waithaka,waIthaka,254740288265
+justinitumo05@gmail.com,1.3,BLESSED ANGEL,RUARAKA - NAIVAS,,D8:07:B6:B3:33:15,2024-12-16T11:55:01.851Z,Justine Mumo,JTS000453,Justine,juStine,254702451222
+godwin.lemayian@gmail.com,101,Bensloft,Naivas,,70:4F:57:98:D1:1D,2025-01-11T17:08:06.071Z,Godwin Lemayian,JTS000454,Lemayian,leMayian,254768717930
+,G4,Next barcelona,RUARAKA - NAIVAS,,58:D9:D5:20:46:F8,2024-12-13T17:17:25.381Z,James Charo,JTS000455,Charo,chAro,254706128329
+,House 12,Jude max,Naivas ,,3C:52:A1:2E:A0:07,2024-12-15T14:36:53.646Z,Ricky Letaare,JTS000456,Letaare,leTaare,254719828023
+,C6,Alliance ,naivas,,3C:52:A1:2F:21:7D,2024-12-26T19:50:25.455Z,Cosmas Kamanda,JTS000457,Kamanda,kaManda,254745561067
+,404,Mvuli,Ngara,,40:ED:00:F7:21:D9,2025-01-28T08:12:12.113Z,Sharon Sharon,JTS000458,Sharon404,shAron404,254797894366
+,A1,Next Jose,Naivas,,D8:32:14:2E:9D:A8,2024-12-09T05:42:00Z,Alex Saningo,JTS000459,Saningo,saNingo,254717628668
+,G14,Bustani,RUARAKA - NAIVAS,,CC:2D:21:BB:11:58,2024-12-25T17:52:45.934Z,Faith Mbete,JTS000461,Mbete,mbEte,254725374168
+,G3,Blessed Angel,RUARAKA - NAIVAS,,9C:53:22:DA:C0:07,2025-01-04T17:03:28.108Z,Koech Boaz,JTS000462,Koech,koEch,254742525622
+,318,Redsky,RUARAKA - NAIVAS,,40:ED:00:F7:21:B7,2025-01-24T06:54:41.741Z,Ali Fabian,JTS000463,Fabian,faBian,254700365336
+,304,Mvuli,Ngara,,3C:52:A1:2E:D4:57,2025-02-05T09:00:00Z,Esther Nderitu,JTS000464,Esther304,esTher304,254721720311
+beverlykasoe@gmail.com,57,Mirriam Soja,Allsops,,3C:52:A1:2E:D4:77,2024-12-05T09:39:19.235Z,Beverly Tima,JTS000465,Beverly,beVerly,254712381109
+,,Old Penda,RUARAKA - NAIVAS,,B8:3A:08:77:E5:70,2024-12-13T13:45:19.665Z,Absolom Omariba,JTS000466,Omariba,omAriba,254703892253
+watomamo98@gmail.com,201,Blue Hse,RUARAKA - NAIVAS,,3C:52:A1:2E:D4:7B,2025-01-07T17:23:19.282Z,Wato Guyo,JTS000467,Guyo,guYo,254743419042
+,511,Mvuli,Ngara,,B0:95:75:5A:7D:9F,2025-01-12T11:20:00Z,Mike Mayienga,JTS000468,Mike511,miKe511,254720202681
+,3,Judmak,RUARAKA - NAIVAS,,,2025-01-12T08:23:37.88Z,Susan Onacha,JTS000469,Onacha,onAcha,254714687243
+,1.7,BLESSED ANGEL,Naivas,,3C:52:A1:2E:D4:63,2024-12-14T14:59:27.101Z,Stacy Waigiri,JTS000470,Waigiri,waIgiri,254729716493
+,D1,Old penda,RUARAKA - NAIVAS,,3C:52:A1:2E:D4:B5,2025-01-15T20:37:11.7Z,Stephen Kyalo,JTS000471,Stephen,stEphen,254721658461
+,6.2,BLESSED ANGEL,RUARAKA - NAIVAS,,40:ED:00:F7:52:7D,2024-12-25T14:31:00Z,Mercy Mutheu,JTS000472,Mutheu,muTheu,254793300926
+,207,Mvuli,Ngara,,1C:3B:F3:07:92:B3,2024-12-16T13:05:56.525Z,Toniwest Toniwest,JTS000473,Toniwest207,toNiwest207,254725830757
+,405,Emeli,Ngara,,3C:84:6A:3C:1F:F9,2024-12-11T14:49:00.466Z,Hanrietta Chepkirui,JTS000474,Chepkirui,chEpkirui,254724429014
+,CPE 4,Imani,Naivas,,D8:32:14:7A:0A:40,2025-02-03T11:00:58.929Z,Fartun Saman,JTS000475,Fartun,faRtun,254705430640
+,G5,BLESSED ANGEL,RUARAKA - NAIVAS,,04:95:E6:C7:B4:D0,2025-01-11T08:19:31.409Z,Vanessa Omondi,JTS000476,Vanessa,vaNessa,254785058477
+,Chemist,Embeut,RUARAKA - NAIVAS,,3C:52:A1:2F:21:BF,2025-01-05T11:00:03.479Z,Eunice Ndung'u,JTS000477,Eunice,euNice,254720463146
+,11,Next Redsky,RUARAKA - NAIVAS,,C8:3A:35:53:86:A8,2025-01-05T12:09:03.345Z,Hyline Maina,JTS000478,Hyline,hyLine,254746807156
+,6.1,Blessed Angel,RUARAKA - NAIVAS,,50:91:E3:23:E3:9D,2025-01-06T09:02:06.382Z,Gilbert Kosgey,JTS000479,Kosgey,koSgey,254722110123
+robertouma99@gmail.com,ACP3-2,City Plaza,Naivas ,,D8:32:14:30:2F:10,2025-01-08T12:03:30.553Z,Robert Ouma,JTS000480,JTS000480,ouMa,254700395605
+,1.2,BLESSED ANGEL,RUARAKA - NAIVAS,,E4:FA:C4:FD:5B:EB,2025-01-12T04:01:18.45Z,Boniface  Musee,JTS000481,Musee,muSee,254769278005
+,G2,,RUARAKA - NAIVAS,,3C:52:A1:2F:1F:EB,2024-12-09T14:48:41.372Z,Victor Mbeka,JTS000482,Mbeka,mbEka,254711673621
+,6.3,BLESSED ANGEL,Naivas,,60:A4:B7:DC:8D:EB,2025-01-09T15:31:30.771Z,Almasi Boniface,JTS000483,Almasi,alMasi,254748925446
+,719,Bensloft,RUARAKA - NAIVAS,,B8:3A:08:78:40:48,2024-12-14T07:57:58.94Z,Michael Miugo,JTS000484,Miugo,miUgo,254790079225
+joacqiummoriasi@gmail.com,4.6,BLESSED ANGEL,RUARAKA - NAIVAS,,3C:52:A1:2E:57:95,2024-12-14T12:07:29.985Z,Joacqium Moriasi,JTS000485,Moriasi,moRiasi,254795565210
+,Jambo Bet,Jambo Bet,RUARAKA - NAIVAS,,3C:52:A1:2F:1F:CB,2025-01-28T15:21:45.723Z,Florence Chibole,JTS000486,Chibole,chIbole,254795163931
+,2nd floor,Kinyua,RUARAKA - NAIVAS,,68:FF:7B:9B:FE:B3,2024-12-25T17:56:57.634Z,Fanice Otwori,JTS000487,Otwori,otWori,254724175344
+,2.5,BLESSED ANGEL,RUARAKA - NAIVAS,,90:9A:4A:27:57:F5,2025-01-27T15:24:36.653Z,Claire Kirui,JTS000488,Claire,clAire,254712343563
+,604,Bensloft,RUARAKA - NAIVAS,,CC:2D:21:67:8B:70,2024-12-28T17:15:42.444Z,Kevin Kipngeno,JTS000489,Kipngeno,kiPngeno,254700669941
+,,Sam,RUARAKA - NAIVAS,,CC:2D:21:F0:36:00,2025-02-01T14:09:32.195Z,Paul Machogu,JTS000490,Machogu,maChogu,254793766722
+,A06,BOR,RUARAKA - NAIVAS,,50:D4:F7:66:9E:7F,2025-01-11T18:14:28.16Z,Alexander  Odhiambo,JTS000491,Alexander,alExander,254769960709
+,4.5,Next Leo fresh,RUARAKA - NAIVAS,,58:6D:8F:21:5E:14,2025-01-06T15:15:59.512Z,Mary Mutinda,JTS000492,Marymutinda,maRymutinda,254703793045
+,5th,2nd floor,RUARAKA - NAIVAS,,5C:A6:E6:8B:AB:E9,2025-01-13T13:32:06.477Z,Martin Karanja,JTS000493,Karanja,kaRanja,254705158794
+,4,Kinyua,RUARAKA - NAIVAS,,50:0F:F5:2E:1D:28,2025-01-16T15:34:23.123Z,Robert Mwendwa,JTS000494,Mwendwa,mwEndwa,254716820246
+,D2,,RUARAKA - NAIVAS,,B8:3A:08:4D:3B:28,2025-01-16T16:43:04.619Z,Ismail Adan,JTS000495,Ismail,isMail,254707291974
+,405,Mvuli,Ngara,,A8:42:A1:98:4F:F7,2025-03-30T12:59:00Z,Perminus Wawira,JTS000496,Perminus,peRminus,254748951922
+,117,Next Simavade,RUARAKA - NAIVAS,,3C:52:A1:2F:1F:DF,2025-01-27T11:54:36.058Z,Keith Jomo,JTS000497,Jomo,joMo,254798546966
+,Sultan,Sultan,RUARAKA - NAIVAS,,B8:3A:08:31:B5:60,2025-01-31T16:31:49.051Z,Jamal Mulomi,JTS000498,Jamal,jaMal,254715814545
+,GFR,Kamau,RUARAKA - NAIVAS,,CC:2D:21:2D:DC:A0,2025-02-02T15:46:11.837Z,Joyce Debora,JTS000499,Debora,deBora,254710821201
+,25,Stanley,Kasarani,,58:D9:D5:13:4B:10,2025-02-03T09:00:00Z,Joel Kimani,JTS000500,Joel,joEl,254716562185
+`;
+
+// Convert the CSV to JSON format
+export const formattedData = csvToJson(csvData.trim());

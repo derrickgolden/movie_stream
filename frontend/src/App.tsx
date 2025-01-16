@@ -34,8 +34,8 @@ function App() {
             <Route path="/" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} /> 
             <Route path="login/:urltoken" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} />
             <Route path="viewer/signup" element={<Signup prevelages="viewer"/>} />
-            <Route path="reset-password/:urltoken" element={<ResetPassword />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="viewer/reset-pass" element={<ResetPassword />} />
             <Route path='change-pass' element={<ChangePassword setIsLogin = {setIsLogin}/>} />
             {/* <Route path='register-shop' element={<RegisterShop />} /> */}
       
