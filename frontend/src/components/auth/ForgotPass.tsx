@@ -105,7 +105,7 @@ const ForgotPassword: React.FC = () =>{
                             
                                 <div className=" gap-5 d-flex form-title">
                                     
-                                    <div className="col-lg-4 col-xl-3 col-xxl-1 d-flex text-center px- px-sm-3 py-5"
+                                    <div className="col-lg-4 col-xl-3 d-flex text-center px- px-sm-3 py-5"
                                     >
                                         <div className="form-bo text-light" >
                                             {
