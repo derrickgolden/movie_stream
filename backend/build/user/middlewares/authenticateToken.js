@@ -6,7 +6,7 @@ require('dotenv').config();
 // const adminAccess = new RevokedAdminCache()
 const authenticateToken = async (req, res, next) => {
     const token = req.header('Authorization');
-    const { reset_password, email } = req.body;
+    const { reset_password, phone } = req.body;
     if (!token) {
         return res.status(200).send({ success: false, reLogin: true, msg: "No authentication token: Login" });
     }
@@ -17,7 +17,7 @@ const authenticateToken = async (req, res, next) => {
                 success: false, msg, reLogin: true,
             });
         }
-        if (reset_password && email !== user.email) {
+        if (reset_password && phone !== user.phone) {
             return res.status(200).send({
                 success: false, msg: "Email does not match"
             });

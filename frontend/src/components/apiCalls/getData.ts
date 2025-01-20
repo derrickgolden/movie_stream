@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { MovieListProps, TvSeries } from "./types";
 import { MovieListDetails } from "../../redux/movieList";
 import { SeriesListDetails } from "../../redux/seriesList";
+import { Navigate, NavigateFunction } from "react-router-dom";
 
 interface ResponseData {
     success: boolean;
@@ -13,33 +14,24 @@ interface SeriesData {
     success: boolean;
     details: SeriesListDetails[];
 }
-interface SeasonEpisode {
-    success: boolean;
-    details: TvSeries[];
-}
 
-export const getMoviesList = async (path: string, data: string): Promise<ResponseData> => {
-    return await makeApiCall("videos/get-movies", 'get', data);
+export const getMoviesList = async (path: string, data: string, navigate: NavigateFunction, auth = true): Promise<ResponseData> => {
+    return await makeApiCall("videos/get-movies", 'get', data, navigate, auth);
 };
-export const getSeriesList = async (path: string, data: string): Promise<SeriesData> => {
-    return await makeApiCall("videos/get-series", 'get', data);
-};
-export const getSerieSeasonsEpisodes = async (movie_id: string): Promise<SeasonEpisode> => {
-    return await makeApiCall('videos/get-seasons-episodes', 'get', movie_id);
+export const getSeriesList = async (path: string, data: string, navigate: NavigateFunction, auth = true): Promise<SeriesData> => {
+    return await makeApiCall("videos/get-series", 'get', data, navigate, auth);
 };
 
-const makeApiCall = async(url: string, method: string, data: string) =>{
-    // const tokenString = sessionStorage.getItem("userToken");
-
-    // if (tokenString !== null) {
-    //     var token = JSON.parse(tokenString);
-    // } else {
-    //     Swal.fire({
-    //         title: "Token not Found",
-    //         text: "Log out and log in then try again.",
-    //         icon: "warning"
-    //     });
-    // }
+const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction, auth: boolean) =>{
+    if(auth){
+        const tokenString = localStorage.getItem("viewerToken");
+    
+        if (tokenString !== null) {
+            var token = JSON.parse(tokenString);
+        } else {
+            navigate("/")
+        }
+    }
 
     let config = {
         method: method,
@@ -47,6 +39,7 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
         url: `${server_baseurl}/${url}/${data}`,
         headers: { 
             'Content-Type': 'application/json',
+            'authorization': token,
         },
         data : data
     };

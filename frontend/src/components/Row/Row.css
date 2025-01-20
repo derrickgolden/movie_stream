@@ -6,14 +6,15 @@
   min-height: 100px;
 }
 .row2 >h2 {
-  margin-left: 15px;
+  /* margin-left: 15px; */
 }
 .row__posters {
   display: flex;
+  justify-content: space-around;
   overflow-y: hidden;
   overflow-x: scroll;
   scroll-behavior: smooth;
-  padding: 0 20px 0 20px;
+  /* padding: 0 20px 0 20px; */
 }
 .custom-btn{
   background-image: linear-gradient(to right, black, black, transparent);
@@ -33,6 +34,10 @@
   display: none;
 }
 
+.div_poster {
+  min-height: 250px;
+  min-width: 180px;
+}
 .row__poster {
   margin-bottom: 10px;
   object-fit: contain;

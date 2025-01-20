@@ -77,7 +77,6 @@ router.post('/login', async (req: Request, res: Response): Promise<void> =>{
 
         const match: boolean = await bcrypt.compare(password, passwordHash);
         if(match) {
-            console.log(details);
             res.status(200).send({success: true, token, msg: "User Found", details});   
         }else{
             res.status(200).send({success: false, msg: "Incorrect Password"});
@@ -114,17 +113,17 @@ router.patch('/submit-code', async (req: Request, res: Response): Promise<void> 
 
 router.patch('/change-pass', authenticateToken, async(req: ModifiedReq, res: Response) =>{
     const { newPassword, oldPassword } = req.body;
-    const {email} = req.user;
+    const {phone} = req.user;
 
     try {
-        const response: LoginResponse = await loginUser(email);
+        const response: LoginResponse = await loginUser(phone);
         const { passwordHash } = response;
         
         const match: boolean = await bcrypt.compare(oldPassword, passwordHash);
         if(match) {
             const hash = await bcrypt.hash(newPassword, 10);
     
-            const response = await resetPassword(hash, email)
+            const response = await resetPassword(hash, phone)
             return response.success ?
                 res.status(200).send({success: true, 
                     msg: "Password changed, you are required to log in again"}) :
@@ -134,7 +133,7 @@ router.patch('/change-pass', authenticateToken, async(req: ModifiedReq, res: Res
         }
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(404).send({success: false, err: error.message, msg: "Server side error"})
     }
 });
@@ -182,9 +181,12 @@ router.post('/forgot-password', async(req: Request, res: Response): Promise<void
                 const resp: SendEmailRes  = await sendSMS([p], msg);
                 resp.success ?
                     res.status(200).send({success: true, msg: "Code sent", details: storeCode.details}):
-                    res.status(400).send(resp)
-                }
+                    res.status(400).send(resp);
+                    return;
+            }else{
+                res.status(400).send(storeCode);
                 return;
+            }
             }
         res.status(400).send(response)
 

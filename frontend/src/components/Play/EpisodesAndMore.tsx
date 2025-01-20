@@ -77,7 +77,7 @@ const EpisodesAndMore = () => {
                                     <img style={{
                                         backgroundSize: "objectFit"
                                     }}
-                                        src={`${baseUrl}/${episode.thumbnail_path}`}
+                                        src={`${baseUrl}/${episode.thumbnail_path || movie.backdrop_path}`}
                                         alt="Thumbnail"
                                         className="w-100 h-100"
                                     />

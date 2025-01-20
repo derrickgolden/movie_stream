@@ -31,7 +31,7 @@ export const getMoviesList = async ( ): Promise<universalResponse> => {
             ON 
                 movies.movie_id = movie_files.movie_id
             ORDER BY 
-                movies.created_at DESC;;
+                movies.created_at DESC;
         `, []);
 
         connection.release();

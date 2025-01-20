@@ -9,6 +9,7 @@ import { RootState } from "../../redux/store";
 import { baseUrl } from "../Row/Row";
 import { HoveredMovie } from "../../sections/LandingPage";
 import { playMovie } from "../Row/playMovie";
+import SideBar from "../Navbar/SideBar";
 
 interface BannerProps {
   hoveredMovie: HoveredMovie;
@@ -92,13 +93,14 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
   const handleVideoLoaded = () => {
     setIsVideoReady(true);
   };
+
   return (
     <header
-      className="banner col-12 d-flex flex-column justify-content-between position-fixed top-0 "
+      className="banner col-11 d-flex flex-column justify-content-between position-fixed top-0"
     >
       <div className="d-flex align-items-center col-12 position-relative" style={{backgroundColor: "#000"}}>
-        <div className="banner__contents col-12 col-md-5  ">
-          <h1 className="banner__title display-4 ">
+        <div className="banner__contents col-12 col-md-5 ">
+          <h1 className="banner__title display-4">
             {movie?.title || movie?.name || movie?.original_name }
           </h1>
           <div className="banner__buttons ">
@@ -110,7 +112,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
               </button>
             )}
           </div>
-          <h1 className="banner__description display-6 text-center">{movie?.description}</h1>
+          <h1 className="banner__description display-6 text-start">{movie?.description}</h1>
         </div>
 
         <div className="col-12 col-md-7 position-relative " style={{

@@ -1,7 +1,9 @@
 :80 {
     reverse_proxy localhost:3000
-    log {
-        output file E:\Code\projects\movie_stream\backend\caddy.log
-    }
+}
+
+:2080 {
+    reverse_proxy localhost:4000
+    
 }
 

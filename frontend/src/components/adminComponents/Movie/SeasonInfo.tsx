@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MovieFile, Season, TvSeries } from "../../apiCalls/types";
-import { addSeasonsInfo } from "../../apiCalls/postData";
+import { addSeasonsInfo } from "../apiCalls/postData";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { setCallApi } from "../../../redux/callApi";

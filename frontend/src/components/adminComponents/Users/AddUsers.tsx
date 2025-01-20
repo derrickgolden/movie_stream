@@ -10,7 +10,7 @@ import { server_baseurl } from '../../../baseUrl';
 import Swal from 'sweetalert2'
 import { formFields } from './userInputs';
 import { formattedData, user } from './users';
-import { addUser } from '../../apiCalls/postData';
+import { addUser } from '../apiCalls/postData';
 
 type UserAcc = "viewer" | "admin";
 
@@ -45,8 +45,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
         
         const phone = "254" + signupDetails.phone
         let data = JSON.stringify({...signupDetails, phone, auth_with: "app"});        
-console.log(data);
-return;
+
         let config = {
             method: 'post',
             maxBodyLength: Infinity,

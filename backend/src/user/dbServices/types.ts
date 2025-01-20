@@ -83,5 +83,12 @@ export interface UpdateInvoiceProps {
     customerGave: {[key: string]: string};
     sale_id: number;
     updated_at: Date;
+};
+
+export interface RequestMovie {
+  movieName: string,
+  movieType: 'movie' | 'series',
+  description: string,
+  notify: boolean;
 }
 

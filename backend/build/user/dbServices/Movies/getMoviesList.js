@@ -30,7 +30,7 @@ const getMoviesList = async () => {
             ON 
                 movies.movie_id = movie_files.movie_id
             ORDER BY 
-                movies.created_at DESC;;
+                movies.created_at DESC;
         `, []);
         connection.release();
         return {

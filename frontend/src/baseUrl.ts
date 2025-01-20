@@ -1,6 +1,6 @@
 const client_baseurl = "http://localhost:5173"
 
-// const server_baseurl = "http://192.168.0.112"
+// const server_baseurl = "http://192.168.0.200:2080"
 // const server_baseurl = "http://localhost:4000"
 const server_baseurl = "https://japtech.africa"
 // const server_baseurl = "http://12.0.0.100:2080"

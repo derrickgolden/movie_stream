@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { addEpisodeDetails } from "../../apiCalls/postData";
+import { addEpisodeDetails } from "../apiCalls/postData";
 import { Episode } from "../../apiCalls/types";
 import { FaEdit } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { getSerieSeasonsEpisodes } from "../../apiCalls/getData";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useDispatch } from "react-redux";
@@ -14,6 +13,7 @@ import axios from "axios";
 import { API_KEY } from "./AddNewMovie";
 import { MdOutlinePreview } from "react-icons/md";
 import { deleteEpisodeApi } from "../../apiCalls/updateData";
+import { getSerieSeasonsEpisodes } from "../apiCalls/getData";
 
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
@@ -41,19 +41,19 @@ const EpisodeManage = () =>{
         const name = e.target.id;
         let value;
         name === "isEdit"? value = e.target.checked: value = e.target.value;
-        console.log(name, value)
         setEpisodeDetails((obj) => ({...obj, [name]: value}))
     }
 
     const handleSubmitEpisode = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
-        console.log(e)
         const episodeData = JSON.stringify({epidodeDetails, season});
         addEpisodeDetails(episodeData).then((data) =>{
             if(data.success){
                 Swal.fire(data.msg)
                 dispatch(setCallApi(!callApi));
-                setEpisodeDetails({episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", episode_order: 0});
+                setEpisodeDetails((obj) => 
+                    ({...obj, episode_no: obj.episode_no + 1, episode_name: "", isEdit: false, url: "", episode_order: 0})
+                );
             }
         })
     }
@@ -66,7 +66,6 @@ const EpisodeManage = () =>{
         const request = axios.get(url);
         request.then((data) =>{
             if(data.status === 200){
-                console.log(data.data);
                 const {name, overview, runtime, still_path, id} = data.data;
                 setEpisodeDetails((obj) =>({...obj,
                     episode_name: name, overview, runtime, still_path, id

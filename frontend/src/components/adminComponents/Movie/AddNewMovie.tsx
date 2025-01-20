@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { movieDetailsInput, seoAndMarketingInput } from "./movieDetailsInputs";
 import { baseUrl } from "../../../baseUrl";
-import { addMovieDetails } from "../../apiCalls/postData";
+import { addMovieDetails } from "../apiCalls/postData";
 import { useNavigate } from "react-router-dom";
 
 export const API_KEY = "086cfe05dd16828e37291d2f37293a38";

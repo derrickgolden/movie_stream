@@ -55,7 +55,8 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                 navigate("/viewer/dashboard")
             }
         }
-        getMoviesList("videos/get-movies", "").then((res) =>{
+        const auth = false;
+        getMoviesList("videos/get-movies", "", navigate, auth).then((res) =>{
             if(res.success){
                 dispatch(setMovieListDetails(res.details));
             }

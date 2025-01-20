@@ -60,7 +60,6 @@ router.post('/login', async (req, res) => {
         ;
         const match = await bcrypt.compare(password, passwordHash);
         if (match) {
-            console.log(details);
             res.status(200).send({ success: true, token, msg: "User Found", details });
         }
         else {
@@ -101,14 +100,14 @@ router.patch('/submit-code', async (req, res) => {
 });
 router.patch('/change-pass', authenticateToken_1.authenticateToken, async (req, res) => {
     const { newPassword, oldPassword } = req.body;
-    const { email } = req.user;
+    const { phone } = req.user;
     try {
-        const response = await loginUser(email);
+        const response = await loginUser(phone);
         const { passwordHash } = response;
         const match = await bcrypt.compare(oldPassword, passwordHash);
         if (match) {
             const hash = await bcrypt.hash(newPassword, 10);
-            const response = await resetPassword(hash, email);
+            const response = await resetPassword(hash, phone);
             return response.success ?
                 res.status(200).send({ success: true,
                     msg: "Password changed, you are required to log in again" }) :
@@ -119,7 +118,7 @@ router.patch('/change-pass', authenticateToken_1.authenticateToken, async (req, 
         }
     }
     catch (error) {
-        console.log(error);
+        // console.log(error)
         res.status(404).send({ success: false, err: error.message, msg: "Server side error" });
     }
 });
@@ -151,8 +150,12 @@ router.post('/forgot-password', async (req, res) => {
                 resp.success ?
                     res.status(200).send({ success: true, msg: "Code sent", details: storeCode.details }) :
                     res.status(400).send(resp);
+                return;
             }
-            return;
+            else {
+                res.status(400).send(storeCode);
+                return;
+            }
         }
         res.status(400).send(response);
     }

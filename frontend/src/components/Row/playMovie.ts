@@ -32,8 +32,8 @@ export const playMovie = ({movie, clickCount, setClickCount, navigate, setHovere
         navigate(`/watch/${movie.title}-${movie.video_id}`, {state: {movie, playVideo}});
       }
     }else if(setClickCount && setHoveredMovie && setIsVideoReady){
-      setClickCount({count: 1, id: movie.video_id});
-      setHoveredMovie({movie_id: movie.video_id, is_series: movie.is_series}  );
-      setIsVideoReady(false);
+      // setClickCount({count: 1, id: movie.video_id});
+      // setHoveredMovie({movie_id: movie.video_id, is_series: movie.is_series}  );
+      // setIsVideoReady(false);
     };
   };

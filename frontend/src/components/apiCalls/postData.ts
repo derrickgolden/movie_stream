@@ -1,7 +1,8 @@
 import axios from "axios";
-import { server_baseurl } from "../../baseUrl";
 import Swal from "sweetalert2";
 import { MovieFile } from "./types";
+import { server_baseurl } from "../../baseUrl";
+import { NavigateFunction } from "react-router-dom";
 
 interface UploadMovieRes {
     success: boolean;
@@ -9,38 +10,20 @@ interface UploadMovieRes {
     details: MovieFile[];
 }
 
-export const addMovieDetails = async (data: string): Promise<UploadMovieRes> => {
-    return await makeApiCall('videos/add/movie-details', 'post', data);
-};
-export const uploadMovieDetails = async (data: string): Promise<UploadMovieRes> => {
+export const requestMovieApi = async (data: string, navigate: NavigateFunction): Promise<UploadMovieRes> => {
     // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
-    return await makeApiCall('videos/add/movie-path', 'post', data);
-};
-export const addSeasonsInfo = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
-    return await makeApiCall('videos/add/season-info', 'post', data);
-};
-export const addEpisodeDetails = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
-    return await makeApiCall('videos/add/episode-info', 'post', data);
-};
-export const addUser = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
-    return await makeApiCall('user/signup', 'post', data);
+    return await makeApiCall('user/movie-request', 'post', data, navigate);
 };
 
-const makeApiCall = async(url: string, method: string, data: string) =>{
-    // const tokenString = sessionStorage.getItem("userToken");
+const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction) =>{
+    const tokenString = localStorage.getItem("viewerToken");
 
-    // if (tokenString !== null) {
-    //     var token = JSON.parse(tokenString);
-    // } else {
-    //     Swal.fire({
-    //         title: "Token not Found",
-    //         text: "Log out and log in then try again.",
-    //         icon: "warning"
-    //     });
-    // }
+    if (tokenString !== null) {
+        var token = JSON.parse(tokenString);
+    } else {
+        navigate("/");
+        return {success: false, msg: "Token not found. Try to login again", details: []}
+    }
 
     let config = {
         method: method,
@@ -48,8 +31,10 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
         url: `${server_baseurl}/${url}`,
         headers: { 
             'Content-Type': 'application/json',
+            'authorization': token
         },
         data : data
+        
     };
 
     return await axios.request(config)

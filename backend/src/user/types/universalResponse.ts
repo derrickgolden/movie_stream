@@ -8,10 +8,13 @@ export interface universalResponse{
     err?: string | boolean;
 }
 
+export interface TokenUser {
+    id: number;
+    phone: number;
+    prevelages: string;
+    account: string;
+    account2: string;
+}
 export interface ModifiedReq extends Request{
-    user: {
-        user_id: number;
-        added_by: number;
-        email: string;
-    }
+    user: TokenUser
 }

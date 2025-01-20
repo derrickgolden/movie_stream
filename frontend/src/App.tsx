@@ -18,18 +18,22 @@ import { AddNewMovie, AllMovies, AllSeries, EpisodeManage, Logout, MovieRequests
 } from './components/adminComponents';
 import AddUsers from './components/adminComponents/Users/AddUsers';
 import AllUsers from './components/adminComponents/Users/AllUsers';
+import RequestMovie from './sections/RequestMovie';
+import SearchMovie from './sections/SearchMovie';
 
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
 
   return (
-    <div className='App'>
+    <div className='App position-relative'>
 
           <Routes>
             <Route path='viewer/dashboard' element={<LandingPage />} />
             <Route path='watch/:id' element={<MoviePlayer /> } />
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
+            <Route path='viewer/request-movie' element={<RequestMovie /> } />
+            <Route path='viewer/search-movie' element={<SearchMovie /> } />
 
             <Route path="/" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} /> 
             <Route path="login/:urltoken" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} />

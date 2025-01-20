@@ -7,7 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdOutlinePreview } from "react-icons/md";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { uploadMovieDetails } from "../../apiCalls/postData";
+import { uploadMovieDetails } from "../apiCalls/postData";
 import { MovieFile } from "../../apiCalls/types";
 import Swal from "sweetalert2";
 import { deleteMovieApi } from "../../apiCalls/updateData";

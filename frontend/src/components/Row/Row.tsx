@@ -8,13 +8,14 @@ import { MovieListProps } from "../apiCalls/types";
 import { RowProps } from "./type";
 import { useDispatch } from "react-redux";
 import { setMovieListDetails } from "../../redux/movieList";
-import { SeriesListDetails, setSeriesListDetails } from "../../redux/seriesList";
+import { setSeriesListDetails } from "../../redux/seriesList";
 import { playMovie } from "./playMovie";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import PosterCard from "./PosterCard";
 
 export const baseUrl = "https://image.tmdb.org/t/p/original";
 
-const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHoveredMovie, setIsVideoReady }) => {
+const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHoveredMovie, setIsVideoReady, theDevice }) => {
   const [movies, setMovies] = useState<MovieListProps[]>([]);
   const [trailerUrl, setTrailerUrl] = useState("");
   const [clickCount, setClickCount] = useState({count: 0, id: 0});
@@ -26,14 +27,14 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
   useEffect(() => {
     const data ="";
     if(type === "movies"){
-      getMoviesList(fetchUrl, data).then((res) =>{
+      getMoviesList(fetchUrl, data, navigate).then((res) =>{
         if(res.success){
           setMovies(res.details);
           dispatch(setMovieListDetails(res.details));
         }
       });
     }else if(type === "series"){
-      getSeriesList(fetchUrl, data).then((res) =>{
+      getSeriesList(fetchUrl, data, navigate).then((res) =>{
         if(res.success){
           setMovies(res.details);
           dispatch(setSeriesListDetails(res.details));
@@ -87,34 +88,38 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
   // };
 
   return (
-    <div className="row2 bg-black">
+    <div className="row2 bg-black ps-3">
       <h2 className="row_title">{title}</h2>
       <div className="d-fle position-relative w-100 ">
-        <div onClick={scrollLeft} role="button"
-          className="custom-btn position-absolute top-0 bottom-0 d-flex align-items-center">
-          <FaChevronLeft size={42}/>
-        </div>
-        <div className="row__posters pl-3" ref={rowRef}>
+        {
+          theDevice === "laptop" && 
+          <div onClick={scrollLeft} role="button"
+            className="custom-btn position-absolute start-0 top-0 bottom-0 d-flex align-items-center">
+            <FaChevronLeft size={42}/>
+          </div>
+        }
+        <div className="row__posters pl" ref={rowRef}>
           {movies.map((movie, i) => (
-            <img
-              key={movie.video_id + i}
-              onClick={() => playMovie({
-                movie, clickCount, navigate, setClickCount, setHoveredMovie, setIsVideoReady
-              })}
-              onMouseEnter={() =>handleMovieHover(movie)}
-              onMouseLeave={() =>{}}
-              className={`row__poster ${isLargeRow && "row__posterLarge"} `}
-              src={`${baseUrl}${
-                isLargeRow ? movie.poster_path : movie.backdrop_path
-              }`}
-              alt={movie.name}
+            <PosterCard
+              key={i}
+              movie = {movie} 
+              clickCount ={clickCount} 
+              navigate = {navigate} 
+              setClickCount ={setClickCount} 
+              setHoveredMovie = {setHoveredMovie} 
+              setIsVideoReady = {setIsVideoReady}
+              handleMovieHover = {handleMovieHover} 
+              isLargeRow = {isLargeRow}
             />
           ))}
         </div>
-        <div onClick={scrollRight} role="button"
-          className="custom-btn2 position-absolute end-0 top-0 bottom-0 d-flex align-items-center">
-          <FaChevronRight size={42}/>
-        </div>
+        {
+          theDevice === "laptop" && 
+          <div onClick={scrollRight} role="button"
+            className="custom-btn2 position-absolute end-0 top-0 bottom-0 d-flex align-items-center">
+            <FaChevronRight size={42}/>
+          </div>
+        }
       </div>
       {trailerUrl && (
         <YouTube

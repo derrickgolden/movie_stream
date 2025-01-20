@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SeasonInfo from "./SeasonInfo";
-import { getSerieSeasonsEpisodes } from "../../apiCalls/getData";
 import { Season, TvSeries } from "../../apiCalls/types";
 import { FaEdit } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
@@ -11,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import { setCallApi } from "../../../redux/callApi";
+import { getSerieSeasonsEpisodes } from "../apiCalls/getData";
 
 const SeasonsManage = () =>{
     const [seriesDetails, setSeriesDetails] = useState({title: "", order: 0, url: "", label:"", movie_id: 0});

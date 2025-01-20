@@ -13,6 +13,7 @@ export interface PersonDetails{
 }
 // Define the TypeScript interface
 export interface User {
+    id: number;
     user_type: string;
     email: string;
     password: string;

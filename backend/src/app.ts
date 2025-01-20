@@ -9,10 +9,10 @@ import fs from 'fs';
 require('dotenv').config();
 
 import adminauth from './user/routes/auth';
-import shop from './user/routes/shop';
 import videos from './user/routes/movies/getMoviesList';
 import alterVideos from './user/routes/movies/uploadMovie';
 import deleteVideos from './user/routes/movies/deleteMovies';
+import requestMovie from './user/routes/requestMovie';
 import { authenticateToken } from './user/middlewares/authenticateToken';
 
 const SERIES_PATH=process.env.SERIES_PATH;
@@ -125,8 +125,9 @@ app.use('/js', express.static(path.join(__dirname, 'dist', 'assets', 'index-TSNK
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/user', adminauth);
-app.use('/user', upload.single('logo'), authenticateToken, shop);
+app.use('/user', authenticateToken, requestMovie);
 app.use('/videos', [videos, alterVideos, deleteVideos]);
+app.use('/admin/videos', authenticateToken, requestMovie);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(PORT, () => {

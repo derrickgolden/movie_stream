@@ -6,5 +6,6 @@ export interface RowProps{
     isLargeRow: boolean;
     setHoveredMovie: React.Dispatch<React.SetStateAction<HoveredMovie>>;
     setIsVideoReady: React.Dispatch<React.SetStateAction<boolean>>;
-    type: "movies" | "series" | "both"
+    type: "movies" | "series" | "both";
+    theDevice: "laptop" | "phone" | "tv";
 }
