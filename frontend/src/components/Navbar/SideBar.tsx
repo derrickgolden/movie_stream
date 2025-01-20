@@ -17,9 +17,14 @@ const  SideBar = () =>{
   const navigate = useNavigate();
     const [toggle, setToggle] = useState({link: "Home", isOpen: false})
     const [logOut, setLogOut] = useState(false);
+    const [viewer, setViewer] = useState("")
+
     useEffect(() =>{
+      const viewer = localStorage.getItem("viewer");
+      viewer ? setViewer(JSON.parse(viewer)) : setLogOut(true);
       logOut? navigate("/"): null
     },[logOut]);
+    console.log(viewer);
     const handleLogOut = () =>{
       localStorage.clear();
       localStorage.removeItem("viewerToken")
@@ -29,7 +34,8 @@ const  SideBar = () =>{
         <div style={{backgroundColor: "black "}}
         className={`${toggle.isOpen? "col-9 col-md-3 ": "col-1 " } side-bar col-1 text-center h-100 
           pt-5 px-md-3  position-absolute top-0 left-0 `} >
-            <div className={`${toggle.isOpen? "text-start ": "text-center "} d-flex ps-sm-2 ps-md-3 mb-4 mt-5`}>
+            <div className={`${toggle.isOpen? "text-start ": "text-center "} d-flex 
+            ps-sm-2 ps-md-3 mb-4 mt-5 align-items-center`}>
               <img
                 style={{height: "30px"}}
                   className=""
@@ -38,7 +44,10 @@ const  SideBar = () =>{
               />
               {
                 toggle.isOpen &&
-                <h5 className="text-info ms-3">Derrick</h5>
+                <div className="">
+                  <h5 className="text-info ms-3 text-truncate">{getGreeting()}</h5>
+                  <h6 className="text-info ms-3 text-truncate">{viewer.name}</h6>
+                </div>
               }
             </div>
             <div className={`d-flex  text-center text-warning ps-sm-2 ps-md-3`}>
@@ -90,3 +99,15 @@ const  SideBar = () =>{
 };
 
 export default SideBar;
+
+function getGreeting() {
+  const currentHour = new Date().getHours();
+
+  if (currentHour < 12) {
+      return "Good Morning";
+  } else if (currentHour < 18) {
+      return "Good Afternoon";
+  } else {
+      return "Good Evening";
+  }
+}

@@ -146,7 +146,7 @@ const storeLinkToken = async (id, code) => {
             SELECT * FROM reset_codes
             WHERE user_id = ?
         `, [id]);
-        let insertId = getRes[0].id || null;
+        let insertId = getRes[0]?.id || null;
         if (getRes.length) {
             // If record exists, update the code
             await connection.query(`

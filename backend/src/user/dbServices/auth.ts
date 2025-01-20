@@ -176,7 +176,7 @@ const storeLinkToken = async (id: number, code: number) => {
             WHERE user_id = ?
         `, [id]);
 
-        let insertId = getRes[0].id || null;
+        let insertId = getRes[0]?.id || null;
 
         if (getRes.length) {
             // If record exists, update the code
