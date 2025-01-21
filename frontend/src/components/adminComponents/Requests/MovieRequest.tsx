@@ -12,27 +12,17 @@ import { MovieRequestRes } from "../apiCalls/type"
 import { updateRequestedMovieStatus } from "../apiCalls/patchData"
 
 const MovieRequests = () =>{
-    const title = "Movie Request"
-    const [apistate, setApiState] = useState<MovieRequestRes[]>([])
-    const [selectVal, setSelectval] = useState([])
-    // pass status model render
-    const [openModal, setOpenModal] = useState(true)
-    // open update data modal
-    const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false })
-    const [update_modal_data, setUpdate_modal_data] = useState('')
-    const [rerendarApi, setRerendarApi] = useState(false)
+    const title = "Movie Request";
+    const [apistate, setApiState] = useState<MovieRequestRes[]>([]);
+    const [rerendarApi, setRerendarApi] = useState(false);
   
     // open add data modal
-    const [open_add_modal, setOpen_add_modal] = useState({ render: true, modal_open: false });
     const [apicol, setApiCol] = useState<MovieRequestRes>();
     const callApi = useSelector((state: RootState) =>state.callApi);
     const [requestedMovies, setRequestedMovies] = useState<MovieRequestRes[]>([]);
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-
     const filter_apistate = apistate.filter((val) => {
-        return val.status !== "trash"
+        return val.status !== "trash";
     })
 
     const columns = [
@@ -48,7 +38,7 @@ const MovieRequests = () =>{
             <select onChange={(e) => handleStatusChange(e, row)} className="form-select" aria-label="Default select example">
                 <option selected = {row.status === "pending"} value='pending'>Pending</option>
                 <option selected = {row.status === "inProgress"} value='inProgress'>InProgress</option>
-                <option selected = {row.status === "uploaded"} value='completed'>Uploaded</option>
+                <option selected = {row.status === "uploaded"} value='uploaded'>Uploaded</option>
                 <option selected = {row.status === "cancelled"} value='cancelled'>Cancel</option>
             </select>
         }</>,
@@ -83,6 +73,7 @@ const MovieRequests = () =>{
             if (result.isConfirmed) {
                 const data = JSON.stringify({status, movie_request_id: row.movie_request_id })
                 updateRequestedMovieStatus(data).then((data) =>{
+                    console.log(data)
                     if(data.success){
                         Swal.fire({
                           title: "Updated",
