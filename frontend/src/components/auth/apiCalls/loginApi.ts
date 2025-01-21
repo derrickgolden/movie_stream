@@ -1,8 +1,6 @@
 import Swal from "sweetalert2";
 import { server_baseurl } from "../../../baseUrl";
-import { Dispatch } from "react";
 import { PersonDetails } from "../Login";
-import { ActionCreatorWithPayload, AnyAction } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
 
 interface LoginApiProps {
@@ -25,10 +23,9 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
             return response.json();
         } )
         .then(data => {
+            // console.log(data)
             if(data.success){
-                console.log(data)
                 if(data.details[0].prevelages === "viewer"){
-
                     localStorage.setItem("viewer", JSON.stringify(data?.details[0]));
                     localStorage.setItem("viewerToken", JSON.stringify(data?.token));
                 }else if(data.details[0].prevelages === "admin"){
@@ -37,7 +34,6 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
                 }
                 setIsLogin(true);
                 navigate(`/${prevelages}/dashboard`, {replace: true});
-                console.log(data);
             }else{
                 Swal.fire({
                     text: `${data.msg}`,

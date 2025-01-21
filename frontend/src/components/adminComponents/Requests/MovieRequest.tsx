@@ -71,13 +71,13 @@ const MovieRequests = () =>{
             confirmButtonText: "Yes, Update"
           }).then((result) => {
             if (result.isConfirmed) {
-                const data = JSON.stringify({status, movie_request_id: row.movie_request_id })
+                const data = JSON.stringify({ status, row });
                 updateRequestedMovieStatus(data).then((data) =>{
                     console.log(data)
                     if(data.success){
                         Swal.fire({
                           title: "Updated",
-                          text: "Status updated successfully.",
+                          text: data.msg,
                           icon: "success"
                         });
                     }

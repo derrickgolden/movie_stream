@@ -46,7 +46,7 @@ const  SideBar = () =>{
                 toggle.isOpen &&
                 <div className="">
                   <h5 className="text-info ms-3 text-truncate">{getGreeting()}</h5>
-                  <h6 className="text-info ms-3 text-truncate">{viewer.name}</h6>
+                  <h6 className="text-info ms-3 text-truncate">{viewer?.account2}</h6>
                 </div>
               }
             </div>
