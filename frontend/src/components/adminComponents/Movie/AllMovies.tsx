@@ -72,16 +72,14 @@ const AllMovies = () =>{
     }, [rerendarApi, seriesList])
 
     useEffect(() =>{
-        getMoviesList("videos/get-movies", "").then((data) =>{
+        getMoviesList("videos/get-movies", "", navigate).then((data) =>{
             if(data.success){
-                console.log(data.details);
                 setSeriesList(data.details);
             }
         });
     }, [callApi]);
 
     const manageMovies = (row: MovieListDetails) =>{
-        console.log(row);
         const state = [{...row, isEdit: true, url: row.video_url, order: row.file_order}];
         navigate("/admin/movie-upload", {state})
     }

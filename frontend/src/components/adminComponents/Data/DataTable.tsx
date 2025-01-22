@@ -8,11 +8,7 @@ export default function DataTable_Component({ apidata, columns, search }) {
   useEffect(() => {
     let result = data.filter(val => {
       if (search == 'name') {
-        const fullName = `${val.first_name} ${val.last_name}`.toLowerCase();
-        return fullName.toLowerCase().match(datafilter?.toLowerCase())
-      }
-      else if (search == 'Sender Email') {
-        return val.sender_email?.toLowerCase().match(datafilter?.toLowerCase())
+        return val?.title.toLowerCase().match(datafilter?.toLowerCase())
       }
     })
 
