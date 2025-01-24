@@ -26,7 +26,8 @@ const getSeriesSeasonsEpisodeById = async (movie_id) => {
                                             'episode_name', e.episode_name,
                                             'episode_order', e.episode_order,
                                             'thumbnail_path', e.thumbnail_path,
-                                            'url', e.url
+                                            'url', e.url,
+                                            'subtitles_url', e.subtitles_url
                                         )
                                     )
                                 FROM episodes e

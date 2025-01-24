@@ -22,7 +22,8 @@ const getMoviesList = async () => {
                 movie_files.url AS video_url,
                 movie_files.created_at,
                 movie_files.updated_at,
-                movie_files.trailer_url
+                movie_files.trailer_url,
+                movie_files.subtitles_url
             FROM 
                 movies
                 LEFT JOIN 

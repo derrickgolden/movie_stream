@@ -7,7 +7,6 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const compression_1 = __importDefault(require("compression"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 require('dotenv').config();
@@ -24,20 +23,6 @@ const loadMime = async () => {
     const { default: mime } = await import('mime'); // Dynamic ESM import
     return mime;
 };
-// Set up multer storage for file uploads
-const storage = multer_1.default.diskStorage({
-    destination: (req, file, callback) => {
-        const absolutePath = path_1.default.resolve(__dirname, 'uploads');
-        if (!fs_1.default.existsSync(absolutePath)) {
-            fs_1.default.mkdirSync(absolutePath, { recursive: true });
-        }
-        callback(null, absolutePath);
-    },
-    filename: (req, file, callback) => {
-        callback(null, Date.now() + '-' + file.originalname);
-    },
-});
-const upload = (0, multer_1.default)({ storage: storage });
 const app = (0, express_1.default)();
 // Enable CORS with specific origin
 app.use((0, cors_1.default)());
@@ -60,6 +45,7 @@ app.get('/series/:filename(*)', (req, res) => {
     }
     videoStat(videoPath, req, res);
 });
+app.use('/subtitles', express_1.default.static('E:/videos/after earth/After.Earth.2013.en.srt'));
 const getSafeFilePath = (rootPath, userPath) => {
     const sanitizedPath = path_1.default.normalize(userPath).replace(/^(\.\.(\/|\\|$))+/, ''); // Prevent traversal
     const resolvedPath = path_1.default.join(rootPath, sanitizedPath);
