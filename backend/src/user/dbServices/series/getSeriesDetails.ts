@@ -32,6 +32,7 @@ export const getSeriesDetails = async (): Promise<universalResponse> => {
                                             'episode_no', e.episode_no,
                                             'thumbnail_path', e.thumbnail_path,
                                             'video_url', e.url,
+                                            'subtitles_url', e.subtitles_url,
                                             'overview', e.overview,
                                             'runtime', e.runtime,
                                             'id', e.id

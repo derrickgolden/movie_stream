@@ -24,7 +24,7 @@ const  SideBar = () =>{
       viewer ? setViewer(JSON.parse(viewer)) : setLogOut(true);
       logOut? navigate("/"): null
     },[logOut]);
-    console.log(viewer);
+
     const handleLogOut = () =>{
       localStorage.clear();
       localStorage.removeItem("viewerToken")

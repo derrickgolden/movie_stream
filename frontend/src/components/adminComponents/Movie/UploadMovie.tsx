@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { TbCircleLetterM } from "react-icons/tb";
 import { TbCircleLetterT } from "react-icons/tb";
-import { movieDetailsInput, seoAndMarketingInput, UploadMovieInput } from "./movieDetailsInputs";
+import { UploadMovieInput } from "./movieDetailsInputs";
 import { FaEdit } from "react-icons/fa";
 import { MdOutlinePreview } from "react-icons/md";
 import { FaDeleteLeft } from "react-icons/fa6";
@@ -11,11 +11,15 @@ import { uploadMovieDetails } from "../apiCalls/postData";
 import { MovieFile } from "../../apiCalls/types";
 import Swal from "sweetalert2";
 import { deleteMovieApi } from "../../apiCalls/updateData";
+import ConvertSrtToVtt from "../ConvertSrtVtt";
 
 const API_KEY = "086cfe05dd16828e37291d2f37293a38";
 
 const UploadMovie = () =>{
-    const [movieDetails, setMovieDetails] = useState({title: "", label: "", order: 1, url: "", isEdit: false, video_id: 0});
+    const [movieDetails, setMovieDetails] = useState({title: "", label: "", order: 1, 
+        url: "https://japtech.africa/video/", trailer_url: "", 
+        subtitles_url: "", isEdit: false, video_id: 0   
+    });
     const [addedMovies, setAddedMovies] = useState<MovieFile[]>([])
     const location = useLocation();
     const navigate = useNavigate();
@@ -54,8 +58,8 @@ const UploadMovie = () =>{
 
     const handleEditMovie = (movie: MovieFile) =>{
         console.log({movie})
-        const {label, order, title, url, movie_id, video_id, trailer_url} = movie;
-        setMovieDetails({ label, order, url, isEdit: true, movie_id:video_id, video_id, title, trailer_url  });
+        const {label, order, title, url, movie_id, video_id, trailer_url, subtitles_url} = movie;
+        setMovieDetails({ label, order, url, isEdit: true, movie_id:video_id, video_id, title, trailer_url, subtitles_url  });
     }
 
     const deleteVideo = (movie: MovieFile) =>{
@@ -110,11 +114,11 @@ console.log(addedMovies)
                         
             <form onSubmit={handleUploadMovie} 
                 className=" mt-4 col-12">
-                <div className="bg-white col-12 ">
+                <div className="bg-white d-flex flex-wrap justify-content-between col-12 ">
                         {
                             UploadMovieInput?.map((detail, i)=>{
                                 return(
-                                    <div key={i} className="form-floating mb-3 col-12">
+                                    <div key={i} className={`form-floating mb-3 ${i == 0 || i == 1? "col-5 ": "col-12 "} `}>
                                         <input type={detail.type} className="form-control" 
                                             required={detail.required} value={movieDetails[detail.id]}
                                             id={detail.id} placeholder={detail.placeholder}
@@ -147,6 +151,7 @@ console.log(addedMovies)
                             <th scope="col">Label</th>
                             <th scope="col">Movie URL</th>
                             <th scope="col">Trailer URL</th>
+                            <th scope="col">Subtitles URL</th>
                             <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -160,9 +165,10 @@ console.log(addedMovies)
                                     <td>{movie.label}</td>
                                     <td className=" text-wrap text-break">{movie.url}</td>
                                     <td className=" text-wrap text-break">{movie.trailer_url}</td>
+                                    <td className=" text-wrap text-break">{movie.subtitles_url}</td>
                                     <td className="d-flex flex-column gap-1" >
                                         <span className="d-flex">
-                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.url || "")}`} target="_blank">
+                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.url || "")}&subtitlesUrl=${movie.subtitles_url}`} target="_blank">
                                                 <TbCircleLetterM size={32} className="text-success me-2 border border-success p-1"/>
                                             </Link>
                                             <Link to={`/preview?movieUrl=${encodeURIComponent(movie.trailer_url || "")}`} target="_blank">
@@ -183,6 +189,7 @@ console.log(addedMovies)
                         </tbody>
                     </table>
                 </div>
+                {/* <ConvertSrtToVtt /> */}
             </div>
     
         </div>

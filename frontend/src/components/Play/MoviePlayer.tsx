@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlinePicLeft } from "react-icons/ai";
 import { RiArrowGoBackFill } from "react-icons/ri";
+import { Episode, Season } from "../apiCalls/types";
 
 interface MoviePlayerProps {}
 
@@ -13,7 +14,9 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const navigate = useNavigate();
   const { movie, playVideo } = location.state;
   const [showOverlay, setShowOverlay] = useState(true);
+  const [showSubtitles, setShowSubtitles] = useState(true);
   const [playingVideo, setPlayingVideo] = useState({
+    subtitles_url: "",
     video_url: "",
     backdrop_path: "",
     is_series: false,
@@ -31,7 +34,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     }
   };
 
-  const handlePlay = () => {
+  const handlePlay = (showSubtitles: boolean) => {
+    setShowSubtitles(showSubtitles);
     const videoElement = videoRef.current;
     if (videoElement) {
       if (videoElement.requestFullscreen) {
@@ -52,17 +56,18 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const playNextEpisode = () => {
     if (movie.is_series) {
       const currentSeason = movie.seasons.find(
-        (season) => season.season_order === playingVideo.season_order
+        (season: Season) => season.season_order === playingVideo.season_order
       );
       if (currentSeason) {
         const nextEpisode = currentSeason.episodes.find(
-          (episode) => episode.episode_order === playingVideo.episode_order + 1
+          (episode: Episode) => episode.episode_order === playingVideo.episode_order + 1
         );
 
         if (nextEpisode) {
           // Play the next episode
-          const { video_url, thumbnail_path, episode_order } = nextEpisode;
+          const { video_url, thumbnail_path, episode_order, subtitles_url } = nextEpisode;
           const nextVideo = {
+            subtitles_url,
             video_url,
             backdrop_path: thumbnail_path,
             is_series: true,
@@ -93,16 +98,15 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
       videoElement.addEventListener("canplay", handleAutoplay);
       videoElement.addEventListener("ended", playNextEpisode);
 
-      if (playingVideo.is_series ) {
-        videoElement.addEventListener("play", () => {
-          setTimeout(() => {
-            // setShowOverlay(false);
-            // console.log("hello time")
-            // playRef.current.click();
-            // handlePlay();
-          }, 5000);
-        });
-      }
+      // if (playingVideo.is_series ) {
+      //   videoElement.addEventListener("play", () => {
+      //     setTimeout(() => {
+      //       // setShowOverlay(false);
+      //       // playRef.current.click();
+      //       // handlePlay();
+      //     }, 5000);
+      //   });
+      // }
     }
 
     return () => {
@@ -122,7 +126,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
       className="position-relative"
       style={{ maxHeight: "", margin: "auto", textAlign: "center" }}
     >
-      {playingVideo.is_series &&  showOverlay ?(
+      {showOverlay ?(
         <div className="  position-absolute top-0 left-0 bottom-0 player-banner">
           <div className=" h-100 d-flex d-md-block flex-column justify-content-between p-2 p-sm-3 p-md-5 col-12 col-md-5 ">
             <div>
@@ -130,15 +134,42 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
               <h1 className="banner__description lead">{movie?.description}</h1>
             </div>
             <div className="banner-buttons d-flex mt-5 flex-column gap-4">
-              <button onClick={handlePlay} ref={playRef}
-              className="btn btn-outline-info w-100 
-              d-flex align-items-center gap-2 justify-content-center text-center">
-                <FaPlay /> Resume S{playingVideo.season_order}: EP.{playingVideo.episode_order}
-              </button>
-              <button onClick={handleEpisodesAndMore} className="btn btn-outline-info w-100 
-              d-flex align-items-center gap-2 justify-content-center text-center" >
-                <AiOutlinePicLeft /> Episodes & More
-              </button>
+            {
+              playingVideo.is_series? (  <>
+                <button onClick={() =>handlePlay(false)} ref={playRef}
+                className="btn btn-outline-info w-100 
+                d-flex align-items-center gap-2 justify-content-center text-center">
+                  <FaPlay /> Resume S{playingVideo.season_order}: EP.{playingVideo.episode_order}
+                </button>
+                {
+                  playingVideo.subtitles_url &&
+                  <button onClick={() =>handlePlay(true)} ref={playRef}
+                  className="btn btn-outline-info w-100 
+                  d-flex align-items-center gap-2 justify-content-center text-center">
+                    <FaPlay /> Resume With Subtitles
+                  </button>
+                }
+                <button onClick={handleEpisodesAndMore} className="btn btn-outline-info w-100 
+                d-flex align-items-center gap-2 justify-content-center text-center" >
+                  <AiOutlinePicLeft /> Episodes & More
+                </button>
+              </>) : (<>
+                  <button onClick={() =>handlePlay(false)} ref={playRef}
+                  className="btn btn-outline-info w-100 
+                  d-flex align-items-center gap-2 justify-content-center text-center">
+                    <FaPlay /> Play Full Screen
+                  </button>
+                  {
+                    playingVideo.subtitles_url? 
+                    <button onClick={() =>handlePlay(true)} ref={playRef}
+                    className="btn btn-outline-info w-100 
+                    d-flex align-items-center gap-2 justify-content-center text-center">
+                      <FaPlay /> Play with Subtitles
+                    </button> : null
+                  }
+              </>)
+
+            }
               <button onClick={() =>navigate("/viewer/dashboard")} className="btn btn-outline-secondary w-100 
               d-flex align-items-center gap-2 justify-content-center text-center" >
                 <RiArrowGoBackFill /> Back
@@ -153,7 +184,22 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         poster={playingVideo.backdrop_path}
         controls
         style={{ width: "100%", height: "99vh", borderRadius: "8px" }}
-      />
+      >
+        {/* Video source */}
+        <source src={playingVideo.video_url}  />
+
+        {/* Subtitle track */}
+        {
+          showSubtitles &&
+          <track
+              src={playingVideo?.subtitles_url}
+              kind="subtitles"
+              srcLang="en"
+              label="English"
+              default
+          />
+        }
+      </video>
     </div>
   );
 };

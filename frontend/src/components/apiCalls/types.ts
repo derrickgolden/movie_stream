@@ -3,6 +3,7 @@ export interface MovieListProps{
     title: string, name: string, original_name: string,
     video_url: string, movie: string, description: string, backdrop_path: string, poster_path: string
     is_series: boolean;
+    subtitles_url: string;
 }
 export interface MovieFile {
     order: number; // Sequence order of the file
@@ -13,6 +14,7 @@ export interface MovieFile {
     movie_file_id: number;
     video_id: number;
     trailer_url: string;
+    subtitles_url: string;
   }
 
 export  interface Episode {
@@ -22,6 +24,7 @@ export  interface Episode {
     thumbnail_path: string | null; // Path or URL to the episode thumbnail
     video_url: string; // URL of the episode source
     url: string;
+    subtitles_url: string;
   }
   
  export interface Season {

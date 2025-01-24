@@ -6,17 +6,10 @@ const Preview = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const queryParams = new URLSearchParams(location.search);
   const movieUrl = queryParams.get("movieUrl") || undefined;
-
+  const subtitlesUrl = queryParams.get("subtitlesUrl") || undefined;
+console.log({subtitlesUrl, movieUrl})
   const [previewText, setPreviewText] = useState<string>("");
   const [videoError, setVideoError] = useState<string | null>(null);
-
-  const getYouTubeEmbedUrl = (url: string) => {
-    const videoIdMatch = url.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([^&?]+)/);
-    console.log(videoIdMatch)
-    return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}?autoplay=1` : null;
-  };
-
-  const embedUrl = getYouTubeEmbedUrl("https://www.youtube.com/watch?v=naQr0uTrH_s");
 
   useEffect(() => {
     const handleAutoplay = () => {
@@ -53,22 +46,23 @@ const Preview = () => {
       </div>
         <video
           ref={videoRef}
-          src={movieUrl}
-          loop
           controls
           height="450px"
           width="100%"
           onError={handleVideoError}
-        />
-         {/* <iframe
-          width="100%"
-          height="500px"
-          src= {embedUrl}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe> */}
+        >
+           {/* Video source */}
+          <source src={movieUrl}  />
+
+          {/* Subtitle track */}
+          <track
+              src={subtitlesUrl}
+              kind="subtitles"
+              srcLang="en"
+              label="English"
+              default
+          />
+        </video>
     </div>
   );
 };

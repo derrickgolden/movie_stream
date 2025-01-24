@@ -38,7 +38,6 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
         if(res.success){
           setMovies(res.details);
           dispatch(setSeriesListDetails(res.details));
-          console.log(res.details);
         }
       });
     }

@@ -11,6 +11,7 @@ interface Episode {
     episode_name: string;
     episode_order: number;
     thumbnail_path: string;
+    subtitles_url: string;
 }
 
 interface Season {

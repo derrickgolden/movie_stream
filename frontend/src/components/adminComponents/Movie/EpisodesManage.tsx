@@ -17,7 +17,7 @@ import { getSerieSeasonsEpisodes } from "../apiCalls/getData";
 
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
-        {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", episode_order: 0}
+        {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", episode_order: 0, subtitles_url: ""}
     )
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const callApi = useSelector((state: RootState) => state.callApi);
@@ -31,6 +31,7 @@ const EpisodeManage = () =>{
         getSerieSeasonsEpisodes(seriesDetails.movie_id).then((data) =>{
             if(data.success){
                 const updatedSeason = data.details[0].seasons.filter((season1) => season1.season_id === season.season_id);
+                console.log(updatedSeason[0].episodes)
                 if(updatedSeason.length === 1) setEpisodes(updatedSeason[0].episodes);
             }
         })
@@ -47,12 +48,13 @@ const EpisodeManage = () =>{
     const handleSubmitEpisode = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
         const episodeData = JSON.stringify({epidodeDetails, season});
+        console.log({epidodeDetails});
         addEpisodeDetails(episodeData).then((data) =>{
             if(data.success){
                 Swal.fire(data.msg)
                 dispatch(setCallApi(!callApi));
                 setEpisodeDetails((obj) => 
-                    ({...obj, episode_no: obj.episode_no + 1, episode_name: "", isEdit: false, url: "", episode_order: 0})
+                    ({...obj, episode_no: obj.episode_no + 1, episode_name: "", isEdit: false, url: "", episode_order: 0, subtitles_url: ""})
                 );
             }
         })
@@ -148,6 +150,11 @@ const EpisodeManage = () =>{
                             <input type="text" onChange={handleInput} value={epidodeDetails.url} required
                             className="form-control" id="url" placeholder="https://series/hello"/>
                         </div>
+                        <div className="mb-3">
+                            <label htmlFor="subtitles_url" className="form-label ms-2">Subtitles Url</label>
+                            <input type="text" onChange={handleInput} value={epidodeDetails.subtitles_url}
+                            className="form-control" id="subtitles_url" placeholder="https://series/hello"/>
+                        </div>
                         {
                             epidodeDetails.isEdit? (
                                 <button type="submit" className="btn btn-warning btn-sm"><FaEdit /> Edit</button>
@@ -165,6 +172,7 @@ const EpisodeManage = () =>{
                                  <th scope="col">Episode Name</th>
                                 <th scope="col">Order</th>
                                 <th scope="col">Url</th>
+                                <th scope="col">Subtitles Url</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -179,11 +187,13 @@ const EpisodeManage = () =>{
                                     <td><input type="number" onChange={()=>{}} 
                                         value={episode.episode_order} style={{width: "60px"}} /></td>
                                     <td>{episode.url}</td>
+                                    <td>{episode.subtitles_url}</td>
                                     <td>
                                         <span className="d-flex">
                                             <FaEdit size={32} onClick={() =>setEpisodeDetails((obj) =>({...obj, ...episode, isEdit: true}))} 
                                                 role="button" className="text-warning me-2 border border-warning p-1"/>
-                                            <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}`} target="_blank">
+                                            <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}&subtitlesUrl=${episode.subtitles_url}`}
+                                                 target="_blank">
                                                 <MdOutlinePreview size={32} className="text-success me-2 border border-success p-1"/>
                                             </Link>
                                             <FaDeleteLeft onClick={() =>deleteEpisode (episode)} role="button" 

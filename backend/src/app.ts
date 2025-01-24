@@ -24,22 +24,6 @@ const loadMime = async () => {
   return mime;
 };
 
-// Set up multer storage for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    const absolutePath = path.resolve(__dirname, 'uploads');
-    if (!fs.existsSync(absolutePath)) {
-      fs.mkdirSync(absolutePath, { recursive: true });
-    }
-    callback(null, absolutePath);
-  },
-  filename: (req, file, callback) => {
-    callback(null, Date.now() + '-' + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 const app = express();
 // Enable CORS with specific origin
 app.use(cors());
@@ -64,6 +48,8 @@ app.get('/series/:filename(*)', (req, res) => {
   }
   videoStat(videoPath, req, res);
 });
+
+app.use('/subtitles', express.static('E:/videos/after earth/After.Earth.2013.en.srt'));
 
 const getSafeFilePath = (rootPath: string, userPath: string) => {
   const sanitizedPath = path.normalize(userPath).replace(/^(\.\.(\/|\\|$))+/, ''); // Prevent traversal

@@ -20,7 +20,8 @@ export interface MovieDetails {
     movie_id: number; // Foreign key referencing the movie
     id: number;    // Unique identifier for the file
     isEdit: boolean;
-    trailer_url: string
+    trailer_url: string;
+    subtitles_url: string;
   }
   
   interface SeasonInfo {
@@ -49,6 +50,7 @@ export interface MovieDetails {
     id: number;                 // Identifier for the episode (from external sources like TMDB)
     episode_no: number;         // Episode number in the season
     season_no: number;          // Season number the episode belongs to
+    subtitles_url: string;
     isEdit: false;
   }
   
