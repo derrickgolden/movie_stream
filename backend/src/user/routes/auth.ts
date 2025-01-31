@@ -1,23 +1,21 @@
 import express, {Request, Response} from 'express';
 import { TokenResponse } from '../controllers/auth/generateToken';
 import {  GoogleUserProfile, LinkTokenRes, LoginResponse, 
-    PersonDetails,  SignupResponse, 
-    User} from 'user/type';
+    PersonDetails,  SignupResponse, User} from 'user/type';
 
 var bcrypt = require('bcryptjs');
 const router = express.Router();
 
-const { loginUser, resetPassword, storeLinkToken, getLinkToken, signupUser, getCode
-    } =  require('../dbServices/auth');
+const { loginUser, resetPassword, storeLinkToken, signupUser, getCode,
+    updateLogin} =  require('../dbServices/auth');
 // const { sendText } = require('../controllers/sendText');
 // const { generateRandomVerificationCode } = require('../controllers/randomCode');
-// const { authenticateToken } = require('../middleware/authToken');
 import { generateAuthToken } from '../controllers/auth/generateToken';
 import { UserDetailsRes } from '../dbServices/users';
 import { SendEmailRes } from 'user/controllers/auth/sendEmail';
 import { StoreLinkTokenRes } from 'user/dbServices/auth';
 import { authenticateToken } from '../middlewares/authenticateToken';
-import { ModifiedReq } from 'user/types/universalResponse';
+import { ModifiedReq, universalResponse } from 'user/types/universalResponse';
 import { sendSMS } from '../../user/controllers/auth/sendText';
 
 const { getUserDetailsByPhone } = require('../dbServices/users');
@@ -77,10 +75,30 @@ router.post('/login', async (req: Request, res: Response): Promise<void> =>{
 
         const match: boolean = await bcrypt.compare(password, passwordHash);
         if(match) {
+            const wrong_pass = false
+            const resp:universalResponse = await updateLogin(wrong_pass, phone, prevelages );
             res.status(200).send({success: true, token, msg: "User Found", details});   
         }else{
+            const wrong_pass = true;
+            const response:universalResponse = await updateLogin(wrong_pass, phone, prevelages )
             res.status(200).send({success: false, msg: "Incorrect Password"});
         };
+    } catch (error) {
+        console.log(error);
+        res.status(404).send({success: false, msg: error.message});
+    };
+});
+
+router.get('/validate-token', authenticateToken, async (req: ModifiedReq, res: Response, next): Promise<void> =>{
+    const {prevelages, phone} = req.user;
+
+    try {
+        const wrong_pass = false;
+        const response:universalResponse = await updateLogin(wrong_pass, phone, prevelages )
+        res.status(200).send({success: false, msg: "Incorrect Password"});
+        response.success ? 
+            res.status(200).json(response):
+            res.status(302).json(response)
     } catch (error) {
         console.log(error);
         res.status(404).send({success: false, msg: error.message});

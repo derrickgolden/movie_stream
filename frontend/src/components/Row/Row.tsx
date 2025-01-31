@@ -91,7 +91,7 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
       <h2 className="row_title">{title}</h2>
       <div className="d-fle position-relative w-100 ">
         {
-          theDevice === "laptop" && 
+          theDevice !== "phone" && 
           <div onClick={scrollLeft} role="button"
             className="custom-btn position-absolute start-0 top-0 bottom-0 d-flex align-items-center">
             <FaChevronLeft size={42}/>
@@ -113,7 +113,7 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
           ))}
         </div>
         {
-          theDevice === "laptop" && 
+          theDevice !== "phone" && 
           <div onClick={scrollRight} role="button"
             className="custom-btn2 position-absolute end-0 top-0 bottom-0 d-flex align-items-center">
             <FaChevronRight size={42}/>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import "./auth.css"
 
 import { Link, useNavigate, useParams } from "react-router-dom";
-import loginApi from "./apiCalls/loginApi";
+import loginApi, { validateTokenApi } from "./apiCalls/loginApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { getMoviesList } from "../apiCalls/getData";
@@ -52,9 +52,11 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
         if(prevelages === "viewer"){
             const viewerToken = localStorage.getItem("viewerToken");
             if(viewerToken){
+                // validateTokenApi(viewerToken)
+                // console.log(viewerToken)
                 navigate("/viewer/dashboard")
-            }
-        }
+            };
+        };
         const auth = false;
         getMoviesList("videos/get-movies", "", navigate, auth).then((res) =>{
             if(res.success){

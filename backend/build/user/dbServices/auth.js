@@ -58,11 +58,47 @@ const loginUser = async (email, phone, prevelages) => {
                 WHERE phone = ?
             `, [phone]);
         }
+        ;
         connection.release();
         if (res.length === 1) {
             const { name, account, account2, phone, id, email, remember_me, password } = res[0];
             return { userAvailable: true, passwordHash: password,
                 details: [{ name, account, account2, phone, id, email, remember_me, prevelages }]
+            };
+        }
+        else {
+            return { userAvailable: false };
+        }
+    }
+    catch (error) {
+        console.log(error);
+        connection.release();
+        if (error.sqlMessage) {
+            return { userAvailable: false,
+                res: { success: false, msg: error.sqlMessage } };
+        }
+        else {
+            return { userAvailable: false,
+                res: { success: false, msg: error.message } };
+        }
+    }
+};
+const updateLogin = async (wrong_pass, phone, prevelages) => {
+    const connection = await pool.getConnection();
+    try {
+        if (prevelages === "viewer") {
+            var [res] = await connection.query(`
+                UPDATE users
+                SET last_login = NOW(), wrong_pass = ?
+                WHERE phone =?
+            `, [wrong_pass, phone]);
+        }
+        ;
+        connection.release();
+        // console.log(res) ss  
+        if (res.affectedRows > 0) {
+            return { userAvailable: true,
+                details: [{ prevelages }]
             };
         }
         else {
@@ -213,6 +249,7 @@ const getLinkToken = async (token) => {
     }
 };
 module.exports = {
+    updateLogin,
     signupUser,
     loginUser,
     getCode,

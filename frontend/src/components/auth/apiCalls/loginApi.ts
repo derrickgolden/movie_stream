@@ -59,4 +59,29 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
         });
 }
 
+export const validateTokenApi = (viewerToken: string)=>{
+    fetch(`${server_baseurl}/user/validate-token`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${viewerToken}`
+        },
+        })
+        .then(response =>{
+            return response.json();
+        } )
+        .then(data => {
+            console.log(data)
+            if(data.success){
+                
+            }else{
+                
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            
+        });
+}
+
 export default loginApi;

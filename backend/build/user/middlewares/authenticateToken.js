@@ -5,11 +5,12 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 // const adminAccess = new RevokedAdminCache()
 const authenticateToken = async (req, res, next) => {
-    const token = req.header('Authorization');
-    const { reset_password, phone } = req.body;
+    const token = req.header("Authorization")?.split(" ")[1];
     if (!token) {
         return res.status(200).send({ success: false, reLogin: true, msg: "No authentication token: Login" });
     }
+    console.log(token);
+    const { reset_password, phone } = req.body;
     jwt.verify(token, "skajskdhcdhsjhdwe836", (err, user) => {
         if (err) {
             const msg = reset_password ? "Link expired or Invalid." : "Could not parse your authentication token. Please try to Login again.";

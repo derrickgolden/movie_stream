@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 var bcrypt = require('bcryptjs');
 const router = express_1.default.Router();
-const { loginUser, resetPassword, storeLinkToken, getLinkToken, signupUser, getCode } = require('../dbServices/auth');
+const { loginUser, resetPassword, storeLinkToken, signupUser, getCode, updateLogin } = require('../dbServices/auth');
 // const { sendText } = require('../controllers/sendText');
 // const { generateRandomVerificationCode } = require('../controllers/randomCode');
-// const { authenticateToken } = require('../middleware/authToken');
 const generateToken_1 = require("../controllers/auth/generateToken");
 const authenticateToken_1 = require("../middlewares/authenticateToken");
 const sendText_1 = require("../../user/controllers/auth/sendText");
@@ -60,12 +59,32 @@ router.post('/login', async (req, res) => {
         ;
         const match = await bcrypt.compare(password, passwordHash);
         if (match) {
+            const wrong_pass = false;
+            const resp = await updateLogin(wrong_pass, phone, prevelages);
             res.status(200).send({ success: true, token, msg: "User Found", details });
         }
         else {
+            const wrong_pass = true;
+            const response = await updateLogin(wrong_pass, phone, prevelages);
             res.status(200).send({ success: false, msg: "Incorrect Password" });
         }
         ;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(404).send({ success: false, msg: error.message });
+    }
+    ;
+});
+router.get('/validate-token', authenticateToken_1.authenticateToken, async (req, res, next) => {
+    const { prevelages, phone } = req.user;
+    try {
+        const wrong_pass = false;
+        const response = await updateLogin(wrong_pass, phone, prevelages);
+        res.status(200).send({ success: false, msg: "Incorrect Password" });
+        response.success ?
+            res.status(200).json(response) :
+            res.status(302).json(response);
     }
     catch (error) {
         console.log(error);

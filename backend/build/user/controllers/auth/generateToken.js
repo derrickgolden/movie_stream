@@ -8,7 +8,7 @@ function generateAuthToken(id, account, account2, phone, prevelages, expiresInDa
     const exp_date = new Date();
     exp_date.setDate(exp_date.getDate() + expiresInDays);
     // Generate a token with the specified expiration time
-    const key = process.env.TOKEN_SECRET_KEY || "skajskdhcdhsjhdwe836";
+    const key = "skajskdhcdhsjhdwe836";
     const token = jwt.sign({
         id, account, account2, phone, prevelages
     }, key, {
