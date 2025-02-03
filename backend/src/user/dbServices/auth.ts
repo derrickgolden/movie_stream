@@ -84,10 +84,10 @@ const loginUser = async(email: string, phone: string, prevelages: "admin" | "vie
         connection.release();
 
         if(res.length === 1){
-            const {name, account, account2, phone, id, email, remember_me, password } = res[0]
+            const {name, account, account2, phone, id, email, remember_me, password, mac } = res[0]
                 
             return {userAvailable: true, passwordHash: password,
-                details: [{name, account, account2, phone, id, email, remember_me,  prevelages}]
+                details: [{name, account, account2, phone, id, email, remember_me,  prevelages, mac}]
             };
         }else{
             return {userAvailable: false}
@@ -119,18 +119,19 @@ const updateLogin = async( wrong_pass: boolean, phone: string, prevelages: "admi
                 SET last_login = NOW(), wrong_pass = ?
                 WHERE phone =?
             `, [ wrong_pass, phone]);
+            // console.log(res) ss  
+            connection.release();
+
+            if(res.affectedRows > 0){
+                return { userAvailable: true, details: [{ prevelages}] };
+            }else{
+                return {userAvailable: false}
+            }
+        }else{
+            return { userAvailable: true, details: [{ prevelages}] };
         };
 
-        connection.release();
 
-        // console.log(res) ss  
-        if(res.affectedRows > 0){
-            return {userAvailable: true,
-                details: [{ prevelages}]
-            };
-        }else{
-            return {userAvailable: false}
-        }
     } catch (error) {
         console.log(error)
         connection.release();

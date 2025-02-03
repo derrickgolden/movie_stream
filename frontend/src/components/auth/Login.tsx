@@ -26,6 +26,8 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     const [loginDetails, setLoginDetails] = useState<PersonDetails>({
         email:"", password: "", acc_type, phone: ""
     });
+    const [isLoading, setIsLoading]  = useState(false);
+
     const movieListDetails = useSelector((state: RootState) => state.movieListDetails);
     
       const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,9 +54,12 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
         if(prevelages === "viewer"){
             const viewerToken = localStorage.getItem("viewerToken");
             if(viewerToken){
-                // validateTokenApi(viewerToken)
-                // console.log(viewerToken)
-                navigate("/viewer/dashboard")
+                const token = JSON.parse(viewerToken);
+                setIsLoading(true);
+                validateTokenApi(token).then((res) =>{
+                    if(res.success) navigate("/viewer/dashboard");
+                    else setIsLoading(false)
+                })
             };
         };
         const auth = false;
@@ -69,11 +74,13 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
         setLoginDetails((obj) => ({...obj, acc_type}));
     }, [acc_type]);
     
-    const handleLoginDetailsSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
+    const handleLoginDetailsSubmit = async(e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
         let data = JSON.stringify({...loginDetails, prevelages, phone: "254" + loginDetails.phone, auth_with: "app"});
-
-        loginApi({data, navigate, setLoginDetails, setIsLogin, prevelages});   
+        
+        setIsLoading(true);
+        await loginApi({data, navigate, setLoginDetails, setIsLogin, prevelages});   
+        setIsLoading(false);
     }
 
     return(
@@ -140,7 +147,9 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                     </div>
                                                 </div>
                                                 <div className=" my-3 text-start">
-                                                    <button type='submit' className="btn btn-outline-primary">Log in</button>
+                                                    <button type='submit' disabled= {isLoading}
+                                                        className="btn btn-outline-primary">{isLoading? "Logging in ..." : "Log in"}
+                                                    </button>
                                                 </div>
                                                 <div className="remember-forgot d-flex justify-content-between pt-3">                                          
                                                     <div className="forget-pw">

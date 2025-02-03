@@ -9,6 +9,6 @@ export const formFields = [
     { name: "name", label: "Name", type: "text", placeholder: "Full Name", required:true },
     { name: "account", label: "Account(JTS...)", type: "text", placeholder: "Account", required:true },
     { name: "account2", label: "Account 2(Name)", type: "text", placeholder: "Account 2", required:true },
-    { name: "password", label: "Password(For Movies)", type: "password", placeholder: "JAP_movies", required:true },
+    { name: "password", label: "Password(For Movies)", type: "text", placeholder: "JAP_movies", required:true },
     { name: "phone", label: "Phone Number", type: "number", placeholder: "Phone Number", prefix: "+254", required:true },
   ];

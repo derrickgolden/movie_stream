@@ -33,6 +33,8 @@ app.options('*', cors());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
   const { filename } = req.params;
+  const range = req.headers.range;
+
   const videoPath = getSafeFilePath(VIDEO_PATH, filename);
   if (!videoPath) {
     return res.status(400).send('Invalid file path');
@@ -113,7 +115,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/user', adminauth);
 app.use('/user', authenticateToken, requestMovie);
 app.use('/videos', [videos, alterVideos, deleteVideos]);
-app.use('/admin/videos', authenticateToken, requestMovie);
+app.use('/admin/videos', authenticateToken,  requestMovie);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(PORT, () => {

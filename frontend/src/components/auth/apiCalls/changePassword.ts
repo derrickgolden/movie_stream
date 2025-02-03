@@ -32,7 +32,7 @@ export const changePasswordApi = ({oldPassword, newPassword, navigate, setIsload
         url: `${server_baseurl}/user/change-pass`,
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `${token}`
+            'Authorization': `Bear ${token}`
         },
         data : data
     };

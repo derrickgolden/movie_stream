@@ -85,7 +85,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
     }
 
     return(
-        <div className="p-4 bg-light w-100">
+        <div className="p-md-4 bg-light w-100">
             <div className="container">
                 <div className="row justify-content-center align-items-center">
                     <div className="">
@@ -98,7 +98,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
                                 <div className="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
                                 <form  onSubmit={handleFormSubmit} className='d-flex justify-content-between flex-wrap'>
                                     {formFields.map((field, index) => (
-                                        <div className="mb-3 col-5" key={index}>
+                                        <div className="mb-3 col-12 col-md-5" key={index}>
                                             <label htmlFor={field.name} className="form-label ms-2">
                                                 {field.label}
                                             </label>
@@ -116,7 +116,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
                                             </div>
                                         </div>
                                     ))}
-                                    <div className="btn-area py-2 col-5">
+                                    <div className="btn-area py-2 col-12 col-md-5">
                                         <button type="submit" className="cmn-btn btn btn-primary col-12">
                                          Add Client
                                         </button>

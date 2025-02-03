@@ -6,6 +6,10 @@
         "outDir": "build",
         "sourceMap": true,
         "noImplicitAny": true,
+        "skipLibCheck": true,
+        "allowJs": true,
+        "noEmitOnError": false,
+        "typeRoots": ["./node_modules/@types", "./src/types"]
         // "strict": true
     },
     "include": ["src/**/*", "express.d.ts", "build/dist"],

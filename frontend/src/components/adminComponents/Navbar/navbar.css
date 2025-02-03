@@ -4,3 +4,7 @@
     left: 100px;
     right: 0;
 }
+
+.a-sidebar{
+    min-width: "250px" !important 
+}

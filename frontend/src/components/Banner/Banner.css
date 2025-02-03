@@ -4,6 +4,7 @@
   max-height: 340px;
   position: relative;
   z-index: 89 ;
+  right: -2px;
 }
 .banner__contents {
   padding-left: 12px;

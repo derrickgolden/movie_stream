@@ -34,7 +34,7 @@ export interface User {
 
 
 export interface LoginMysqlRes{
-    id: number, account:string, name:string, email:string, remember_me: boolean, 
+    id: number, account:string, name:string, email:string, remember_me: boolean, mac: string,
     account2: string,  password?: string, phone: number, prevelages: "admin" | "viewer"
 }
 

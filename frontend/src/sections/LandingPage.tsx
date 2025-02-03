@@ -33,9 +33,10 @@ const LandingPage = () =>{
       })
     
     return(
-        <div className="d-fle  ">
+        <div className="d-flex  ">
             <SideBar />
-            <div className="App d-flex justify-content-end position-relative">
+
+            <div className="App d-flex justify-content-end position-relative col-12 " >
                 <Navbar />
                 <Banner 
                     hoveredMovie = {hoveredMovie}
@@ -43,7 +44,7 @@ const LandingPage = () =>{
                     isVideoReady = {isVideoReady} 
                     setIsVideoReady = {setIsVideoReady}
                 />
-                <div className="col-11 ">
+                <div className="col-11 "  >
                     <div className="" style={{marginTop: "340px"}}>
 
                     </div>

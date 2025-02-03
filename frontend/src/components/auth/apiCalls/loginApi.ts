@@ -11,8 +11,8 @@ interface LoginApiProps {
     prevelages: "admin" | "viewer";
 }
 
-const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: LoginApiProps) =>{
-    fetch(`${server_baseurl}/user/login`, {
+const loginApi = async({ data, navigate, setLoginDetails, setIsLogin, prevelages }: LoginApiProps) =>{
+    await fetch(`${server_baseurl}/user/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
                     sessionStorage.setItem("adminToken", JSON.stringify(data?.token));
                 }
                 setIsLogin(true);
-                navigate(`/${prevelages}/dashboard`, {replace: true});
+                return navigate(`/${prevelages}/dashboard`, {replace: true});
             }else{
                 Swal.fire({
                     text: `${data.msg}`,
@@ -42,7 +42,8 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
                     animation: false,
                     color: "#dc3545",
                     padding: "5px"
-                })
+                });
+                return;
             }
         })
         .catch(error => {
@@ -56,32 +57,32 @@ const loginApi = ({ data, navigate, setLoginDetails, setIsLogin, prevelages }: L
                 color: "#dc3545",
                 padding: "5px"
             })
+            return;
         });
 }
 
-export const validateTokenApi = (viewerToken: string)=>{
-    fetch(`${server_baseurl}/user/validate-token`, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${viewerToken}`
-        },
-        })
-        .then(response =>{
-            return response.json();
-        } )
-        .then(data => {
-            console.log(data)
-            if(data.success){
-                
-            }else{
-                
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            
+export const validateTokenApi = async (viewerToken: string): Promise<{ success: boolean }> => {
+    try {
+        const response = await fetch(`${server_baseurl}/user/validate-token`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${viewerToken}`
+            },
         });
-}
+
+        const data = await response.json();
+
+        if (data.success) {
+            return data; // Return success response
+        } else {
+            Swal.fire(data.msg);
+            return { success: false };
+        }
+    } catch (error) {
+        console.error("Token validation error:", error);
+        return { success: false };
+    }
+};
 
 export default loginApi;

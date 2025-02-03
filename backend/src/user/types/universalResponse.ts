@@ -14,6 +14,7 @@ export interface TokenUser {
     prevelages: string;
     account: string;
     account2: string;
+    mac: string;
 }
 export interface ModifiedReq extends Request{
     user: TokenUser

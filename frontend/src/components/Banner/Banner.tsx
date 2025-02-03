@@ -99,7 +99,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
       className="banner col-11 d-flex flex-column justify-content-between position-fixed top-0"
     >
       <div className="d-flex align-items-center col-12 position-relative" style={{backgroundColor: "#000"}}>
-        <div className="banner__contents col-12 col-md-5 ">
+        <div className="banner__contents ps-3  col-12 col-md-5 ">
           <h1 className="banner__title display-4">
             {movie?.title || movie?.name || movie?.original_name }
           </h1>

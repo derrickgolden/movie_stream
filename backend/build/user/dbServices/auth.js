@@ -61,9 +61,9 @@ const loginUser = async (email, phone, prevelages) => {
         ;
         connection.release();
         if (res.length === 1) {
-            const { name, account, account2, phone, id, email, remember_me, password } = res[0];
+            const { name, account, account2, phone, id, email, remember_me, password, mac } = res[0];
             return { userAvailable: true, passwordHash: password,
-                details: [{ name, account, account2, phone, id, email, remember_me, prevelages }]
+                details: [{ name, account, account2, phone, id, email, remember_me, prevelages, mac }]
             };
         }
         else {
@@ -92,18 +92,19 @@ const updateLogin = async (wrong_pass, phone, prevelages) => {
                 SET last_login = NOW(), wrong_pass = ?
                 WHERE phone =?
             `, [wrong_pass, phone]);
-        }
-        ;
-        connection.release();
-        // console.log(res) ss  
-        if (res.affectedRows > 0) {
-            return { userAvailable: true,
-                details: [{ prevelages }]
-            };
+            // console.log(res) ss  
+            connection.release();
+            if (res.affectedRows > 0) {
+                return { userAvailable: true, details: [{ prevelages }] };
+            }
+            else {
+                return { userAvailable: false };
+            }
         }
         else {
-            return { userAvailable: false };
+            return { userAvailable: true, details: [{ prevelages }] };
         }
+        ;
     }
     catch (error) {
         console.log(error);

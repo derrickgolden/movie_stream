@@ -25,11 +25,11 @@ const Navbar: React.FC = () => {
     <div className={`nav ${show ? "nav__black" : ""}`}>
       {/* <img className="nav__logo" src={JAP_logo} alt="netflix-logo" /> */}
       <span className="text-primary h1 p-0 m-0">J<span className="text-warning px-2">A</span>P</span>
-      <img
+      {/* <img
         className="nav__avatar"
         src={avatar}
         alt="netflix-avatar"
-      />
+      /> */}
     </div>
   );
 };

@@ -12,6 +12,7 @@ const { loginUser, resetPassword, storeLinkToken, signupUser, getCode, updateLog
 const generateToken_1 = require("../controllers/auth/generateToken");
 const authenticateToken_1 = require("../middlewares/authenticateToken");
 const sendText_1 = require("../../user/controllers/auth/sendText");
+const validateMacAddress_1 = require("../middlewares/validateMacAddress");
 const { getUserDetailsByPhone } = require('../dbServices/users');
 const { sendEmail } = require('../controllers/auth/sendEmail');
 const { hashCode } = require('../controllers/auth/genResetPassLink');
@@ -42,16 +43,26 @@ router.post('/login', async (req, res) => {
     const { email, prevelages, phone, password, auth_with } = req.body;
     const response = await loginUser(email, phone, prevelages);
     const { passwordHash, userAvailable, details } = response;
-    // console.log({email, prevelages, phone, password, auth_with})
     try {
         if (!userAvailable) {
             res.status(200).send({ success: false, msg: "Details not registered", details: response });
             return;
         }
+        const { id, account, account2, phone, prevelages, mac } = details[0];
+        if (prevelages === "viewer") {
+            const client = await (0, validateMacAddress_1.checkActivePPPoEUser)(mac);
+            if (!client) {
+                res.status(403).json({
+                    success: false,
+                    msg: "You are not an active client of JAPTECH. Contact ISP.",
+                    details: [],
+                });
+                return;
+            }
+        }
         // generate JWT token
         const expiresInDays = 60;
-        const { id, account, account2, phone, prevelages } = details[0];
-        const { token, exp_date } = await (0, generateToken_1.generateAuthToken)(id, account, account2, phone, prevelages, expiresInDays);
+        const { token, exp_date } = await (0, generateToken_1.generateAuthToken)(id, account, account2, phone, mac, prevelages, expiresInDays);
         if (auth_with === "google") {
             res.status(200).send({ success: true, token, msg: "User Found", details });
             return;
@@ -76,19 +87,25 @@ router.post('/login', async (req, res) => {
     }
     ;
 });
-router.get('/validate-token', authenticateToken_1.authenticateToken, async (req, res, next) => {
-    const { prevelages, phone } = req.user;
+router.get('/validate-token', authenticateToken_1.authenticateToken, async (req, res) => {
+    const { prevelages, phone, mac } = req.user;
     try {
+        const client = await (0, validateMacAddress_1.checkActivePPPoEUser)(mac);
+        if (!client) {
+            res.status(403).json({
+                success: false,
+                msg: "You are not an active client of JAPTECH. Contact ISP.",
+                details: [],
+            });
+            return;
+        }
         const wrong_pass = false;
         const response = await updateLogin(wrong_pass, phone, prevelages);
-        res.status(200).send({ success: false, msg: "Incorrect Password" });
-        response.success ?
-            res.status(200).json(response) :
-            res.status(302).json(response);
+        res.status(200).send({ success: true, msg: "User Found and correct mac" });
     }
     catch (error) {
         console.log(error);
-        res.status(404).send({ success: false, msg: error.message });
+        res.status(404).send({ success: false, msg: "Server side error" });
     }
     ;
 });

@@ -39,7 +39,7 @@ const makeApiCall = async(url: string, method: string, data: string, navigate: N
         url: `${server_baseurl}/${url}/${data}`,
         headers: { 
             'Content-Type': 'application/json',
-            'authorization': token,
+            'Authorization': `Bear ${token}`
         },
         data : data
     };

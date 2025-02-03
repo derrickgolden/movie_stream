@@ -24,17 +24,17 @@ export const deleteSeriesApi = async (series_id: number): Promise<UploadMovieRes
 
 
 const makeApiCall = async(url: string, method: string, data: string) =>{
-    // const tokenString = sessionStorage.getItem("userToken");
+    const tokenString = sessionStorage.getItem("userToken");
 
-    // if (tokenString !== null) {
-    //     var token = JSON.parse(tokenString);
-    // } else {
-    //     Swal.fire({
-    //         title: "Token not Found",
-    //         text: "Log out and log in then try again.",
-    //         icon: "warning"
-    //     });
-    // }
+    if (tokenString !== null) {
+        var token = JSON.parse(tokenString);
+    } else {
+        Swal.fire({
+            title: "Token not Found",
+            text: "Log out and log in then try again.",
+            icon: "warning"
+        });
+    }
 
     let config = {
         method: method,
@@ -42,6 +42,7 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
         url: `${server_baseurl}/${url}`,
         headers: { 
             'Content-Type': 'application/json',
+            'Authorization': `Bear ${token}`
         },
         data : data
     };

@@ -6,32 +6,38 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 // const adminAccess = new RevokedAdminCache()
-export const authenticateToken = async(req: ModifiedReq, res: Response, next: NextFunction) =>{
+export const authenticateToken = async (req: ModifiedReq, res: Response, next: NextFunction) => {
   const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) {
-    return res.status(200).send({success: false, reLogin: true, msg: "No authentication token: Login"});
-  }
-  console.log(token)
 
-  const {reset_password, phone} = req.body;
-  
-  jwt.verify(token, "skajskdhcdhsjhdwe836", (err: any, user: any) => {
-    if (err) {
-      const msg = reset_password? "Link expired or Invalid." : "Could not parse your authentication token. Please try to Login again."
-      return res.status(200).send({
-        success: false, msg, reLogin: true,
-      });
+  if (!token) {
+    return res.status(401).json({ success: false, reLogin: true, msg: "No authentication token: Please log in" });
+  }
+
+  try {
+    const secretKey = process.env.JWT_SECRET;
+    if (!secretKey) {
+      throw new Error("JWT_SECRET is not set in environment variables");
     }
-    if(reset_password && phone !== user.phone){
-      return res.status(200).send({
-        success: false, msg : "Email does not match"
-      });
-    }
-    req.user = user;
-    
+
+    // Try decoding first
+    const decoded = jwt.decode(token);
+
+    // Verify the token
+    const decodedUser = jwt.verify(token, secretKey);
+
+    req.user = decodedUser;
     next();
-  });
-}
+  } catch (err) {
+    // console.error("JWT Verification Error:", err.message);
+
+    return res.status(401).json({
+      success: false,
+      msg: "Invalid authentication token. Please log in again.",
+      reLogin: true,
+    });
+  }
+};
+
 
 module.exports = {
     authenticateToken
