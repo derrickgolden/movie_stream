@@ -31,7 +31,8 @@ app.options('*', (0, cors_1.default)());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
     const { filename } = req.params;
-    const range = req.headers.range;
+    console.log(SERIES_PATH);
+    console.log(VIDEO_PATH);
     const videoPath = getSafeFilePath(VIDEO_PATH, filename);
     if (!videoPath) {
         return res.status(400).send('Invalid file path');
@@ -46,7 +47,6 @@ app.get('/series/:filename(*)', (req, res) => {
     }
     videoStat(videoPath, req, res);
 });
-app.use('/subtitles', express_1.default.static('E:/videos/after earth/After.Earth.2013.en.srt'));
 const getSafeFilePath = (rootPath, userPath) => {
     const sanitizedPath = path_1.default.normalize(userPath).replace(/^(\.\.(\/|\\|$))+/, ''); // Prevent traversal
     const resolvedPath = path_1.default.join(rootPath, sanitizedPath);
@@ -98,7 +98,6 @@ app.use(express_1.default.json());
 app.use((0, compression_1.default)());
 app.use((0, cookie_parser_1.default)());
 // Serve static files
-app.use('/js', express_1.default.static(path_1.default.join(__dirname, 'dist', 'assets', 'index-TSNK7VKS.js')));
 app.use(express_1.default.static(path_1.default.join(__dirname, 'dist')));
 app.use('/user', auth_1.default);
 app.use('/user', authenticateToken_1.authenticateToken, requestMovie_1.default);

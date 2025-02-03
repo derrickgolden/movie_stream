@@ -14,6 +14,7 @@ import alterVideos from './user/routes/movies/uploadMovie';
 import deleteVideos from './user/routes/movies/deleteMovies';
 import requestMovie from './user/routes/requestMovie';
 import { authenticateToken } from './user/middlewares/authenticateToken';
+import { validateIP } from './user/middlewares/validateIP';
 
 const SERIES_PATH=process.env.SERIES_PATH;
 const VIDEO_PATH=process.env.VIDEO_PATH;
@@ -33,7 +34,8 @@ app.options('*', cors());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
   const { filename } = req.params;
-
+console.log(SERIES_PATH)
+console.log(VIDEO_PATH)
   const videoPath = getSafeFilePath(VIDEO_PATH, filename);
   if (!videoPath) {
     return res.status(400).send('Invalid file path');
@@ -49,8 +51,6 @@ app.get('/series/:filename(*)', (req, res) => {
   }
   videoStat(videoPath, req, res);
 });
-
-app.use('/subtitles', express.static('E:/videos/after earth/After.Earth.2013.en.srt'));
 
 const getSafeFilePath = (rootPath: string, userPath: string) => {
   const sanitizedPath = path.normalize(userPath).replace(/^(\.\.(\/|\\|$))+/, ''); // Prevent traversal
@@ -108,7 +108,6 @@ app.use(compression());
 app.use(cookieParser());
 
 // Serve static files
-app.use('/js', express.static(path.join(__dirname, 'dist', 'assets', 'index-TSNK7VKS.js')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/user', adminauth);
