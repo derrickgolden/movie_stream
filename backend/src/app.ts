@@ -33,7 +33,6 @@ app.options('*', cors());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
   const { filename } = req.params;
-  const range = req.headers.range;
 
   const videoPath = getSafeFilePath(VIDEO_PATH, filename);
   if (!videoPath) {
