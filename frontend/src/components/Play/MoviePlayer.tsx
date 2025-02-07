@@ -66,6 +66,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         if (nextEpisode) {
           // Play the next episode
           const { video_url, thumbnail_path, episode_order, subtitles_url } = nextEpisode;
+          console.log(thumbnail_path)
           const nextVideo = {
             subtitles_url,
             video_url,

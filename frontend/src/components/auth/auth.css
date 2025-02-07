@@ -25,3 +25,89 @@
   .form-title{
     height: 79vh;
   }
+
+
+/* styles.css */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeOutShrink {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scaleY(0); }
+}
+
+@keyframes moveToCenter {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-120px); } /* Adjusted for center */
+}
+
+.fullscreen-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0d6efd;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.japtech-logo {
+  font-size: 6rem;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-align: center;
+  display: flex;
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
+}
+
+.japtech-logo span {
+  display: inline-block;
+  transition: transform 0.5s ease-out;
+}
+
+/* Change "A" to yellow */
+.japtech-logo .text-warning {
+  color: #ffc107 !important;
+}
+
+.fade-out {
+  animation: fadeOutShrink 0.5s forwards;
+}
+
+.move-jap {
+  animation: moveToCenter 1s forwards;
+}
+
+/* Loader styles */
+.loader {
+  margin-top: 20px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #ffc107; /* Matches "A" color */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.show-loader {
+  opacity: 1;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (min-width: 768px) {
+  .japtech-logo {
+    font-size: 8rem;
+  }
+}

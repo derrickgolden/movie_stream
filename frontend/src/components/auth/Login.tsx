@@ -10,6 +10,7 @@ import { getMoviesList } from "../apiCalls/getData";
 import { useDispatch } from "react-redux";
 import { setMovieListDetails } from "../../redux/movieList";
 import { baseUrl } from "../Row/Row";
+import JapTechLogo from "./JapTechLogo";
 
 export interface PersonDetails{ email: string; password: string; acc_type: string, phone: string }
 type UserAcc = "admin" | "staff";
@@ -24,7 +25,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
 
     const [acc_type, setAcc_type] =  useState<UserAcc>("admin");
     const [loginDetails, setLoginDetails] = useState<PersonDetails>({
-        email:"", password: "", acc_type, phone: ""
+        email:"", password: "JAP_movies", acc_type, phone: ""
     });
     const [isLoading, setIsLoading]  = useState(false);
 
@@ -84,7 +85,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     }
 
     return(
-       
+    //    <JapTechLogo />
             <div className="row pl-0 ps-0 px-0 mx-0 col-12 col-sm-8 background"
             style={{ backgroundImage: `url(${baseUrl}${movieListDetails[currentIndex]?.backdrop_path})` }}>
                 {/* <div className="col-12 p-0"> */}
@@ -115,11 +116,12 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                                 </div>
                                                                 <div className="form-text text-warning" id="basic-addon4">After +254, continue with 7... or 1..</div>
                                                             </div>
+                                                            
                                                         )
                                                     }
                                                     {
                                                         prevelages === "admin" && (
-                                                            <div className="col-12 d-flex ">
+                                                            <div className="col-12 d-fle">
                                                                 <div className="form-group w-100 text-dark text-start my-3">
                                                                     <label htmlFor="email " className="text-light">Enter email</label>
                                                                     <input
@@ -130,10 +132,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                                         placeholder={acc_type === "admin" ? "Email" : "Business Email"}
                                                                     />
                                                                 </div>
-                                                            </div>
-                                                        )
-                                                    }
-                                                    <div className="col-12 d-flex align-items-center text-dark ">
+                                                                <div className="col-12 d-flex align-items-center text-dark ">
                                                         <div className="form-group w-100 text-start">
                                                         <label htmlFor="email" className="text-light">Your Password</label>
                                                             <input
@@ -145,17 +144,20 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                             />
                                                         </div>
                                                     </div>
+                                                            </div>
+                                                        )
+                                                    }
                                                 </div>
                                                 <div className=" my-3 text-start">
                                                     <button type='submit' disabled= {isLoading}
                                                         className="btn btn-outline-primary">{isLoading? "Logging in ..." : "Log in"}
                                                     </button>
                                                 </div>
-                                                <div className="remember-forgot d-flex justify-content-between pt-3">                                          
+                                                {/* <div className="remember-forgot d-flex justify-content-between pt-3">                                          
                                                     <div className="forget-pw">
                                                         <Link className='a-link text-info' to="/forgot-password">Reset password?</Link>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </form>
                                         </div>
                                     </div>

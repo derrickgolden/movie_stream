@@ -42,7 +42,6 @@ const AddNewMovie: React.FC<{type: "movie" | "series"}> = ({type}) =>{
                    runtime, backdrop_path, poster_path, release_date
                 }));
             }
-            console.log(request);
             return request;
         }
         fetchData();
