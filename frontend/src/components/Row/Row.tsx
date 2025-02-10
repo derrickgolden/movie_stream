@@ -12,6 +12,8 @@ import { setSeriesListDetails } from "../../redux/seriesList";
 import { playMovie } from "./playMovie";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import PosterCard from "./PosterCard";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export const baseUrl = "https://image.tmdb.org/t/p/original";
 
@@ -19,28 +21,39 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
   const [movies, setMovies] = useState<MovieListProps[]>([]);
   const [trailerUrl, setTrailerUrl] = useState("");
   const [clickCount, setClickCount] = useState({count: 0, id: 0});
+  const seriesListDetails = useSelector((state: RootState) => state.seriesListDetails)
+  const movieListDetails = useSelector((state: RootState) => state.movieListDetails)
   const dispatch = useDispatch();
   const rowRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
+  useEffect(() =>{
+    if(type === "continue_watching"){
+      const movie_watching = movieListDetails.filter((movie) => movie.progress && !movie.completed)
+      const series_watching = seriesListDetails.filter((movie) => movie.watch_progress.progress && !movie.watch_progress.completed)
+      setMovies([...movie_watching, ...series_watching]);
+    };
+  }, [movieListDetails, seriesListDetails]);
+
   useEffect(() => {
-    const data ="";
     if(type === "movies"){
-      getMoviesList(fetchUrl, data, navigate).then((res) =>{
+      getMoviesList(fetchUrl, "", navigate).then((res) =>{
         if(res.success){
-          setMovies(res.details);
+          const movies = res.details.filter((movie) => Number(movie.progress) < 60);
+          setMovies(movies);
           dispatch(setMovieListDetails(res.details));
-        }
+        };
       });
     }else if(type === "series"){
-      getSeriesList(fetchUrl, data, navigate).then((res) =>{
+      getSeriesList(fetchUrl, "", navigate).then((res) =>{
         if(res.success){
-          setMovies(res.details);
+          const series = res.details.filter((movie) => Number(movie.watch_progress.progress) < 60);
+          setMovies(series);
           dispatch(setSeriesListDetails(res.details));
-        }
+        };
       });
-    }
+    };
   }, [fetchUrl]);
 
   const opts = {
@@ -70,25 +83,9 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
     rowRef.current? rowRef.current.scrollLeft += 300 : null; // Adjust scroll distance
   };
 
-  // const handleClick = (movie: MovieListProps) => {
-  //   // navigate("/watch/After.Earth.2013.720p.BluRay.x264.YIFY.mp4");
-  //   console.log(movie)
-
-  //   if (trailerUrl) {
-  //     setTrailerUrl("");
-  //   } else {
-  //     movieTrailer(movie?.name || "")
-  //       .then((url) => {
-  //         const urlParams = new URLSearchParams(new URL(url).search);
-  //         setTrailerUrl(urlParams.get("v"));
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // };
-
   return (
-    <div className="row2 bg-black ps-3">
-      <h2 className="row_title">{title}</h2>
+    <div className="row2 bg-black col-12">
+      <h2 className="row_title px-3 text-warning">{title}</h2>
       <div className="d-fle position-relative w-100 ">
         {
           theDevice !== "phone" && 
@@ -97,7 +94,7 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
             <FaChevronLeft size={42}/>
           </div>
         }
-        <div className="row__posters pl" ref={rowRef}>
+        <div className="row__posters " ref={rowRef}>
           {movies.map((movie, i) => (
             <PosterCard
               key={i}

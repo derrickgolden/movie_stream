@@ -20,20 +20,28 @@ import AddUsers from './components/adminComponents/Users/AddUsers';
 import AllUsers from './components/adminComponents/Users/AllUsers';
 import RequestMovie from './sections/RequestMovie';
 import SearchMovie from './sections/SearchMovie';
+import SideBar from './components/Navbar/SideBar';
 
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
+  const [toggle, setToggle] = useState({link: "Home", isOpen: false})
 
   return (
-    <div className='App position-relative'>
+    <div className='App position-relative' >
 
           <Routes>
-            <Route path='viewer/dashboard' element={<LandingPage />} />
             <Route path='watch/:id' element={<MoviePlayer /> } />
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
-            <Route path='viewer/request-movie' element={<RequestMovie /> } />
-            <Route path='viewer/search-movie' element={<SearchMovie /> } />
+            <Route path='/viewer' element ={<SideBar 
+                toggle = {toggle}  setToggle ={setToggle}
+              />}>
+              <Route path='dashboard' element={<LandingPage 
+                toggle = {toggle}  setToggle ={setToggle}
+              />} />
+              <Route path='request-movie' element={<RequestMovie /> } />
+              <Route path='search-movie' element={<SearchMovie /> } />
+            </Route>
 
             <Route path="/" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} /> 
             <Route path="login/:urltoken" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} />

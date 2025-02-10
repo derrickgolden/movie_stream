@@ -2,9 +2,10 @@ import { FaExclamationTriangle, FaHome } from "react-icons/fa";
 import { BsFillChatSquareQuoteFill } from "react-icons/bs";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import { avatar } from "../../assets";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RiMenuFold3Fill, RiMenuUnfold3Fill } from "react-icons/ri";
+import { ToggleProps } from "../../sections/type";
 
 // Sidebar links configuration
   const links = [
@@ -13,9 +14,8 @@ import { RiMenuFold3Fill, RiMenuUnfold3Fill } from "react-icons/ri";
     { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={32} />, href: "/viewer/request-movie" },  
   ];
 
-const  SideBar = () =>{
+const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
   const navigate = useNavigate();
-    const [toggle, setToggle] = useState({link: "Home", isOpen: false})
     const [logOut, setLogOut] = useState(false);
     const [viewer, setViewer] = useState("")
 
@@ -31,38 +31,38 @@ const  SideBar = () =>{
       setLogOut(true);
     }
     return(
-        <div style={{backgroundColor: "black "}}
-        className={`${toggle.isOpen? "col-9 col-md-3 ": "col-1 " } side-bar col-1 text-center h-100 
-          pt-5 px-md-3  position-absolute top-0 left-0 `} >
-            <div className={`${toggle.isOpen? "text-start ": "text-center "} d-flex 
-            ps-sm-2 ps-md-3 mb-4 mt-5 align-items-center`}>
-              <img
-                style={{height: "30px"}}
-                  className=""
-                  src={avatar}
-                  alt="netflix-avatar"
-              />
-              {
-                toggle.isOpen &&
-                <div className="">
-                  <h5 className="text-info ms-3 text-truncate">{getGreeting()}</h5>
-                  <h6 className="text-info ms-3 text-truncate">{viewer?.account2}</h6>
-                </div>
-              }
-            </div>
-            <div className={`d-flex  text-center text-warning ps-sm-2 ps-md-3`}>
-              <Link to="#" className="text-warning  border border-warning rounded px-1 py-sm-1 ps-sm-2 pe-sm-2 px-xxl-3" role="button" 
-                onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
-              {
-                toggle.isOpen? 
-                <RiMenuFold3Fill className="fs-3 " />:
-                <RiMenuUnfold3Fill className="fs-3 " />
-              }
-              </Link>
-            </div>
-                      <ul className="list-unstyled pt-5">
+        <div style={{}} className={`  d-flex justify-content-end`} >
+            <div className={`${toggle.isOpen? "col-9 col-sm-5 col-md-4 col-lg-3 ": "col-1 d-none d-sm-block" } side-bar col-1 text-center h-100 
+              pt-3 px-md-3  position-fixed top-0 left-0  `} style={{zIndex: 30}}>
+              <div className={`d-none d-sm-block`}>
+                <Link to="#" className="text-warning text-start rounded px-1" 
+                  onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
+                {
+                  toggle.isOpen? 
+                  <RiMenuFold3Fill size={42} className="fs-1 "  />:
+                  <RiMenuUnfold3Fill size={42} className="fs-1 " />
+                }
+                </Link>
+              </div>
+              <div className={`${toggle.isOpen? "text-start ": "justify-content-center "} d-flex  
+              ps-2 ps-sm-0 my-4 align-items-center `} style={{height: "80px"}}>
+                <img style={{height: "30px"}}
+                    className=""
+                    src={avatar}
+                    alt="netflix-avatar"
+                />
+                {
+                  toggle.isOpen &&
+                  <div className="">
+                    <h5 className="text-info ms-3 text-truncate">{getGreeting()}</h5>
+                    <h6 className="text-info ms-3 text-truncate">{viewer?.account2}</h6>
+                  </div>
+                }
+              </div>
+              
+                      <ul className="list-unstyled pt-5 ps-2 ps-sm-0">
                           {links.map((link, index) => (
-                            <li key={index} className="mb-5 text-start ps-sm-2 ps-md-3">
+                            <li key={index} className={`mb-5 ${toggle.isOpen? "text-start ": "text-center "} `}>
                               {
                                   <Link
                                     to={link.href || "#"}
@@ -79,7 +79,7 @@ const  SideBar = () =>{
                               }
                             </li>
                           ))}
-                            <li key="100" className="mb-5 text-start ps-sm-2 ps-md-3">
+                            <li key="100" className={`mb-5 ${toggle.isOpen? "text-start ": "text-center "} `}>
                               {
                                 <Link to="#"
                                     className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
@@ -93,7 +93,9 @@ const  SideBar = () =>{
                                 </Link>
                               }
                             </li>
-                        </ul>
+                      </ul>
+            </div>
+          <Outlet />
         </div>
     )
 };

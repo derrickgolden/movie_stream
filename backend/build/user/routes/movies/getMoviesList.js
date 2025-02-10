@@ -9,8 +9,9 @@ const getSeriesSeasonsById_1 = require("../../dbServices/series/getSeriesSeasons
 const getSeriesDetails_1 = require("../../dbServices/series/getSeriesDetails");
 const router = express_1.default.Router();
 router.get('/get-movies', async (req, res) => {
+    const { id } = req.user;
     try {
-        const response = await (0, getMoviesList_1.getMoviesList)();
+        const response = await (0, getMoviesList_1.getMoviesList)(id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);
@@ -34,8 +35,9 @@ router.get('/get-seasons-episodes/:movie_id', async (req, res) => {
     }
 });
 router.get('/get-series', async (req, res) => {
+    const { id } = req.user;
     try {
-        const response = await (0, getSeriesDetails_1.getSeriesDetails)();
+        const response = await (0, getSeriesDetails_1.getSeriesDetails)(id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

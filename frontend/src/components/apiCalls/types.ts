@@ -4,6 +4,8 @@ export interface MovieListProps{
     video_url: string, movie: string, description: string, backdrop_path: string, poster_path: string
     is_series: boolean;
     subtitles_url: string;
+    progress: number;
+    completed: boolean;
 }
 export interface MovieFile {
     order: number; // Sequence order of the file
@@ -41,6 +43,11 @@ export  interface TvSeries {
     description: string; // Description of the series
     release_date: string; // Release date of the series in YYYY-MM-DD format
     seasons: Season[]; // List of seasons in the series
+    watch_progress: {
+      progress: number;
+      completed: boolean;
+      episode_id: number | null;
+    }
   }
   
   

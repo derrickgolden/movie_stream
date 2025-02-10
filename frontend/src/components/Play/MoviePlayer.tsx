@@ -4,7 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlinePicLeft } from "react-icons/ai";
 import { RiArrowGoBackFill } from "react-icons/ri";
+import { MdReplayCircleFilled } from "react-icons/md";
 import { Episode, Season } from "../apiCalls/types";
+import { server_baseurl } from "../../baseUrl";
+import { markMovieCompleteApi, postWatchProgressApi } from "../apiCalls/postData";
 
 interface MoviePlayerProps {}
 
@@ -13,16 +16,13 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { movie, playVideo } = location.state;
+  const lastSavedTime = useRef<number>(0);
   const [showOverlay, setShowOverlay] = useState(true);
   const [showSubtitles, setShowSubtitles] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
   const [playingVideo, setPlayingVideo] = useState({
-    subtitles_url: "",
-    video_url: "",
-    backdrop_path: "",
-    is_series: false,
-    episode_order: 0,
-    season_order: 0,
-    show_details: false,
+    subtitles_url: "", video_url: "", backdrop_path: "", video_id: 0, episode_id: 0,
+    is_series: false, episode_order: 0, season_order: 0, show_details: false, progress: 0
   });
   const playRef = useRef(null)
 
@@ -34,10 +34,10 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     }
   };
 
-  const handlePlay = (showSubtitles: boolean) => {
-    setShowSubtitles(showSubtitles);
+  const handlePlay = (resume: boolean) => {
     const videoElement = videoRef.current;
     if (videoElement) {
+      if(!resume) videoElement.currentTime = 0;
       if (videoElement.requestFullscreen) {
         videoElement.requestFullscreen();
       } else if ((videoElement as any).webkitRequestFullscreen) {
@@ -66,7 +66,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         if (nextEpisode) {
           // Play the next episode
           const { video_url, thumbnail_path, episode_order, subtitles_url } = nextEpisode;
-          console.log(thumbnail_path)
+
           const nextVideo = {
             subtitles_url,
             video_url,
@@ -79,16 +79,16 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
           navigate(`/watch/${movie.title}-${movie.video_id}`, {
             state: { movie, playVideo: nextVideo },
           });
-          // location.state = { movie, playVideo: nextEpisode }
-          // setPlayingVideo(nextVideo);
-          // videoRef.current?.load(); // Reload video with the new source
           return;
         }
       }
     }
 
     // If no next episode is found or it's a movie, navigate back to home
-    navigate("/");
+    const { video_id, is_series, episode_id } = playingVideo;
+    const data = JSON.stringify({ movie_id: video_id, progress: currentTime, is_series, episode_id, isCompleted: true });
+    postWatchProgressApi(data, navigate)
+    navigate("/viewer/dashboard"); 
   };
 
   useEffect(() => {
@@ -98,16 +98,6 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     if (videoElement) {
       videoElement.addEventListener("canplay", handleAutoplay);
       videoElement.addEventListener("ended", playNextEpisode);
-
-      // if (playingVideo.is_series ) {
-      //   videoElement.addEventListener("play", () => {
-      //     setTimeout(() => {
-      //       // setShowOverlay(false);
-      //       // playRef.current.click();
-      //       // handlePlay();
-      //     }, 5000);
-      //   });
-      // }
     }
 
     return () => {
@@ -121,6 +111,21 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const handleEpisodesAndMore = () => {
     navigate(`/watch/episodes-more/${movie.video_id}`, { state: movie });
   };
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget; // Type-safe access to video element
+    const newTime = Math.floor(video.currentTime);
+    
+    // Save progress every 10 seconds
+    if (newTime - lastSavedTime.current >= 10) {
+      setCurrentTime(newTime);
+      lastSavedTime.current = newTime;
+      const { video_id, is_series, episode_id } = playingVideo;
+      const data = JSON.stringify({ movie_id: video_id, progress: newTime, is_series, episode_id, isCompleted: false });
+      postWatchProgressApi(data, navigate)
+    }
+  };
+  
 
   return (
     <div
@@ -137,17 +142,17 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
             <div className="banner-buttons d-flex mt-5 flex-column gap-4">
             {
               playingVideo.is_series? (  <>
-                <button onClick={() =>handlePlay(false)} ref={playRef}
+                <button onClick={() =>handlePlay(true)} ref={playRef}
                 className="btn btn-outline-info w-100 
                 d-flex align-items-center gap-2 justify-content-center text-center">
                   <FaPlay /> Resume S{playingVideo.season_order}: EP.{playingVideo.episode_order}
                 </button>
                 {
                   playingVideo.subtitles_url &&
-                  <button onClick={() =>handlePlay(true)} ref={playRef}
+                  <button onClick={() =>handlePlay(false)} ref={playRef}
                   className="btn btn-outline-info w-100 
                   d-flex align-items-center gap-2 justify-content-center text-center">
-                    <FaPlay /> Resume With Subtitles
+                    <MdReplayCircleFilled /> Play from Beginning
                   </button>
                 }
                 <button onClick={handleEpisodesAndMore} className="btn btn-outline-info w-100 
@@ -155,19 +160,19 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
                   <AiOutlinePicLeft /> Episodes & More
                 </button>
               </>) : (<>
+                {
+                  playingVideo.progress && 
+                  <button onClick={() =>handlePlay(true)} ref={playRef}
+                  className="btn btn-outline-info w-100 
+                  d-flex align-items-center gap-2 justify-content-center text-center">
+                    <FaPlay /> Resume Playing
+                  </button>
+                }
                   <button onClick={() =>handlePlay(false)} ref={playRef}
                   className="btn btn-outline-info w-100 
                   d-flex align-items-center gap-2 justify-content-center text-center">
-                    <FaPlay /> Play Full Screen
+                    <MdReplayCircleFilled /> Play From Beginning
                   </button>
-                  {
-                    playingVideo.subtitles_url? 
-                    <button onClick={() =>handlePlay(true)} ref={playRef}
-                    className="btn btn-outline-info w-100 
-                    d-flex align-items-center gap-2 justify-content-center text-center">
-                      <FaPlay /> Play with Subtitles
-                    </button> : null
-                  }
               </>)
 
             }
@@ -183,6 +188,12 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         ref={videoRef}
         src={playingVideo.video_url}
         poster={playingVideo.backdrop_path}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={() => {
+          if (videoRef.current) {
+            videoRef.current.currentTime = playingVideo.progress; // Jump to 60 seconds
+          }
+        }}
         controls
         style={{ width: "100%", height: "99vh", borderRadius: "8px" }}
       >

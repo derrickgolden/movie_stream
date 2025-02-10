@@ -31,6 +31,11 @@ export interface SeriesListDetails {
     backdrop_path: string;
     poster_path: string;
     seasons: Season[];
+    watch_progress: {
+      progress: number;
+      completed: boolean;
+      episode_id: number | null;
+    }
 }
 
 

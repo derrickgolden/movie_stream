@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import './section.css'
 import PosterCard from "../components/Row/PosterCard";
 import { getMoviesList, getSeriesList } from "../components/apiCalls/getData";
 import { useDispatch } from "react-redux";
@@ -41,27 +42,24 @@ const SearchMovie =() =>{
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const value = e.target.value;
-        console.log(movies);
-        const filteredMovies = []
         setFilteredMovies(movies.filter((movie) => movie.title.toLocaleLowerCase().includes(value.toLocaleLowerCase())) as MovieListProps[])
-        console.log(value)
     }
     return(
-        <div className="d-flex " 
+        <div className="d-flex flex-column flex-lg-row bg-black col-12 col-sm-11 " 
         style={{minHeight: "100vh"}}>
             
-            <div className="col-4 p-4">
+            <div className="col-12 col-lg-4 p-4 " >
                 <div className="mb-3 ">
                     <input type="text" onChange={handleInputChange} placeholder="Search Movie"
                     className="form-control" id="search" />
                 </div>
-                <div>
+                <div className="search">
                     {filteredMovies.map((movie, i) => (
-                        <h6 className="display-6 text-secondary text-truncate">{movie.title}</h6>
+                        <h6 className="display-6 mb-0 text-secondary text-truncate">{movie.title}</h6>
                     ))}
                 </div>
             </div>
-            <div className="d-flex flex-wrap pl-3 py-4" >
+            <div className="d-flex flex-wrap pl-3 py-4 justify-content-center col-12 col-lg-8" >
             {filteredMovies.length?(
                 filteredMovies.map((movie, i) => (
                     <div role="button">

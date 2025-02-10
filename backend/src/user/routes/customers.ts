@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express';
 import { universalResponse } from 'user/types/universalResponse';
 import { addCustomer } from '../dbServices/customers/addCustomer';
 import { editCustomerDetails } from '../dbServices/customers/editCustomerDetails';
-import { getCustomerList } from '../dbServices/customers/getCustomers';
+import { getUserWatchStats } from '../dbServices/customers/getCustomers';
 
 const router = express.Router();
 
@@ -22,11 +22,9 @@ router.post('/add-customer', async(req: Request, res: Response) =>{
     }
 });
 
-router.post('/get-list', async(req: Request, res: Response) =>{
-    const body = req.body;
-
+router.get('/get-list', async(req: Request, res: Response) =>{
     try {
-        const response:universalResponse = await getCustomerList(body)
+        const response:universalResponse = await getUserWatchStats();
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response);

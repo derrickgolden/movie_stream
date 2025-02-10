@@ -2,15 +2,13 @@ import React from "react";
 import { useEffect, useState } from "react";
 import "./auth.css"
 
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import loginApi, { validateTokenApi } from "./apiCalls/loginApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { getMoviesList } from "../apiCalls/getData";
 import { useDispatch } from "react-redux";
 import { setMovieListDetails } from "../../redux/movieList";
 import { baseUrl } from "../Row/Row";
-import JapTechLogo from "./JapTechLogo";
+import { getSeriesPosters } from "../apiCalls/noWarningApi";
+import { SeriesListDetails } from "../../redux/seriesList";
 
 export interface PersonDetails{ email: string; password: string; acc_type: string, phone: string }
 type UserAcc = "admin" | "staff";
@@ -24,30 +22,29 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     const dispatch = useDispatch();
 
     const [acc_type, setAcc_type] =  useState<UserAcc>("admin");
+    const [seriesList, setSeriesList] = useState<SeriesListDetails[]>([])
     const [loginDetails, setLoginDetails] = useState<PersonDetails>({
-        email:"", password: "JAP_movies", acc_type, phone: ""
+        email:"", password: "123456", acc_type, phone: ""
     });
     const [isLoading, setIsLoading]  = useState(false);
-
-    const movieListDetails = useSelector((state: RootState) => state.movieListDetails);
     
       const [currentIndex, setCurrentIndex] = useState(0);
     
       useEffect(() => {
         const interval = setInterval(() => {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % movieListDetails.length);
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % seriesList.length);
         }, 5000); // Change image every 5 seconds
     
         return () => clearInterval(interval); // Cleanup on component unmount
-      }, [movieListDetails.length]);
+      }, [seriesList.length]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-        const name = e.target.name
-        const value = e.target.value
+        const name = e.target.name;
+        const value = e.target.value;
         if(name === "phone"){
             value.length < 10 ? setLoginDetails((obj) =>({...obj, [name]: value})) : null;
         }else{
-            setLoginDetails((obj) =>({...obj, [name]: value}))
+            setLoginDetails((obj) =>({...obj, [name]: value}));
         }
     };
 
@@ -59,14 +56,14 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                 setIsLoading(true);
                 validateTokenApi(token).then((res) =>{
                     if(res.success) navigate("/viewer/dashboard");
-                    else setIsLoading(false)
+                    else setIsLoading(false);
                 })
             };
         };
         const auth = false;
-        getMoviesList("videos/get-movies", "", navigate, auth).then((res) =>{
+        getSeriesPosters("posters/get", "", navigate).then((res) =>{
             if(res.success){
-                dispatch(setMovieListDetails(res.details));
+                setSeriesList(res.details);
             }
         });
     }, []);
@@ -87,7 +84,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     return(
     //    <JapTechLogo />
             <div className="row pl-0 ps-0 px-0 mx-0 col-12 col-sm-8 background"
-            style={{ backgroundImage: `url(${baseUrl}${movieListDetails[currentIndex]?.backdrop_path})` }}>
+            style={{ backgroundImage: `url(${baseUrl}${seriesList[currentIndex]?.backdrop_path})` }}>
                 {/* <div className="col-12 p-0"> */}
                     <div className="bg- d-fle  login-form h-100">
                         <h1 className="text-primary p-4">J<span className="text-warning px-2">A</span>P</h1>
@@ -164,8 +161,8 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                 </div>
                             </div>
                             <div className="d-flex justify-content-end flex-column text-end align-items-end w-100 text-light border-2">
-                                <h1 className="text-warning">{movieListDetails[currentIndex]?.title}</h1>
-                                <p className="text-info">{movieListDetails[currentIndex]?.slug}</p>
+                                <h1 className="text-warning">{seriesList[currentIndex]?.title}</h1>
+                                <p className="text-info">{seriesList[currentIndex]?.slug}</p>
                             </div>
                         </div>
                         

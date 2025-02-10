@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMoviesList = void 0;
 const { pool } = require("../../../mysqlSetup");
-const getMoviesList = async () => {
+const getMoviesList = async (user_id) => {
     const connection = await pool.getConnection();
     try {
         var [res] = await connection.query(`
@@ -23,16 +23,19 @@ const getMoviesList = async () => {
                 movie_files.created_at,
                 movie_files.updated_at,
                 movie_files.trailer_url,
-                movie_files.subtitles_url
+                movie_files.subtitles_url,
+                COALESCE(movie_watch_progress.progress, 0) AS progress, 
+                COALESCE(movie_watch_progress.completed, FALSE) AS completed
             FROM 
                 movies
-                LEFT JOIN 
-                movie_files 
-            ON 
-                movies.movie_id = movie_files.movie_id
+            LEFT JOIN 
+                movie_files ON movies.movie_id = movie_files.movie_id
+            LEFT JOIN 
+                movie_watch_progress ON movies.movie_id = movie_watch_progress.movie_id 
+                AND movie_watch_progress.user_id = ?
             ORDER BY 
                 movies.created_at DESC;
-        `, []);
+            `, [user_id]);
         connection.release();
         return {
             success: true,

@@ -1,0 +1,31 @@
+.rows{
+    height: 100vh - 340px;
+    overflow-y: auto;
+}
+
+.search {
+    max-height: 32vh;
+    overflow-y: auto;
+
+    /* Scrollbar Styling */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #888 transparent; /* Firefox */
+}
+
+/* WebKit Scrollbar (Chrome, Edge, Safari) */
+.search::-webkit-scrollbar {
+    width: 8px; /* Adjust scrollbar width */
+}
+
+.search::-webkit-scrollbar-thumb {
+    background: #888; /* Scrollbar color */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.search::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker on hover */
+}
+
+.search::-webkit-scrollbar-track {
+    background: transparent; /* Track background */
+}

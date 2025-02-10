@@ -61,7 +61,7 @@ const RequestMovie = () => {
 
   return (
     <div
-      className="d-flex justify-content-center align-items-center text-light"
+      className="d-flex justify-content-center align-items-center text-light col-12 bg-black text-start"
       style={{ height: "100vh" }}
     >
       <div className="col-11 col-sm-8 col-md-7 col-lg-5 bg-dark px-4 pt-3 pb-5 rounded">

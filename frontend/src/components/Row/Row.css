@@ -2,7 +2,7 @@
   /* padding-left: 10px; */
   color: white;
   position: relative;
-  z-index: 80;
+  /* z-index: 10; */
   min-height: 100px;
 }
 .row2 >h2 {

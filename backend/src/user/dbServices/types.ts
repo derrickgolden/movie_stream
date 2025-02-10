@@ -93,4 +93,12 @@ export interface RequestMovie {
   description: string,
   notify: boolean;
 }
+export interface MovieProgressBody {
+  user_id: number, 
+  movie_id: number;
+  progress: number;
+  is_series: boolean,
+  episode_id: number;
+  isCompleted: number;
+}
 

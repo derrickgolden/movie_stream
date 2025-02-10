@@ -21,10 +21,9 @@ router.post('/add-customer', async (req, res) => {
         res.status(302).json({ success: false, msg: "sever side error", err: error.message });
     }
 });
-router.post('/get-list', async (req, res) => {
-    const body = req.body;
+router.get('/get-list', async (req, res) => {
     try {
-        const response = await (0, getCustomers_1.getCustomerList)(body);
+        const response = await (0, getCustomers_1.getUserWatchStats)();
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

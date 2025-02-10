@@ -2,12 +2,12 @@ import { RowDataPacket } from "mysql2";
 import { universalResponse } from "user/types/universalResponse";
 const { pool } = require("../../../mysqlSetup");
 
-export const getSeriesDetails = async (): Promise<universalResponse> => {
-
+export const getSeriesDetails = async (user_id: number): Promise<universalResponse> => {
     const connection: RowDataPacket = await pool.getConnection();
     try {
-        var [res] = await connection.query(`
-             SELECT 
+        var [res] = await connection.query(
+            `
+            SELECT 
                 ts.movie_id AS video_id,
                 ts.title,
                 ts.description,
@@ -15,6 +15,23 @@ export const getSeriesDetails = async (): Promise<universalResponse> => {
                 ts.is_series,
                 ts.backdrop_path,
                 ts.poster_path,
+                COALESCE(
+                    (
+                        SELECT JSON_OBJECT(
+                            'episode_id', swp.episode_id,
+                            'progress', swp.progress,
+                            'completed', swp.completed
+                        )
+                        FROM series_watch_progress swp
+                        JOIN episodes e ON swp.episode_id = e.episode_id
+                        WHERE e.season_id IN (
+                            SELECT season_id FROM season_info WHERE movie_id = ts.movie_id
+                        ) AND swp.user_id = ?
+                        ORDER BY swp.updated_at DESC
+                        LIMIT 1
+                    ), 
+                    JSON_OBJECT('episode_id', NULL, 'progress', 0, 'completed', FALSE)
+                ) AS watch_progress,
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'season_id', si.season_id,
@@ -53,19 +70,21 @@ export const getSeriesDetails = async (): Promise<universalResponse> => {
                 ts.movie_id
             ORDER BY 
                 ts.id DESC;
-        `);
+            `,
+            [user_id]
+        );
 
         connection.release();
 
         return {
             success: true,
-            msg: `Tv Series List`,
+            msg: `TV Series List`,
             details: res
         };
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error("Error:", error.message);
         connection.release();
-        
+
         if (error.sqlMessage) {
             return { success: false, msg: "Database Error", err: error.sqlMessage };
         } else {
@@ -76,4 +95,4 @@ export const getSeriesDetails = async (): Promise<universalResponse> => {
 
 module.exports = {
     getSeriesDetails,
-}
+};

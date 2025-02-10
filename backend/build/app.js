@@ -15,6 +15,9 @@ const getMoviesList_1 = __importDefault(require("./user/routes/movies/getMoviesL
 const uploadMovie_1 = __importDefault(require("./user/routes/movies/uploadMovie"));
 const deleteMovies_1 = __importDefault(require("./user/routes/movies/deleteMovies"));
 const requestMovie_1 = __importDefault(require("./user/routes/requestMovie"));
+const watchProgress_1 = __importDefault(require("./user/routes/watchProgress"));
+const getPosters_1 = __importDefault(require("./user/routes/getPosters"));
+const customers_1 = __importDefault(require("./user/routes/customers"));
 const authenticateToken_1 = require("./user/middlewares/authenticateToken");
 const SERIES_PATH = process.env.SERIES_PATH;
 const VIDEO_PATH = process.env.VIDEO_PATH;
@@ -31,8 +34,6 @@ app.options('*', (0, cors_1.default)());
 // Example route: Serve video files
 app.get('/video/:filename(*)', (req, res) => {
     const { filename } = req.params;
-    console.log(SERIES_PATH);
-    console.log(VIDEO_PATH);
     const videoPath = getSafeFilePath(VIDEO_PATH, filename);
     if (!videoPath) {
         return res.status(400).send('Invalid file path');
@@ -100,10 +101,12 @@ app.use((0, cookie_parser_1.default)());
 // Serve static files
 app.use(express_1.default.static(path_1.default.join(__dirname, 'dist')));
 app.use('/user', auth_1.default);
-app.use('/user', authenticateToken_1.authenticateToken, requestMovie_1.default);
-app.use('/videos', [getMoviesList_1.default, uploadMovie_1.default, deleteMovies_1.default]);
-app.use('/admin/videos', authenticateToken_1.authenticateToken, requestMovie_1.default);
+app.use('/posters', getPosters_1.default);
+app.use('/user', authenticateToken_1.authenticateToken, [watchProgress_1.default, requestMovie_1.default]);
+app.use('/videos', authenticateToken_1.authenticateToken, [getMoviesList_1.default, uploadMovie_1.default, deleteMovies_1.default]);
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, 'uploads')));
+app.use('/admin/videos', authenticateToken_1.authenticateToken, requestMovie_1.default);
+app.use('/admin/clients', authenticateToken_1.authenticateToken, customers_1.default);
 app.listen(PORT, () => {
     console.log(`Listening on port :${PORT}`);
 });

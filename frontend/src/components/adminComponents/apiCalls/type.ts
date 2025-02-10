@@ -10,4 +10,13 @@ export interface MovieRequestRes {
     status: 'pending' | 'inProgress' | 'uploaded' | 'cancelled'
     request_date: string; // ISO string representing the request date
   }
-  
+  export interface UserWatchStats {
+    user_id: number;
+    name: string;
+    mac: string;
+    apartment: string;
+    phone: string;
+    last_login: string; // ISO date string
+    total_watched: number;
+    last_watched_at: string; // Timestamp or formatted date string
+}

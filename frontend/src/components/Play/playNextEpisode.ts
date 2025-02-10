@@ -16,7 +16,7 @@ type PlayNextEpisodeProps = {
     videoRef:React.MutableRefObject<HTMLVideoElement | null>, 
     navigate:NavigateFunction;
 }
-export const playNextEpisode = ({movie, playingVideo, setPlayingVideo, videoRef, navigate}: PlayNextEpisodeProps) => {
+export const playNextEpisode = ({movie, playingVideo, setPlayingVideo}: PlayNextEpisodeProps) => {
     if (movie.is_series) {
       const currentSeason = movie.seasons.find(
         (season) => season.season_order === playingVideo.season_order
@@ -24,11 +24,9 @@ export const playNextEpisode = ({movie, playingVideo, setPlayingVideo, videoRef,
       if (currentSeason) {
         const nextEpisode = currentSeason.episodes.find(
           (episode) =>{
-            console.log(episode)
               return episode.episode_order === (playingVideo.episode_order + 1)
           } 
         );
-        console.log({nextEpisode})
         if (nextEpisode) {
           // Play the next episode
           const { video_url, thumbnail_path, episode_order } = nextEpisode;
@@ -40,14 +38,9 @@ export const playNextEpisode = ({movie, playingVideo, setPlayingVideo, videoRef,
             episode_order,
             show_details: false,
           };
-          console.log(nextVideo);
           setPlayingVideo(nextVideo);
-        //   videoRef.current?.load(); // Reload video with the new source
           return;
         }
       }
     }
-
-    // If no next episode is found or it's a movie, navigate back to home
-    // navigate("/");
   };

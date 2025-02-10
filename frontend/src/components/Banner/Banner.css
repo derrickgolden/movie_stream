@@ -3,8 +3,9 @@
   object-fit: contain;
   max-height: 340px;
   position: relative;
-  z-index: 89 ;
-  right: -2px;
+  z-index: 20 ;
+  /* right: -2px; */
+  margin-right: 100px;
 }
 .banner__contents {
   padding-left: 12px;
