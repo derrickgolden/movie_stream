@@ -15,8 +15,6 @@ const MovieRequests = () =>{
     const title = "Movie Request";
     const [apistate, setApiState] = useState<MovieRequestRes[]>([]);
     const [rerendarApi, setRerendarApi] = useState(false);
-  
-    // open add data modal
     const [apicol, setApiCol] = useState<MovieRequestRes>();
     const callApi = useSelector((state: RootState) =>state.callApi);
     const [requestedMovies, setRequestedMovies] = useState<MovieRequestRes[]>([]);
@@ -33,7 +31,13 @@ const MovieRequests = () =>{
         { name: "Client Name", selector: (row: MovieRequestRes) => row.name, sortable: true },
         { name: "Phone", selector: (row: MovieRequestRes) => row.phone, sortable: true },
         { name: "Apartment", selector: (row: MovieRequestRes) => row.apartment, sortable: true },
-        { name: "Status", selector: (row: MovieRequestRes) => row.status, sortable: true },
+        { name: "Status", cell: (row: MovieRequestRes) => <>{
+            <span className={`${row.status === "pending"? "text-warning ": 
+                row.status === "inProgress"? "text-primary ":
+                row.status === "uploaded"? "text-success ": "text-danger "
+            } text-capitalize fs-6`}>{row.status}</span>
+        }
+        </>, sortable: true },
         { name: "Update Status", cell: (row: MovieRequestRes) => <>{
             <select onChange={(e) => handleStatusChange(e, row)} className="form-select" aria-label="Default select example">
                 <option selected = {row.status === "pending"} value='pending'>Pending</option>
@@ -53,7 +57,6 @@ const MovieRequests = () =>{
     useEffect(() =>{
         getMovieRequests( "").then((data) =>{
             if(data.success){
-                console.log(data.details);
                 setRequestedMovies(data.details);
             }
         });
@@ -73,7 +76,6 @@ const MovieRequests = () =>{
             if (result.isConfirmed) {
                 const data = JSON.stringify({ status, row });
                 updateRequestedMovieStatus(data).then((data) =>{
-                    console.log(data)
                     if(data.success){
                         Swal.fire({
                           title: "Updated",

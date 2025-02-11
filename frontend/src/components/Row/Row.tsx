@@ -37,8 +37,9 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
   }, [movieListDetails, seriesListDetails]);
 
   useEffect(() => {
+    const stringToken = localStorage.getItem('viewerToken');
     if(type === "movies"){
-      getMoviesList(fetchUrl, "", navigate).then((res) =>{
+      getMoviesList(fetchUrl, "", navigate, stringToken).then((res) =>{
         if(res.success){
           const movies = res.details.filter((movie) => Number(movie.progress) < 60);
           setMovies(movies);
@@ -46,7 +47,7 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
         };
       });
     }else if(type === "series"){
-      getSeriesList(fetchUrl, "", navigate).then((res) =>{
+      getSeriesList(fetchUrl, "", navigate, stringToken).then((res) =>{
         if(res.success){
           const series = res.details.filter((movie) => Number(movie.watch_progress.progress) < 60);
           setMovies(series);

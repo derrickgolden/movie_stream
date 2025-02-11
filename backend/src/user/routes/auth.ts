@@ -93,8 +93,6 @@ router.post('/login', async (req: Request, res: Response): Promise<void> =>{
             const resp:universalResponse = await updateLogin(wrong_pass, phone, prevelages );
             res.status(200).send({success: true, token, msg: "User Found", details});   
         }else{
-            const wrong_pass = true;
-            const response:universalResponse = await updateLogin(wrong_pass, phone, prevelages )
             res.status(200).send({success: false, msg: "Incorrect Password"});
         };
     } catch (error) {

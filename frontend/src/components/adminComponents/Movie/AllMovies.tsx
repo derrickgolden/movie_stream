@@ -72,7 +72,8 @@ const AllMovies = () =>{
     }, [rerendarApi, seriesList])
 
     useEffect(() =>{
-        getMoviesList("videos/get-movies", "", navigate).then((data) =>{
+        const stringToken = sessionStorage.getItem('adminToken');
+        getMoviesList("videos/get-movies", "", navigate, stringToken).then((data) =>{
             if(data.success){
                 setSeriesList(data.details);
             }

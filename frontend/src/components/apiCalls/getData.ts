@@ -15,22 +15,18 @@ interface SeriesData {
     details: SeriesListDetails[];
 }
 
-export const getMoviesList = async (path: string, data: string, navigate: NavigateFunction, auth = true): Promise<ResponseData> => {
-    return await makeApiCall("videos/get-movies", 'get', data, navigate, auth);
+export const getMoviesList = async (path: string, data: string, navigate: NavigateFunction, tokenString: string | null): Promise<ResponseData> => {
+    return await makeApiCall("videos/get-movies", 'get', data, navigate, tokenString);
 };
-export const getSeriesList = async (path: string, data: string, navigate: NavigateFunction, auth = true): Promise<SeriesData> => {
-    return await makeApiCall("videos/get-series", 'get', data, navigate, auth);
+export const getSeriesList = async (path: string, data: string, navigate: NavigateFunction, tokenString: string | null): Promise<SeriesData> => {
+    return await makeApiCall("videos/get-series", 'get', data, navigate, tokenString);
 };
 
-const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction, auth: boolean) =>{
-    if(auth){
-        const tokenString = localStorage.getItem("viewerToken");
-    
-        if (tokenString !== null) {
-            var token = JSON.parse(tokenString);
-        } else {
-            navigate("/")
-        }
+const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction, tokenString: string | null) =>{
+    if (tokenString !== null) {
+        var token = JSON.parse(tokenString);
+    } else {
+        navigate("/")
     }
 
     let config = {
