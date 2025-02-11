@@ -195,6 +195,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
           }
         }}
         controls
+        controlsList="nodownload"
+        onContextMenu={(e) => e.preventDefault()}
         style={{ width: "100%", height: "99vh", borderRadius: "8px" }}
       >
         {/* Video source */}

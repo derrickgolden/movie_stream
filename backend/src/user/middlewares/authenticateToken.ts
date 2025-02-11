@@ -8,7 +8,6 @@ require('dotenv').config()
 // const adminAccess = new RevokedAdminCache()
 export const authenticateToken = async (req: ModifiedReq, res: Response, next: NextFunction) => {
   const token = req.header("Authorization")?.split(" ")[1];
-
   if (!token) {
     return res.status(401).json({ success: false, reLogin: true, msg: "No authentication token: Please log in" });
   }

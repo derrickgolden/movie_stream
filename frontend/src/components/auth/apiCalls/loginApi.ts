@@ -23,7 +23,6 @@ const loginApi = async({ data, navigate, setLoginDetails, setIsLogin, prevelages
             return response.json();
         } )
         .then(data => {
-            // console.log(data)
             if(data.success){
                 if(data.details[0].prevelages === "viewer"){
                     localStorage.setItem("viewer", JSON.stringify(data?.details[0]));

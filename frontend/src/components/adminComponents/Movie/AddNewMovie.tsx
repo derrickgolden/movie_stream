@@ -21,9 +21,7 @@ const AddNewMovie: React.FC<{type: "movie" | "series"}> = ({type}) =>{
     const handleCreateMovie = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
         addMovieDetails(JSON.stringify(movieDetails)).then((data) =>{
-            console.log(movieDetails);
             if(data.success){
-                    console.log(data.details);
                 if(type === "movie") navigate("/admin/movie-upload", {state: data.details});
                 if(type === "series") navigate("/admin/seasons-manage", {state: data.details});
             }
@@ -46,6 +44,7 @@ const AddNewMovie: React.FC<{type: "movie" | "series"}> = ({type}) =>{
         }
         fetchData();
     }
+    
     return(
         <div className="bg-light w-100 p-4 ">
             <div>
