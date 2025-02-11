@@ -6,6 +6,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RiMenuFold3Fill, RiMenuUnfold3Fill } from "react-icons/ri";
 import { ToggleProps } from "../../sections/type";
+import Swal from "sweetalert2";
 
 // Sidebar links configuration
   const links = [
@@ -26,9 +27,22 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
     },[logOut]);
 
     const handleLogOut = () =>{
-      localStorage.clear();
-      localStorage.removeItem("viewerToken")
-      setLogOut(true);
+      Swal.fire({
+        title: "Are you sure you want to Log Out?",
+        showDenyButton: true,
+        showCloseButton: true,
+        confirmButtonText: "Log Out",
+        denyButtonText: `Continue Watching`,
+        confirmButtonColor: "#ffc107",
+        denyButtonColor: "#198754",
+        icon: 'question'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.clear();
+          localStorage.removeItem("viewerToken")
+          setLogOut(true);
+        }
+      });
     }
     return(
         <div style={{}} className={`  d-flex justify-content-end`} >

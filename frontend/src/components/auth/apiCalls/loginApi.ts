@@ -35,14 +35,14 @@ const loginApi = async({ data, navigate, setLoginDetails, setIsLogin, prevelages
                 setIsLogin(true);
                 return navigate(`/${prevelages}/dashboard`, {replace: true});
             }else{
-                // Swal.fire({
-                //     text: `${data.msg}`,
-                //     showCloseButton: true,
-                //     showConfirmButton: false,
-                //     animation: false,
-                //     color: "#dc3545",
-                //     padding: "5px"
-                // });
+                Swal.fire({
+                    text: `${data.msg}`,
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    animation: false,
+                    color: "#dc3545",
+                    padding: "5px"
+                });
                 return;
             }
         })

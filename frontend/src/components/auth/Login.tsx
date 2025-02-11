@@ -9,6 +9,7 @@ import { setMovieListDetails } from "../../redux/movieList";
 import { baseUrl } from "../Row/Row";
 import { getSeriesPosters } from "../apiCalls/noWarningApi";
 import { SeriesListDetails } from "../../redux/seriesList";
+import Swal from "sweetalert2";
 
 export interface PersonDetails{ email: string; password: string; acc_type: string, phone: string }
 type UserAcc = "admin" | "staff";
@@ -24,7 +25,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
     const [acc_type, setAcc_type] =  useState<UserAcc>("admin");
     const [seriesList, setSeriesList] = useState<SeriesListDetails[]>([])
     const [loginDetails, setLoginDetails] = useState<PersonDetails>({
-        email:"", password: "123456", acc_type, phone: ""
+        email:"", password: "JAP_movies", acc_type, phone: ""
     });
     const [isLoading, setIsLoading]  = useState(false);
     
@@ -147,7 +148,7 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                                                 </div>
                                                 <div className=" my-3 text-start">
                                                     <button type='submit' disabled= {isLoading}
-                                                        className="btn btn-outline-primary">{isLoading? "Logging in ..." : "Log in"}
+                                                        className="btn btn-outline-primary">{isLoading? `Logging in ...` : "Log in"}
                                                     </button>
                                                 </div>
                                                 {/* <div className="remember-forgot d-flex justify-content-between pt-3">                                          
