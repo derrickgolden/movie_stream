@@ -21,35 +21,45 @@ import AllUsers from './components/adminComponents/Users/AllUsers';
 import RequestMovie from './sections/RequestMovie';
 import SearchMovie from './sections/SearchMovie';
 import SideBar from './components/Navbar/SideBar';
+import JaptechLogo from './components/auth/JapTechLogo';
 
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [toggle, setToggle] = useState({link: "Home", isOpen: false})
+  const [isLandingReady, setIsLandingReady] = useState(false);
+  
 
   return (
     <div className='App position-relative' >
 
+      {/* <JaptechLogo isReady ={isLandingReady}/> */}
           <Routes>
             <Route path='watch/:id' element={<MoviePlayer /> } />
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
-            <Route path='/viewer' element ={<SideBar 
+            <Route path='/viewer' element ={<SideBar setIsLandingReady = {setIsLandingReady}
                 toggle = {toggle}  setToggle ={setToggle}
               />}>
               <Route path='dashboard' element={<LandingPage 
                 toggle = {toggle}  setToggle ={setToggle}
+                setIsLandingReady = {setIsLandingReady}
               />} />
               <Route path='request-movie' element={<RequestMovie /> } />
               <Route path='search-movie' element={<SearchMovie /> } />
             </Route>
 
-            <Route path="/" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} /> 
-            <Route path="login/:urltoken" element={<Login setIsLogin = {setIsLogin} prevelages="viewer"/>} />
+            <Route path="/" element={<Login setIsLogin = {setIsLogin} 
+                                            prevelages="viewer"
+                                            setIsLandingReady = {setIsLandingReady}
+                                    />} /> 
+            <Route path="login/:urltoken" element={<Login setIsLogin = {setIsLogin} 
+                                            prevelages="viewer"
+                                            setIsLandingReady = {setIsLandingReady}
+                                    />} />
             <Route path="viewer/signup" element={<Signup prevelages="viewer"/>} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="viewer/reset-pass" element={<ResetPassword />} />
             <Route path='change-pass' element={<ChangePassword setIsLogin = {setIsLogin}/>} />
-            {/* <Route path='register-shop' element={<RegisterShop />} /> */}
       
             <Route path='preview' element ={<Preview />} />
             <Route path='/admin' element={<Sidebar />} >
@@ -68,7 +78,10 @@ function App() {
               <Route path='subscription' element ={<Reports />} />
               <Route path='notification' element ={<Reports />} />
               <Route path="signup" element={<Signup prevelages="admin"/>} />
-              <Route path="login" element={<Login setIsLogin = {setIsLogin} prevelages="admin"/>} />
+              <Route path="login" element={<Login setIsLogin = {setIsLogin} 
+                                            prevelages="admin"
+                                            setIsLandingReady = {setIsLandingReady}
+                                    />} />
               <Route path='logout' element={<Logout />}/>
             </Route>
           </Routes>

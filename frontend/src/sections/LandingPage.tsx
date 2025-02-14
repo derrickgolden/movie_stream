@@ -10,11 +10,26 @@ export interface HoveredMovie {
     movie_id: number | null, is_series: number | null | boolean
 }
 
-const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
+const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingReady}) =>{
     const [hoveredMovie, setHoveredMovie] = useState<HoveredMovie>({movie_id: null, is_series: null});
     const [isVideoReady, setIsVideoReady] = useState(false);
     const [theDevice, setTheDevice] = useState<"laptop" | "phone" | "tv">("laptop");
-    const navigate = useNavigate();
+
+    useEffect(() => {
+      const handleLoad = () => {
+        setIsLandingReady(true);
+      };
+
+      if (document.readyState === "complete") {
+        handleLoad();
+      } else {
+        window.addEventListener("load", handleLoad);
+      }
+
+      return () => {
+        window.removeEventListener("load", handleLoad);
+      };
+    }, []);
 
       const detectDevice = () => {
         const userAgent = navigator.userAgent.toLowerCase();

@@ -38,6 +38,7 @@ export  interface Episode {
   }
   
 export  interface TvSeries {
+    video_id: number;
     movie_id: number; // Unique identifier for the series
     title: string; // Title of the series
     description: string; // Description of the series

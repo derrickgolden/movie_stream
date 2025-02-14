@@ -51,8 +51,9 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
         }
       }else{
         const data = "";
+        const token = localStorage.getItem('viewerToken')
         const fetchPath = hoveredMovie.is_series ? "" : ""
-        getMoviesList(fetchPath, data).then((data) =>{
+        getMoviesList(fetchPath, data, navigate, token).then((data) =>{
           if(data.success) dispatch(setMovieListDetails(data.details));
         });
       }
@@ -122,7 +123,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
           {!isVideoReady && (
             <img
               src={`${baseUrl}/${movie?.backdrop_path}`}
-              alt="Movie Backdrop"
+              // alt="Movie Backdrop"
               style={{
                 width: "100%", // Make the image span the full width
                 height: "340px", // Fixed height

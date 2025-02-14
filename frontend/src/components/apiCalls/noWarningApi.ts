@@ -12,6 +12,10 @@ interface SeriesData {
 export const getSeriesPosters = async (path: string, data: string, navigate: NavigateFunction): Promise<SeriesData> => {
     return await makeApiCall("posters/get", 'get', data, navigate);
 };
+export const postWatchProgressApi = async (data: string, navigate: NavigateFunction): Promise<SeriesData> => {
+    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
+    return await makeApiCall('user/watch-progress', 'post', data, navigate);
+};
 
 const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction) =>{
 
@@ -26,11 +30,12 @@ const makeApiCall = async(url: string, method: string, data: string, navigate: N
     let config = {
         method: method,
         maxBodyLength: Infinity,
-        url: `${server_baseurl}/${url}/${data}`,
+        url: `${server_baseurl}/${url}`,
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bear ${token}`
         },
+        data,
     };
 
     return await axios.request(config)

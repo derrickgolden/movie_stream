@@ -15,10 +15,11 @@ export interface PersonDetails{ email: string; password: string; acc_type: strin
 type UserAcc = "admin" | "staff";
 type LoginProps = {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
-    prevelages: "admin"| "viewer"
+    prevelages: "admin"| "viewer";
+    setIsLandingReady: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
+const Login: React.FC<LoginProps> = ({setIsLogin, prevelages, setIsLandingReady}) =>{
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -57,8 +58,13 @@ const Login: React.FC<LoginProps> = ({setIsLogin, prevelages}) =>{
                 setIsLoading(true);
                 validateTokenApi(token).then((res) =>{
                     if(res.success) navigate("/viewer/dashboard");
-                    else setIsLoading(false);
+                    else{
+                        setIsLoading(false);
+                        setIsLandingReady(true);
+                    } 
                 })
+            }else{
+                setIsLandingReady(true);
             };
         };
         const auth = false;

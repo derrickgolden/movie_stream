@@ -6,8 +6,8 @@ import { AiOutlinePicLeft } from "react-icons/ai";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { MdReplayCircleFilled } from "react-icons/md";
 import { Episode, Season } from "../apiCalls/types";
-import { server_baseurl } from "../../baseUrl";
-import { markMovieCompleteApi, postWatchProgressApi } from "../apiCalls/postData";
+import { postWatchProgressApi } from "../apiCalls/noWarningApi";
+import { nextMovieEpisode } from "./nextMovieEpisode";
 
 interface MoviePlayerProps {}
 
@@ -37,7 +37,12 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const handlePlay = (resume: boolean) => {
     const videoElement = videoRef.current;
     if (videoElement) {
-      if(!resume) videoElement.currentTime = 0;
+      if(!resume){
+        videoElement.currentTime = 0;
+        lastSavedTime.current = 0;
+      } else{
+        lastSavedTime.current = playingVideo.progress;
+      }
       if (videoElement.requestFullscreen) {
         videoElement.requestFullscreen();
       } else if ((videoElement as any).webkitRequestFullscreen) {
@@ -59,34 +64,12 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         (season: Season) => season.season_order === playingVideo.season_order
       );
       if (currentSeason) {
-        const nextEpisode = currentSeason.episodes.find(
-          (episode: Episode) => episode.episode_order === playingVideo.episode_order + 1
-        );
-
-        if (nextEpisode) {
-          // Play the next episode
-          const { video_url, thumbnail_path, episode_order, subtitles_url } = nextEpisode;
-
-          const nextVideo = {
-            subtitles_url,
-            video_url,
-            backdrop_path: thumbnail_path,
-            is_series: true,
-            season_order: playingVideo.season_order,
-            episode_order,
-            show_details: false,
-          };
-          navigate(`/watch/${movie.title}-${movie.video_id}`, {
-            state: { movie, playVideo: nextVideo },
-          });
-          return;
-        }
+        if(nextMovieEpisode({movie, currentSeason, order: playingVideo.episode_order + 1, lastSavedTime, navigate})) return;
       }
     }
-
     // If no next episode is found or it's a movie, navigate back to home
     const { video_id, is_series, episode_id } = playingVideo;
-    const data = JSON.stringify({ movie_id: video_id, progress: currentTime, is_series, episode_id, isCompleted: true });
+    const data = JSON.stringify({ movie_id: video_id, progress: 0, is_series, episode_id, isCompleted: true });
     postWatchProgressApi(data, navigate)
     navigate("/viewer/dashboard"); 
   };
@@ -191,7 +174,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => {
           if (videoRef.current) {
-            videoRef.current.currentTime = playingVideo.progress; // Jump to 60 seconds
+            videoRef.current.currentTime = playingVideo.progress || 0; // Jump to 60 seconds
           }
         }}
         controls
