@@ -110,7 +110,7 @@ const UploadMovie = () =>{
                     <p className="bg-success text-white text-uppercase p-2">Upload Movie</p>
 
                     <div className={`form-floating mb-3 col-12 `}>
-                        <input type='number' className="form-control" id="time" 
+                        <input type='text' className="form-control" id="time" 
                         onChange={(e) => setMovieDetails((obj) => ({...obj, credits_start: timeToSeconds(e.target.value)})) } />
                         <label htmlFor="time">Convert to seconds</label>
                     </div>
