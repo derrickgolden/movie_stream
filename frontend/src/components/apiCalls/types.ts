@@ -6,6 +6,7 @@ export interface MovieListProps{
     subtitles_url: string;
     progress: number;
     completed: boolean;
+    credits_start: number
 }
 export interface MovieFile {
     order: number; // Sequence order of the file
@@ -17,6 +18,7 @@ export interface MovieFile {
     video_id: number;
     trailer_url: string;
     subtitles_url: string;
+    credits_start: string
   }
 
 export  interface Episode {
@@ -27,6 +29,7 @@ export  interface Episode {
     video_url: string; // URL of the episode source
     url: string;
     subtitles_url: string;
+    credits_start: number;
   }
   
  export interface Season {

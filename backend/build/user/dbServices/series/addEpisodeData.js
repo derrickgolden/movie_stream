@@ -5,7 +5,7 @@ const { pool } = require("../../../mysqlSetup");
 const addEpisodeData = async (episodeInfo) => {
     const { epidodeDetails, season } = episodeInfo;
     const { season_id } = season;
-    const { episode_name, episode_order, url, episode_no, id, overview, runtime, season_no, still_path, subtitles_url, isEdit } = epidodeDetails;
+    const { episode_name, episode_order, url, episode_no, id, overview, runtime, season_no, still_path, subtitles_url, isEdit, credits_start } = epidodeDetails;
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
@@ -14,16 +14,16 @@ const addEpisodeData = async (episodeInfo) => {
             const { episode_id } = epidodeDetails;
             var [res] = await connection.query(`
                     UPDATE episodes
-                    SET episode_name = ?, episode_order = ?, url = ?, subtitles_url = ?
+                    SET episode_name = ?, episode_order = ?, url = ?, subtitles_url = ?, credits_start = ?
                     WHERE episode_id = ?
-                `, [episode_name, episode_order, url, subtitles_url, episode_id]);
+                `, [episode_name, episode_order, url, subtitles_url, credits_start, episode_id]);
         }
         else {
             // Insert movies
             var [res] = await connection.query(`
-                    INSERT INTO episodes (season_id, episode_name, episode_order, url, subtitles_url, episode_no, id, overview, runtime, season_no, thumbnail_path)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `, [season_id, episode_name, episode_order, url, subtitles_url, episode_no, id, overview, runtime, season_no, still_path]);
+                    INSERT INTO episodes (season_id, episode_name, episode_order, url, subtitles_url, episode_no, id, overview, runtime, season_no, thumbnail_path, credits_start)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `, [season_id, episode_name, episode_order, url, subtitles_url, episode_no, id, overview, runtime, season_no, still_path, credits_start]);
         }
         await connection.commit();
         connection.release();

@@ -52,6 +52,7 @@ export const getSeriesDetails = async (user_id: number): Promise<universalRespon
                                             'subtitles_url', e.subtitles_url,
                                             'overview', e.overview,
                                             'runtime', e.runtime,
+                                            'credits_start', e.credits_start,
                                             'id', e.id
                                         )
                                     )

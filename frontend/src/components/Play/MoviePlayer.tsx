@@ -8,23 +8,25 @@ import { MdReplayCircleFilled } from "react-icons/md";
 import { Episode, Season } from "../apiCalls/types";
 import { postWatchProgressApi } from "../apiCalls/noWarningApi";
 import { nextMovieEpisode } from "./nextMovieEpisode";
+import { exitFullscreen } from "./quickFunctions";
 
 interface MoviePlayerProps {}
 
 const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const intervalRef = useRef<number | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { movie, playVideo } = location.state;
   const lastSavedTime = useRef<number>(0);
-  const [showOverlay, setShowOverlay] = useState(true);
-  const [showSubtitles, setShowSubtitles] = useState(true);
+  const [show, setShow] = useState({overlay: true, subtitles: false, completed: false});
+  const [review, setReview] = useState(10);
   const [currentTime, setCurrentTime] = useState(0);
   const [playingVideo, setPlayingVideo] = useState({
-    subtitles_url: "", video_url: "", backdrop_path: "", video_id: 0, episode_id: 0,
+    subtitles_url: "", video_url: "", backdrop_path: "", video_id: 0, episode_id: 0, credits_start: 1000000,
     is_series: false, episode_order: 0, season_order: 0, show_details: false, progress: 0
   });
-  const playRef = useRef(null)
+  const playRef = useRef(null);
 
   const handleAutoplay = () => {
     if (videoRef.current) {
@@ -68,7 +70,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
       }
     }
     // If no next episode is found or it's a movie, navigate back to home
-    const { video_id, is_series, episode_id } = playingVideo;
+    const { video_id, is_series, episode_id, credits_start } = playingVideo;
     const data = JSON.stringify({ movie_id: video_id, progress: 0, is_series, episode_id, isCompleted: true });
     postWatchProgressApi(data, navigate)
     navigate("/viewer/dashboard"); 
@@ -91,6 +93,17 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     };
   }, [videoRef, playVideo, playingVideo, playNextEpisode]);
 
+  useEffect(() => {
+    if(review <= 0){
+      playNextEpisode();
+      return () => {
+        if (intervalRef.current !== null) {
+          clearInterval(intervalRef.current);
+        }
+      };
+    };
+  }, [review]);
+
   const handleEpisodesAndMore = () => {
     navigate(`/watch/episodes-more/${movie.video_id}`, { state: movie });
   };
@@ -100,25 +113,36 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     const newTime = Math.floor(video.currentTime);
     
     // Save progress every 10 seconds
-    if (newTime - lastSavedTime.current >= 10) {
-      setCurrentTime(newTime);
+    if (newTime - (lastSavedTime.current | 0) >= 10) {
+      // console.log({newTime, progress: playingVideo.progress});
+      // setCurrentTime(newTime);
       lastSavedTime.current = newTime;
-      const { video_id, is_series, episode_id } = playingVideo;
+      const { video_id, is_series, episode_id, credits_start } = playingVideo;
+      const isCompleted = newTime >= credits_start;
       const data = JSON.stringify({ movie_id: video_id, progress: newTime, is_series, episode_id, isCompleted: false });
-      postWatchProgressApi(data, navigate)
+      postWatchProgressApi(data, navigate);
+      if(isCompleted){
+        setShow((obj) =>({...obj, completed: isCompleted}));
+        if(!is_series){
+          exitFullscreen();
+          intervalRef.current = window.setInterval(() => {
+            setReview((prevReview) => prevReview - 1);
+          }, 1000);
+        } else playNextEpisode();
+      } 
     }
   };
   
-
   return (
     <div
       className="position-relative"
       style={{ maxHeight: "", margin: "auto", textAlign: "center" }}
     >
-      {showOverlay ?(
-        <div className="  position-absolute top-0 left-0 bottom-0 player-banner">
+
+      {show.overlay ?(
+        <div className="position-absolute top-0 left-0 bottom-0 player-banner">
           <div className=" h-100 d-flex d-md-block flex-column justify-content-between p-2 p-sm-3 p-md-5 col-12 col-md-5 ">
-            <div>
+            <div className=" ">
               <h1 className="ms-4 text-warning">{movie?.title}</h1>
               <h1 className="banner__description lead">{movie?.description}</h1>
             </div>
@@ -130,32 +154,36 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
                 d-flex align-items-center gap-2 justify-content-center text-center">
                   <FaPlay /> Resume S{playingVideo.season_order}: EP.{playingVideo.episode_order}
                 </button>
-                {
-                  playingVideo.subtitles_url &&
-                  <button onClick={() =>handlePlay(false)} ref={playRef}
+                <button onClick={() =>handlePlay(false)} ref={playRef}
                   className="btn btn-outline-info w-100 
                   d-flex align-items-center gap-2 justify-content-center text-center">
                     <MdReplayCircleFilled /> Play from Beginning
-                  </button>
-                }
+                </button>
                 <button onClick={handleEpisodesAndMore} className="btn btn-outline-info w-100 
                 d-flex align-items-center gap-2 justify-content-center text-center" >
                   <AiOutlinePicLeft /> Episodes & More
                 </button>
               </>) : (<>
                 {
-                  playingVideo.progress && 
-                  <button onClick={() =>handlePlay(true)} ref={playRef}
-                  className="btn btn-outline-info w-100 
-                  d-flex align-items-center gap-2 justify-content-center text-center">
-                    <FaPlay /> Resume Playing
-                  </button>
-                }
+                  show.completed ? ( <div>
+                    <p className="display-6 text-primary">Review in {review} seconds.</p>
+                  </div> ): <>
+                  {
+                    playingVideo.progress? (
+                      <button onClick={() =>handlePlay(true)} ref={playRef}
+                      className="btn btn-outline-info w-100 
+                      d-flex align-items-center gap-2 justify-content-center text-center">
+                        <FaPlay /> Resume Playing
+                      </button>
+                    ): null
+                  }
                   <button onClick={() =>handlePlay(false)} ref={playRef}
                   className="btn btn-outline-info w-100 
                   d-flex align-items-center gap-2 justify-content-center text-center">
                     <MdReplayCircleFilled /> Play From Beginning
                   </button>
+                  </>
+                }
               </>)
 
             }
@@ -187,7 +215,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
 
         {/* Subtitle track */}
         {
-          showSubtitles &&
+          show.subtitles &&
           <track
               src={playingVideo?.subtitles_url}
               kind="subtitles"

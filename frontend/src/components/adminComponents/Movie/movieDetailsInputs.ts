@@ -88,6 +88,7 @@ export const seoAndMarketingInput = [
 export const UploadMovieInput = [
     { label: "Label", placeholder: "server #", id: "label", type: "text", inputType: "input", required: true },
     { label: "Order", placeholder: "0", id: "order", type: "number", inputType: "input", required: true },
+    { label: "Credits Start", placeholder: "0", id: "credits_start", type: "number", inputType: "input", required: true },
     { label: "Movie URL", placeholder: "https://moviepath.mp4", id: "url", type: "text", inputType: "input", required: true },
     { label: "Trailer URL", placeholder: "https://moviepath.mp4", id: "trailer_url", type: "text", inputType: "input", required: true },
     { label: "Subtitles URL", placeholder: "https://subtitles-path.vtt", id: "subtitles_url", type: "text", inputType: "input", required: false},

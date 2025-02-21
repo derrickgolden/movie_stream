@@ -17,7 +17,7 @@ import { RootState } from "../../redux/store";
 
 export const baseUrl = "https://image.tmdb.org/t/p/original";
 
-const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHoveredMovie, setIsVideoReady, theDevice }) => {
+const Row: React.FC<RowProps> = ({ title, type, subTitle, fetchUrl, isLargeRow, setHoveredMovie, setIsVideoReady, theDevice }) => {
   const [movies, setMovies] = useState<MovieListProps[]>([]);
   const [trailerUrl, setTrailerUrl] = useState("");
   const [clickCount, setClickCount] = useState({count: 0, id: 0});
@@ -41,7 +41,7 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
     if(type === "movies"){
       getMoviesList(fetchUrl, "", navigate, stringToken).then((res) =>{
         if(res.success){
-          const movies = res.details.filter((movie) => Number(movie.progress) < 60);
+          const movies = res.details.filter((movie) => Number(movie.progress) < 60 && !movie.completed);
           setMovies(movies);
           dispatch(setMovieListDetails(res.details));
         };
@@ -86,7 +86,9 @@ const Row: React.FC<RowProps> = ({ title, type, fetchUrl, isLargeRow, setHovered
 
   return (
     <div className="row2 bg-black col-12">
-      <h2 className="row_title px-3 text-warning">{title}</h2>
+      <h2 className="row_title px-3 text-warning">{title}
+        <span className="text-primary fs-6 ms-3">{subTitle}</span>
+      </h2>
       <div className="d-fle position-relative w-100 ">
         {
           theDevice !== "phone" && 

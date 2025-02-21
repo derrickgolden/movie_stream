@@ -62,7 +62,7 @@ const SearchMovie =() =>{
             <div className="d-flex flex-wrap pl-3 py-4 justify-content-center col-12 col-lg-8" >
             {filteredMovies.length?(
                 filteredMovies.map((movie, i) => (
-                    <div role="button">
+                    <div key={'jahsd' + i} role="button">
                         <PosterCard
                             key={i}
                             movie = {movie} 

@@ -28,6 +28,8 @@ export const getSeriesSeasonsEpisodeById = async ( movie_id: string): Promise<un
                                             'episode_order', e.episode_order,
                                             'thumbnail_path', e.thumbnail_path,
                                             'url', e.url,
+                                            'credits_start', e.credits_start,
+                                            'runtime', e.runtime,
                                             'subtitles_url', e.subtitles_url
                                         )
                                     )

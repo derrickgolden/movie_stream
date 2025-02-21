@@ -13,9 +13,9 @@ export const nextMovieEpisode = ({movie, currentSeason, order, lastSavedTime, na
         );
 
         if (nextEpisode) {
+          // console.log(nextEpisode);
           // Play the next episode
-          const { video_url, thumbnail_path, episode_order, subtitles_url, episode_id } = nextEpisode;
-
+          const { video_url, thumbnail_path, episode_order, subtitles_url, episode_id, credits_start } = nextEpisode;
           const nextVideo = {
             subtitles_url,
             video_url,
@@ -25,6 +25,7 @@ export const nextMovieEpisode = ({movie, currentSeason, order, lastSavedTime, na
             is_series: true,
             season_order: currentSeason.season_order,
             episode_order,
+            credits_start,
             show_details: false,
           };
           lastSavedTime.current = 0;

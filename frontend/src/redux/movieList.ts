@@ -6,9 +6,10 @@ export interface MovieListDetails {
   trailer_url: string;
   title: string, name: string, original_name: string,
   url: string, movie: string, overview: string, backdrop_path: string, poster_path: string,
-  is_series: boolean; progress: number; complited: boolean;
+  is_series: boolean; progress: number; completed: boolean;
   description: string;
   video_url: string;
+  credits_start: number;
 }
 
 const initialState: MovieListDetails[] = [];

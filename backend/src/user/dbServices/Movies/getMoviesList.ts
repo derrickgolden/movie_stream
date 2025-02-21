@@ -25,6 +25,7 @@ export const getMoviesList = async (user_id: number ): Promise<universalResponse
                 movie_files.updated_at,
                 movie_files.trailer_url,
                 movie_files.subtitles_url,
+                movie_files.credits_start,
                 COALESCE(movie_watch_progress.progress, 0) AS progress, 
                 COALESCE(movie_watch_progress.completed, FALSE) AS completed
             FROM 

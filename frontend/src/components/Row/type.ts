@@ -2,6 +2,7 @@ import { HoveredMovie } from "../../sections/LandingPage";
 
 export interface RowProps{
     title: string;
+    subTitle: string;
     fetchUrl: string; 
     isLargeRow: boolean;
     setHoveredMovie: React.Dispatch<React.SetStateAction<HoveredMovie>>;

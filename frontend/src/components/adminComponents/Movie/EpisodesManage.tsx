@@ -14,10 +14,12 @@ import { API_KEY } from "./AddNewMovie";
 import { MdOutlinePreview } from "react-icons/md";
 import { deleteEpisodeApi } from "../../apiCalls/updateData";
 import { getSerieSeasonsEpisodes } from "../apiCalls/getData";
+import { timeToSeconds } from "../quickFuctions";
 
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
-        {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", episode_order: 0, subtitles_url: ""}
+        {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", 
+            episode_order: 0, subtitles_url: "", credits_start: ''}
     )
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const callApi = useSelector((state: RootState) => state.callApi);
@@ -31,7 +33,6 @@ const EpisodeManage = () =>{
         getSerieSeasonsEpisodes(seriesDetails.movie_id).then((data) =>{
             if(data.success){
                 const updatedSeason = data.details[0].seasons.filter((season1) => season1.season_id === season.season_id);
-                console.log(updatedSeason[0].episodes)
                 if(updatedSeason.length === 1) setEpisodes(updatedSeason[0].episodes);
             }
         })
@@ -48,7 +49,6 @@ const EpisodeManage = () =>{
     const handleSubmitEpisode = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
         const episodeData = JSON.stringify({epidodeDetails, season});
-        console.log({epidodeDetails});
         addEpisodeDetails(episodeData).then((data) =>{
             if(data.success){
                 Swal.fire(data.msg)
@@ -77,6 +77,7 @@ const EpisodeManage = () =>{
     }
 
     const deleteEpisode = (episode: Episode) =>{
+        console.log(episode)
         Swal.fire({
              title: `Are you sure you want to delete ${episode.episode_name} from ${seriesDetails.title}?`,
              showCancelButton: true,
@@ -111,6 +112,11 @@ const EpisodeManage = () =>{
                 </div>
                 <div className="mt-4">
                     <h5 className="w-100 bg-info p-1">Add Episode</h5>
+                    <div className={`form-floating mb-3 col-12 `}>
+                        <input type='string' className="form-control" id="time" 
+                        onChange={(e) => setEpisodeDetails((obj) => ({...obj, credits_start: timeToSeconds(e.target.value)})) } />
+                        <label htmlFor="time">Convert to seconds</label>
+                    </div>
                     <form onSubmit={handleFetchEpisode}>
                         <div className="d-flex gap-5 justify-content-between align-items-center bg-secondary-subtle px-4 py-2 my-4">
                             <div className="mb-3">
@@ -129,28 +135,32 @@ const EpisodeManage = () =>{
                             </div>
                         </div>
                     </form>
-                    <form onSubmit={handleSubmitEpisode}>
-                        <div className="mb-3">
+                    <form onSubmit={handleSubmitEpisode} className="d-flex flex-wrap justify-content-between">
+                        <div className="mb-3 col-3">
                             <label htmlFor="episode_name" className="form-label ms-2">Episode Name</label>
                             <input type="text" onChange={handleInput} value={epidodeDetails.episode_name}
                             className="form-control" id="episode_name" placeholder="Episode 1" required/>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3 col-3">
                             <label htmlFor="episode_order" className="form-label ms-2">Episode Order</label>
                             <input type="number" onChange={handleInput} value={epidodeDetails.episode_order}
                             className="form-control" id="episode_order" placeholder="1" required/>
                         </div>
-                        <div className="mb-3">
-                            <label htmlFor="formFile" className="form-label ms-2">Select Thumbnail</label>
-                            <input onChange={handleInput}
-                                className="form-control" type="file" id="formFile"/>
+                        <div className="mb-3 col-3">
+                            <label htmlFor="credits_start" className="form-label ms-2">Credits Start</label>
+                            <input type="number" onChange={handleInput} value={epidodeDetails.credits_start}
+                            className="form-control" id="credits_start" placeholder="0" required/>
                         </div>
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
+                            <label htmlFor="formFile" className="form-label ms-2">Select Thumbnail</label>
+                            <input onChange={handleInput} className="form-control" type="file" id="formFile"/>
+                        </div> */}
+                        <div className="mb-3 col-12">
                             <label htmlFor="url" className="form-label ms-2">URL</label>
                             <input type="text" onChange={handleInput} value={epidodeDetails.url} required
                             className="form-control" id="url" placeholder="https://series/hello"/>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3 col-12">
                             <label htmlFor="subtitles_url" className="form-label ms-2">Subtitles Url</label>
                             <input type="text" onChange={handleInput} value={epidodeDetails.subtitles_url}
                             className="form-control" id="subtitles_url" placeholder="https://series/hello"/>
@@ -171,6 +181,7 @@ const EpisodeManage = () =>{
                                 <th scope="col">Thumbnail</th>
                                  <th scope="col">Episode Name</th>
                                 <th scope="col">Order</th>
+                                <th scope="col">Credits</th>
                                 <th scope="col">Url</th>
                                 <th scope="col">Subtitles Url</th>
                                 <th scope="col">Action</th>
@@ -183,14 +194,17 @@ const EpisodeManage = () =>{
                                     <th scope="row">
                                         <img src={`https://image.tmdb.org/t/p/w92/${episode.thumbnail_path}`} alt="" />
                                     </th>
-                                    <td>{episode.episode_name}</td>
-                                    <td><input type="number" onChange={()=>{}} 
-                                        value={episode.episode_order} style={{width: "60px"}} /></td>
+                                    <td className="text-success">{episode.episode_name}</td>
+                                    {/* <td><input type="number" onChange={()=>{}} 
+                                        value={episode.episode_order} style={{width: "60px"}} /></td> */}
+                                    <td className="text-primary">{episode.episode_order}</td>
+                                    <td className="text-info">{episode.credits_start}</td>
                                     <td>{episode.url}</td>
                                     <td>{episode.subtitles_url}</td>
                                     <td>
                                         <span className="d-flex">
-                                            <FaEdit size={32} onClick={() =>setEpisodeDetails((obj) =>({...obj, ...episode, isEdit: true}))} 
+                                            <FaEdit size={32} onClick={() =>setEpisodeDetails((obj) =>({...obj, ...episode,
+                                            credits_start: episode.credits_start || "", isEdit: true}))} 
                                                 role="button" className="text-warning me-2 border border-warning p-1"/>
                                             <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}&subtitlesUrl=${episode.subtitles_url}`}
                                                  target="_blank">

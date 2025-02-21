@@ -12,6 +12,7 @@ interface Episode {
     episode_order: number;
     thumbnail_path: string;
     subtitles_url: string;
+    credits_start: number;
 }
 
 interface Season {

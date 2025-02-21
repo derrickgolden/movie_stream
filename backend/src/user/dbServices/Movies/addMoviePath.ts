@@ -5,26 +5,25 @@ const { pool } = require("../../../mysqlSetup");
 
 export const addMoviePath = async (movieFile: MovieFile ): Promise<universalResponse> => {
 
-    const {id, title, label, order, url, movie_id, isEdit, trailer_url, subtitles_url} = movieFile;
+    const {id, title, label, order, url, movie_id, isEdit, trailer_url, subtitles_url, credits_start} = movieFile;
     const connection: RowDataPacket = await pool.getConnection();
     try {
 
         await connection.beginTransaction();
-
         if(isEdit){
             // update
             var [res] = await connection.query(`
                 UPDATE movie_files
-                SET label = ?, \`order\` = ?, url = ?, trailer_url = ?, subtitles_url = ?
+                SET label = ?, \`order\` = ?, url = ?, trailer_url = ?, subtitles_url = ?, credits_start = ?
                 WHERE movie_id = ?
-            `, [label, order, url, trailer_url, subtitles_url, movie_id]); 
-            var affectRows = res.affectRows           
+            `, [label, order, url, trailer_url, subtitles_url, credits_start, movie_id]); 
+                var affectRows = res.affectRows           
         }else{
             // Insert movies
             var [insert_res] = await connection.query(`
-                INSERT INTO movie_files (label, movie_id, \`order\`, url, trailer_url, subtitles_url)
-                VALUES (?, ?, ?, ?, ?, ?)
-            `, [label, movie_id, order, url, trailer_url, subtitles_url]);
+                INSERT INTO movie_files (label, movie_id, \`order\`, url, trailer_url, subtitles_url, credits_start)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `, [label, movie_id, order, url, trailer_url, subtitles_url, credits_start]);
             var insert_id = insert_res.insertID;
         }
 

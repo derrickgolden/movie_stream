@@ -11,9 +11,10 @@ export interface MovieDetails {
     release_date: string;
     type: "movie" | "series";
   }
-
+  
   export interface MovieFile {
     title: string; // Title of the movie
+    credits_start: number;
     order: number; // Sequence order of the file
     url: string;   // URL of the movie file
     label: string; // Display label or title for the file
@@ -52,6 +53,7 @@ export interface MovieDetails {
     season_no: number;          // Season number the episode belongs to
     subtitles_url: string;
     isEdit: false;
+    credits_start: number;
   }
   
   

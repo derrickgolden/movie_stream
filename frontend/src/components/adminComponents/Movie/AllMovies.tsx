@@ -54,6 +54,7 @@ const AllMovies = () =>{
             />
         }</> },
         { name: "Title", selector: (row: MovieListDetails) => row.title, sortable: true },
+        { name: "Credits Start", selector: (row: MovieListDetails) => row.credits_start, sortable: true },
         {
         name: "action", cell: (row: MovieListDetails) => <>{
             <span>

@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
     const { passwordHash, userAvailable, details } = response;
     try {
         if (!userAvailable) {
-            res.status(200).send({ success: false, msg: "Details not registered", details: response });
+            res.status(200).send({ success: false, msg: "Details not registered. Contact ISP or Call 0714475702", details: response });
             return;
         }
         const { id, account, account2, phone, prevelages, mac } = details[0];
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
             if (!client) {
                 res.status(403).json({
                     success: false,
-                    msg: "You are not an active client of JAPTECH. Contact ISP.",
+                    msg: "You are not an active client of JAPTECH. Contact ISP or Call 0714475702",
                     details: [],
                 });
                 return;
@@ -75,8 +75,6 @@ router.post('/login', async (req, res) => {
             res.status(200).send({ success: true, token, msg: "User Found", details });
         }
         else {
-            const wrong_pass = true;
-            const response = await updateLogin(wrong_pass, phone, prevelages);
             res.status(200).send({ success: false, msg: "Incorrect Password" });
         }
         ;
@@ -94,7 +92,7 @@ router.get('/validate-token', authenticateToken_1.authenticateToken, async (req,
         if (!client) {
             res.status(403).json({
                 success: false,
-                msg: "You are not an active client of JAPTECH. Contact ISP.",
+                msg: "You are not an active client of JAPTECH. Contact ISP or Call 0714475702",
                 details: [],
             });
             return;

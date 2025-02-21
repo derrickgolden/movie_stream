@@ -12,12 +12,13 @@ import { MovieFile } from "../../apiCalls/types";
 import Swal from "sweetalert2";
 import { deleteMovieApi } from "../../apiCalls/updateData";
 import ConvertSrtToVtt from "../ConvertSrtVtt";
+import { timeToSeconds } from "../quickFuctions";
 
 const API_KEY = "086cfe05dd16828e37291d2f37293a38";
 
 const UploadMovie = () =>{
     const [movieDetails, setMovieDetails] = useState({title: "", label: "", order: 1, 
-        url: "https://japtech.africa/video/", trailer_url: "", 
+        url: "https://japtech.africa/video/", trailer_url: "https://japtech.africa/video/", credits_start: 0,
         subtitles_url: "", isEdit: false, video_id: 0   
     });
     const [addedMovies, setAddedMovies] = useState<MovieFile[]>([])
@@ -25,11 +26,11 @@ const UploadMovie = () =>{
     const navigate = useNavigate();
 
     useEffect(() =>{
-        const {title, movie_id, id, isEdit, url, order, trailer_url} = location.state[0];
+        const {title, movie_id, id, isEdit, runtime, trailer_url} = location.state[0];
         if(isEdit){
             setAddedMovies(location.state)
         }else{
-            setMovieDetails((obj)=>({...obj, label: title,  title, movie_id, id, trailer_url}));
+            setMovieDetails((obj)=>({...obj, label: title, credits_start: runtime,  title, movie_id, id, trailer_url}));
         }
     }, [])
 
@@ -46,7 +47,6 @@ const UploadMovie = () =>{
 
     const handleUploadMovie = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
-        console.log(movieDetails);
         uploadMovieDetails(JSON.stringify(movieDetails)).then((data) =>{
             if(data.success){
                 Swal.fire("", data.msg, 'success');
@@ -57,9 +57,8 @@ const UploadMovie = () =>{
     }
 
     const handleEditMovie = (movie: MovieFile) =>{
-        console.log({movie})
-        const {label, order, title, url, movie_id, video_id, trailer_url, subtitles_url} = movie;
-        setMovieDetails({ label, order, url, isEdit: true, movie_id:video_id, video_id, title, trailer_url, subtitles_url  });
+        const {label, order, title, url, credits_start, video_id, trailer_url, subtitles_url} = movie;
+        setMovieDetails({ label, order, url, isEdit: true, credits_start, movie_id:video_id, video_id, title, trailer_url, subtitles_url  });
     }
 
     const deleteVideo = (movie: MovieFile) =>{
@@ -82,7 +81,7 @@ const UploadMovie = () =>{
             };
         });
     }
-console.log(addedMovies)
+
     return(
         <div className="bg-light w-100 py-4 ">
             <div className="px-5">
@@ -108,17 +107,22 @@ console.log(addedMovies)
                     </div>
                 </div>
                 <div className="col-12 px-4">
-
                     <p className="bg-success text-white text-uppercase p-2">Upload Movie</p>
+
+                    <div className={`form-floating mb-3 col-12 `}>
+                        <input type='number' className="form-control" id="time" 
+                        onChange={(e) => setMovieDetails((obj) => ({...obj, credits_start: timeToSeconds(e.target.value)})) } />
+                        <label htmlFor="time">Convert to seconds</label>
+                    </div>
+
                     <div className="d-flex gap-4 mb-1">
                         
-            <form onSubmit={handleUploadMovie} 
-                className=" mt-4 col-12">
+            <form onSubmit={handleUploadMovie} className=" mt-4 col-12">
                 <div className="bg-white d-flex flex-wrap justify-content-between col-12 ">
                         {
                             UploadMovieInput?.map((detail, i)=>{
                                 return(
-                                    <div key={i} className={`form-floating mb-3 ${i == 0 || i == 1? "col-5 ": "col-12 "} `}>
+                                    <div key={i} className={`form-floating mb-3 ${i < 3? "col-3 ": "col-12 "} `}>
                                         <input type={detail.type} className="form-control" 
                                             required={detail.required} value={movieDetails[detail.id]}
                                             id={detail.id} placeholder={detail.placeholder}

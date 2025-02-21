@@ -14,7 +14,7 @@ const EpisodesAndMore = () => {
 
     const handleEpisodeClick = (episode: Episode, season_order: number) => {
         const { description, is_series, video_id } = movie;
-        const { thumbnail_path, video_url, episode_order, subtitles_url, episode_id } = episode;
+        const { thumbnail_path, video_url, episode_order, subtitles_url, episode_id, credits_start } = episode;
         const playVideo = {
             backdrop_path: thumbnail_path,
             description,
@@ -25,9 +25,9 @@ const EpisodesAndMore = () => {
             show_details: false,
             subtitles_url,
             video_id,
+            credits_start,
             episode_id
         };
-        console.log(playVideo)
         navigate(`/watch/${movie.title}-${movie.video_id}`, { state: { movie, playVideo } });
     };
 

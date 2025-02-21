@@ -24,7 +24,7 @@ export const deleteSeriesApi = async (series_id: number): Promise<UploadMovieRes
 
 
 const makeApiCall = async(url: string, method: string, data: string) =>{
-    const tokenString = sessionStorage.getItem("userToken");
+    const tokenString = sessionStorage.getItem("adminToken");
 
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);

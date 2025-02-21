@@ -54,6 +54,7 @@ const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingRead
                 <Navbar 
                   toggle={toggle}
                   setToggle={setToggle}
+                  setIsLandingReady={setIsLandingReady}
                 />
                 <Banner 
                     hoveredMovie = {hoveredMovie}
@@ -67,6 +68,7 @@ const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingRead
                     </div>
                     <Row 
                         title={"Continue Watching"}
+                        subTitle=""
                         type="continue_watching"
                         fetchUrl="videos/get-movies"
                         isLargeRow= {true}
@@ -76,6 +78,7 @@ const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingRead
                     />
                     <Row 
                         title={"Movies"}
+                        subTitle="Scroll/Swipe Left For More."
                         type="movies"
                         fetchUrl="videos/get-movies"
                         isLargeRow= {true}
@@ -84,7 +87,8 @@ const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingRead
                         theDevice = {theDevice}
                     />
                     <Row 
-                        title={"Series"} 
+                        title={"Series"}
+                        subTitle="Scroll/Swipe Left For More." 
                         type="series"
                         fetchUrl="videos/get-series"
                         isLargeRow={true}
