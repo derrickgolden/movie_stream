@@ -19,7 +19,7 @@ import { timeToSeconds } from "../quickFuctions";
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
         {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", 
-            episode_order: "", subtitles_url: "", credits_start: 30000}
+            episode_order: "", subtitles_url: "", credits_start: 30000, runtime: ""}
     )
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const callApi = useSelector((state: RootState) => state.callApi);
@@ -69,10 +69,9 @@ const EpisodeManage = () =>{
         request.then((data) =>{
             if(data.status === 200){
                 const {name, overview, runtime, still_path, id} = data.data;
-                Swal.fire(`${runtime}`)
-                const credits_start = runtime * 60;
+                // const credits_start = runtime * 60;
                 setEpisodeDetails((obj) =>({...obj, episode_order: obj.episode_no,
-                    episode_name: name, overview, runtime, still_path, id, credits_start})
+                    episode_name: name, overview, runtime, still_path, id})
                 )
             }
         });
@@ -99,9 +98,9 @@ const EpisodeManage = () =>{
     }
 
     return(  
-        <div className="w-100 bg-light p-4">
+        <div className="col-10 bg-light p-4">
             <h3>Episodes For {seriesDetails?.title} - {season?.season_name}</h3>
-            <div className="bg-white m-4 p-4">
+            <div className="bg-white p-4">
                 <div className="d-flex justify-content-between">
                     <button onClick={() =>navigate(-1)} className="btn btn-success btn-sm me-4">
                         Back To Seasons
@@ -114,10 +113,15 @@ const EpisodeManage = () =>{
                 </div>
                 <div className="mt-4">
                     <h5 className="w-100 bg-info p-1">Add Episode</h5>
-                    <div className={`form-floating mb-3 col-12 `}>
-                        <input type='string' className="form-control" id="time" 
-                        onChange={(e) => setEpisodeDetails((obj) => ({...obj, credits_start: timeToSeconds(e.target.value)})) } />
-                        <label htmlFor="time">Convert to seconds</label>
+                    <div className="d-flex gap-5 align-items-center">
+                        <div className={`form-floating mb-3 col-10 `}>
+                            <input type='string' className="form-control" id="time" 
+                            onChange={(e) => setEpisodeDetails((obj) => ({...obj, credits_start: timeToSeconds(e.target.value)})) } />
+                            <label htmlFor="time">Convert to seconds</label>
+                        </div>
+                        <div className="col-1">
+                            <button className="btn btn-primary">{epidodeDetails.runtime}</button>
+                        </div>
                     </div>
                     <form onSubmit={handleFetchEpisode}>
                         <div className="d-flex gap-5 justify-content-between align-items-center bg-secondary-subtle px-4 py-2 my-4">
