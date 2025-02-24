@@ -41,6 +41,7 @@ const Row: React.FC<RowProps> = ({ title, type, subTitle, fetchUrl, isLargeRow, 
     if(type === "movies"){
       getMoviesList(fetchUrl, "", navigate, stringToken).then((res) =>{
         if(res.success){
+          console.log(res.details);
           const movies = res.details.filter((movie) => Number(movie.progress) < 60 && !movie.completed);
           setMovies(movies);
           dispatch(setMovieListDetails(res.details));

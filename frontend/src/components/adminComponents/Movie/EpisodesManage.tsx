@@ -19,7 +19,7 @@ import { timeToSeconds } from "../quickFuctions";
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
         {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", 
-            episode_order: 0, subtitles_url: "", credits_start: ''}
+            episode_order: "", subtitles_url: "", credits_start: 30000}
     )
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const callApi = useSelector((state: RootState) => state.callApi);
@@ -54,7 +54,7 @@ const EpisodeManage = () =>{
                 Swal.fire(data.msg)
                 dispatch(setCallApi(!callApi));
                 setEpisodeDetails((obj) => 
-                    ({...obj, episode_no: obj.episode_no + 1, episode_name: "", isEdit: false, url: "", episode_order: 0, subtitles_url: ""})
+                    ({...obj, episode_no: obj.episode_no + 1, episode_name: "", isEdit: false, url: "", episode_order: "", subtitles_url: ""})
                 );
             }
         })
@@ -69,9 +69,11 @@ const EpisodeManage = () =>{
         request.then((data) =>{
             if(data.status === 200){
                 const {name, overview, runtime, still_path, id} = data.data;
-                setEpisodeDetails((obj) =>({...obj,
-                    episode_name: name, overview, runtime, still_path, id
-                }))
+                Swal.fire(`${runtime}`)
+                const credits_start = runtime * 60;
+                setEpisodeDetails((obj) =>({...obj, episode_order: obj.episode_no,
+                    episode_name: name, overview, runtime, still_path, id, credits_start})
+                )
             }
         });
     }

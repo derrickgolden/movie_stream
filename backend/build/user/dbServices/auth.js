@@ -29,7 +29,7 @@ const signupUser = async (signupDetails) => {
             success: true,
             admin_id: userId,
             msg: "User Registered",
-            details: [{ name, email, account, account2, apartment }]
+            details: [{ name, phone, account, account2, apartment }]
         };
     }
     catch (error) {

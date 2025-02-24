@@ -21,7 +21,8 @@ const AddUsers: React.FC<{}> = ({}) =>{
     const [user_type, setUser_type] =  useState<UserAcc>("viewer");
     // admin_email and admin_pass are only used when signing up a user.
     const [signupDetails, setSignupDetails] = useState({
-        remember_me: true, password: "JAP_movies", phone: ""
+        remember_me: true, password: "JAP_movies", phone: "", location: "", apartment: "", account2: "", mac: "",
+        name: ""
     })
     useEffect(() =>{
         setSignupDetails((obj) => ({...obj, user_type}));
@@ -59,7 +60,11 @@ const AddUsers: React.FC<{}> = ({}) =>{
         axios.request(config)
         .then((response) => {
             if(response.data.msg === "User Registered"){
-                Swal.fire("Client Added")
+                Swal.fire(`${response.data.msg}`);
+                setSignupDetails({
+                    remember_me: true, password: "JAP_movies", phone: "", location: "", apartment: "", 
+                    account2: "", mac: "", name: ""
+                })
             }else{
                 Swal.fire({
                     text: `${response.data.msg}`,
@@ -74,7 +79,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
         .catch((error) => {
             console.log(error);
             Swal.fire({
-                text: `Server Side Error`,
+                text: `Server Side Error: ${error?.response?.data?.msg}`,
                 showCloseButton: true,
                 showConfirmButton: false,
                 animation: false,
@@ -95,8 +100,8 @@ const AddUsers: React.FC<{}> = ({}) =>{
                                 <Link className='a-link' to={`/${prevelages}/login`}>Log in now.</Link>
                             </p> */}
                             <div className="tab-content">
-                                <div className="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
-                                <form  onSubmit={handleFormSubmit} className='d-flex justify-content-between flex-wrap'>
+                                <div className="tab-pane fade show active col-12" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                                <form  onSubmit={handleFormSubmit} className='d-flex p-4 shadow border mb-2 justify-content-between flex-wrap'>
                                     {formFields.map((field, index) => (
                                         <div className="mb-3 col-12 col-md-5" key={index}>
                                             <label htmlFor={field.name} className="form-label ms-2">
@@ -109,6 +114,7 @@ const AddUsers: React.FC<{}> = ({}) =>{
                                                     required={field.required}
                                                     type={field.type}
                                                     name={field.name}
+                                                    value={signupDetails[field.name]}
                                                     id={field.name}
                                                     className="form-control"
                                                     placeholder={field.placeholder}
@@ -116,8 +122,8 @@ const AddUsers: React.FC<{}> = ({}) =>{
                                             </div>
                                         </div>
                                     ))}
-                                    <div className="btn-area py-2 col-12 col-md-5">
-                                        <button type="submit" className="cmn-btn btn btn-primary col-12">
+                                    <div className="btn-area py-2 col-12 text-center">
+                                        <button type="submit" className="cmn-btn btn btn-primary col-12 col-md-5">
                                          Add Client
                                         </button>
                                     </div>

@@ -26,7 +26,12 @@ const getMoviesList = async (user_id) => {
                 movie_files.subtitles_url,
                 movie_files.credits_start,
                 COALESCE(movie_watch_progress.progress, 0) AS progress, 
-                COALESCE(movie_watch_progress.completed, FALSE) AS completed
+                COALESCE(movie_watch_progress.completed, FALSE) AS completed,
+                (
+                    SELECT COUNT(*) 
+                    FROM movie_watch_progress 
+                    WHERE movie_watch_progress.movie_id = movies.movie_id
+                ) AS watch_count
             FROM 
                 movies
             LEFT JOIN 
@@ -35,7 +40,7 @@ const getMoviesList = async (user_id) => {
                 movie_watch_progress ON movies.movie_id = movie_watch_progress.movie_id 
                 AND movie_watch_progress.user_id = ?
             ORDER BY 
-                movies.created_at DESC;
+                watch_count DESC, movies.created_at DESC;
             `, [user_id]);
         connection.release();
         return {

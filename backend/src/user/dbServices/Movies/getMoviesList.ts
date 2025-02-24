@@ -2,8 +2,7 @@ import { RowDataPacket } from "mysql2";
 import { universalResponse } from "user/types/universalResponse";
 const { pool } = require("../../../mysqlSetup");
 
-export const getMoviesList = async (user_id: number ): Promise<universalResponse> => {
-
+export const getMoviesList = async (user_id: number): Promise<universalResponse> => {
     const connection: RowDataPacket = await pool.getConnection();
     try {
         var [res] = await connection.query(`
@@ -27,7 +26,12 @@ export const getMoviesList = async (user_id: number ): Promise<universalResponse
                 movie_files.subtitles_url,
                 movie_files.credits_start,
                 COALESCE(movie_watch_progress.progress, 0) AS progress, 
-                COALESCE(movie_watch_progress.completed, FALSE) AS completed
+                COALESCE(movie_watch_progress.completed, FALSE) AS completed,
+                (
+                    SELECT COUNT(*) 
+                    FROM movie_watch_progress 
+                    WHERE movie_watch_progress.movie_id = movies.movie_id
+                ) AS watch_count
             FROM 
                 movies
             LEFT JOIN 
@@ -36,7 +40,7 @@ export const getMoviesList = async (user_id: number ): Promise<universalResponse
                 movie_watch_progress ON movies.movie_id = movie_watch_progress.movie_id 
                 AND movie_watch_progress.user_id = ?
             ORDER BY 
-                movies.created_at DESC;
+                watch_count DESC, movies.created_at DESC;
             `,
             [user_id]);
 
@@ -50,7 +54,7 @@ export const getMoviesList = async (user_id: number ): Promise<universalResponse
     } catch (error) {
         console.error('Error:', error.message);
         connection.release();
-        
+
         if (error.sqlMessage) {
             return { success: false, msg: "Database Error", err: error.sqlMessage };
         } else {
@@ -61,4 +65,4 @@ export const getMoviesList = async (user_id: number ): Promise<universalResponse
 
 module.exports = {
     getMoviesList,
-}
+};

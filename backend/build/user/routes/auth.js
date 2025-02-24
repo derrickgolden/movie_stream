@@ -18,10 +18,10 @@ const { sendEmail } = require('../controllers/auth/sendEmail');
 const { hashCode } = require('../controllers/auth/genResetPassLink');
 router.post('/signup', async (req, res) => {
     const { auth_with } = req.body;
+    const signupDetails = req.body;
     try {
         if (auth_with === "app") {
             const { password } = req.body;
-            const signupDetails = req.body;
             const hash = await bcrypt.hash(password, 10);
             var response = await signupUser({ ...signupDetails, hash });
         }
@@ -31,8 +31,17 @@ router.post('/signup', async (req, res) => {
             var response = await signupUser({ first_name, last_name,
                 email, id, picture }, auth_with);
         }
-        response.success ?
-            res.status(200).json(response) :
+        if (response.success) {
+            const { phone, account2 } = signupDetails;
+            const sendPhone = "+" + phone;
+            const text = `Hi ${account2}. Did you know you can watch any movie from our JapTech site. Click the link below or copy it on a browser to enjoy movies for free and use your phone number ${phone} to login. \n japtech.africa `;
+            (0, sendText_1.sendSMS)([sendPhone], text).then((data) => {
+                data.success ?
+                    res.status(200).json(response) :
+                    res.status(200).json({ success: true, msg: "Status updated but the client might have not received a notificaton" });
+            });
+        }
+        else
             res.status(302).json(response);
     }
     catch (error) {

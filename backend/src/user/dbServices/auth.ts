@@ -50,7 +50,7 @@ const signupUser = async (signupDetails: User): Promise<SignupResponse> => {
             success: true,
             admin_id: userId,
             msg: "User Registered",
-            details: [{ name, email, account, account2, apartment }]
+            details: [{ name, phone, account, account2, apartment }]
         };
     } catch (error) {
         console.error('Error:', error.message);
