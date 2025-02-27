@@ -25,7 +25,7 @@ export  interface Episode {
     episode_id: number; // Unique identifier for the episode
     episode_name: string; // Name of the episode
     episode_order: number; // Order of the episode within the season
-    thumbnail_path: string | null; // Path or URL to the episode thumbnail
+    thumbnail_path: string; // Path or URL to the episode thumbnail
     video_url: string; // URL of the episode source
     url: string;
     subtitles_url: string;

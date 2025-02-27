@@ -15,8 +15,10 @@ export const requestMovieApi = async (data: string, navigate: NavigateFunction):
     return await makeApiCall('user/movie-request', 'post', data, navigate);
 };
 export const markMovieCompleteApi = async (data: string, navigate: NavigateFunction): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('user/watch-progress', 'post', data, navigate);
+};
+export const updateShowSubtitlesApi = async (data: string, navigate: NavigateFunction): Promise<UploadMovieRes> => {
+    return await makeApiCall('user/settings/subtitle', 'patch', data, navigate);
 };
 
 const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction) =>{
@@ -37,8 +39,7 @@ const makeApiCall = async(url: string, method: string, data: string, navigate: N
             'Content-Type': 'application/json',
             'Authorization': `Bear ${token}`
         },
-        data : data
-        
+        data : data   
     };
 
     return await axios.request(config)

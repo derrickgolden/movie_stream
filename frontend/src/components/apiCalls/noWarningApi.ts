@@ -8,23 +8,35 @@ interface SeriesData {
     success: boolean;
     details: SeriesListDetails[];
 }
+interface GetSettingsApi {
+    success: boolean;
+    details: {show_subtitles: boolean}[];
+}
 
 export const getSeriesPosters = async (path: string, data: string, navigate: NavigateFunction): Promise<SeriesData> => {
-    return await makeApiCall("posters/get", 'get', data, navigate);
+    return await makeApiCall("posters/get", 'get', data);
 };
+
+export const getSettingsApi = async (data: string, navigate: NavigateFunction): Promise<GetSettingsApi> => {
+    return await makeApiCall("user/settings/subtitle", 'get', data, navigate);
+};
+
 export const postWatchProgressApi = async (data: string, navigate: NavigateFunction): Promise<SeriesData> => {
     // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('user/watch-progress', 'post', data, navigate);
 };
 
-const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction) =>{
+const makeApiCall = async(url: string, method: string, data: string, navigate?: NavigateFunction) =>{
 
     const tokenString = localStorage.getItem("viewerToken");
     
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);
     } else {
-        // navigate("/")
+        if(navigate){
+            navigate("/");
+            return {success: false, details: []};
+        } ;
     }
 
     let config = {

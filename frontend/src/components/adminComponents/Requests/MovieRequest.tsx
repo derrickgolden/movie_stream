@@ -62,31 +62,57 @@ const MovieRequests = () =>{
         });
     }, [callApi]);
 
-    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>, row: MovieRequestRes) =>{
+    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, row: MovieRequestRes) => {
         const status = e.target.value;
-        Swal.fire({
-            title: "Are you sure?",
-            text: `Update ${row.movie_name} status to ${status}.`,
+        const name = row.name; // Ensure you have `name` from `row`
+        
+        let message = "";
+        if (status === "uploaded") {
+            message = `Hi ${name}, your movie ${row.movie_name.toUpperCase()} is now available to enjoy at japtech.africa. Click the link below to access the movie directly. Thank you for choosing JAPTECH! \n`;
+        } else if (status === "inProgress") {
+            message = `Hi ${name}, your movie ${row.movie_name.toUpperCase()} has been partly uploaded. You can start enjoying at japtech.africa or you can click the link below to access the movie directly \n `;
+        } else if (status === "cancelled") {
+            message = `Hi ${name}, we regret to inform you that your movie ${row.movie_name.toUpperCase()} has been canceled. The main reason for canceling is that we were unable to find the movie. Thank you for choosing JAPTECH! \n`;
+        }
+    
+        // Show confirmation dialog
+        const { value: userMessage } = await Swal.fire({
+            title: `Update ${row.movie_name} status to ${status}?`,
+            text: "Kindly include the direct URL to the movie.",
             icon: "warning",
+            input: "textarea",
+            inputValue: message,
+            inputLabel: "Message",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, Update"
-          }).then((result) => {
-            if (result.isConfirmed) {
-                const data = JSON.stringify({ status, row });
-                updateRequestedMovieStatus(data).then((data) =>{
-                    if(data.success){
-                        Swal.fire({
-                          title: "Updated",
-                          text: data.msg,
-                          icon: "success"
-                        });
-                    }
-                })
-            }
         });
-    }
+    
+        // If user enters a message and confirms, update the status
+        if (userMessage) {
+            try {
+                const data = JSON.stringify({ status, row, message: userMessage });
+                const response = await updateRequestedMovieStatus(data);
+    
+                if (response.success) {
+                    Swal.fire({
+                        title: "Updated",
+                        text: response.msg,
+                        icon: "success"
+                    });
+                }
+            } catch (error) {
+                console.error("Error updating movie status:", error);
+                Swal.fire({
+                    title: "Error",
+                    text: "Failed to update movie status. Please try again.",
+                    icon: "error"
+                });
+            }
+        }
+    };
+    
    
     return(
         <div className='bg-light w-100 px-2 py-4'>

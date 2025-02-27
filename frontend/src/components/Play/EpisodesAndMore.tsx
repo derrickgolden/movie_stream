@@ -4,10 +4,32 @@ import { SeriesListDetails } from "../../redux/seriesList";
 import { baseUrl } from "../Row/Row";
 import { Episode } from "../apiCalls/types";
 
-const EpisodesAndMore = () => {
-    const location = useLocation();
+interface EpisodesAndMoreProps{
+    movie: SeriesListDetails;
+    lastSavedTime: React.MutableRefObject<number>
+    setShow: React.Dispatch<React.SetStateAction<{
+        overlay: boolean;
+        subtitles: boolean;
+        completed: boolean;
+        episodes: boolean;
+    }>>, 
+    setPlayingVideo: React.Dispatch<React.SetStateAction<{
+        subtitles_url: string;
+        video_url: string;
+        backdrop_path: string;
+        video_id: number;
+        episode_id: number;
+        credits_start: number;
+        is_series: boolean;
+        episode_order: number;
+        season_order: number;
+        show_details: boolean;
+        progress: number;
+    }>>;   
+}
+
+const EpisodesAndMore = ({movie, lastSavedTime, setShow, setPlayingVideo}: EpisodesAndMoreProps) => {
     const navigate = useNavigate();
-    const movie: SeriesListDetails = location.state;
 
     // Create refs for each season section
     const seasonRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -26,9 +48,12 @@ const EpisodesAndMore = () => {
             subtitles_url,
             video_id,
             credits_start,
-            episode_id
+            episode_id,
+            progress: 0
         };
-        navigate(`/watch/${movie.title}-${movie.video_id}`, { state: { movie, playVideo } });
+        lastSavedTime.current = 0;
+        setPlayingVideo(playVideo);
+        setShow((obj) =>({...obj, episodes: false}));
     };
 
     const handleSeasonClick = (index: number) => {
@@ -61,6 +86,12 @@ const EpisodesAndMore = () => {
                             <span>{season.episodes.length} episodes</span>
                         </button>
                     ))}
+                        <button
+                            className="btn btn-outline-secondary w-100"
+                            onClick={() => setShow((obj) =>({...obj, episodes: false}))} // Scroll to season on click
+                        >
+                            Back To Watching
+                        </button>
                 </div>
             </div>
             <div className="col-12 col-md-8 py-2 py-md-5 px-2 episodes">

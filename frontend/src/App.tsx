@@ -35,7 +35,7 @@ function App() {
 
       {/* <JaptechLogo isReady ={isLandingReady}/> */}
           <Routes>
-            <Route path='watch/:id' element={<MoviePlayer /> } />
+            <Route path='watch/:type/:title/:movie_id' element={<MoviePlayer /> } />
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
             <Route path='/viewer' element ={<SideBar setIsLandingReady = {setIsLandingReady}
                 toggle = {toggle}  setToggle ={setToggle}

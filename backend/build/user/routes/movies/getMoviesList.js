@@ -7,11 +7,32 @@ const express_1 = __importDefault(require("express"));
 const getMoviesList_1 = require("../../dbServices/Movies/getMoviesList");
 const getSeriesSeasonsById_1 = require("../../dbServices/series/getSeriesSeasonsById");
 const getSeriesDetails_1 = require("../../dbServices/series/getSeriesDetails");
+const getMovieById_1 = require("../../dbServices/Movies/getMovieById");
+const getSeriesDetailsByID_1 = require("../../dbServices/series/getSeriesDetailsByID");
 const router = express_1.default.Router();
 router.get('/get-movies', async (req, res) => {
     const { id } = req.user;
     try {
         const response = await (0, getMoviesList_1.getMoviesList)(id);
+        response.success ?
+            res.status(200).json(response) :
+            res.status(302).json(response);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(302).json({ success: false, msg: "sever side error", err: error.message });
+    }
+});
+router.post('/get-movie-series', async (req, res) => {
+    const { id } = req.user;
+    const { movie_id, type } = req.body;
+    try {
+        if (type === "series") {
+            var response = await (0, getSeriesDetailsByID_1.getSeriesDetailsByID)(id, movie_id);
+        }
+        else if (type === "movie") {
+            var response = await (0, getMovieById_1.getMovieByID)(id, movie_id);
+        }
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

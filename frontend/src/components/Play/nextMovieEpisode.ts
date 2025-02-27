@@ -1,13 +1,14 @@
 import { NavigateFunction } from "react-router-dom";
 import { Episode, Season, TvSeries } from "../apiCalls/types";
+import { PlayVideoProps } from "../Row/playMovie";
 interface NextMovieEpisodeProps{
     movie: TvSeries
     currentSeason: Season,
     order: number;
     lastSavedTime: React.MutableRefObject<number>;
-    navigate: NavigateFunction;
 }
-export const nextMovieEpisode = ({movie, currentSeason, order, lastSavedTime, navigate}: NextMovieEpisodeProps): boolean => {
+export const nextMovieEpisode = ({
+  movie, currentSeason, order, lastSavedTime}: NextMovieEpisodeProps): PlayVideoProps | undefined => {
         const nextEpisode = currentSeason.episodes.find(
           (episode: Episode) => episode.episode_order === order
         );
@@ -27,17 +28,18 @@ export const nextMovieEpisode = ({movie, currentSeason, order, lastSavedTime, na
             episode_order,
             credits_start,
             show_details: false,
+            progress: 0, completed: false
           };
           lastSavedTime.current = 0;
-          navigate(`/watch/${movie.title}-${movie.video_id}`, {
-            state: { movie, playVideo: nextVideo },
-          });
-          return true;
+          // navigate(`/watch/series/${movie.title}/${movie.video_id}`, {
+          //   state: { movie, playVideo: nextVideo },
+          // });
+          return nextVideo;
         }else{
             const nextSession = movie.seasons.find((season) => season.season_order === currentSeason.season_order + 1);
             if(nextSession){
-                return nextMovieEpisode({movie, currentSeason: nextSession, order: 1, lastSavedTime, navigate});
+                return nextMovieEpisode({movie, currentSeason: nextSession, order: 1, lastSavedTime});
             }
-            return false;
+            // return false;
         }
       }

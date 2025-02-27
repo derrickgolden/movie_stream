@@ -28,7 +28,7 @@ export interface SeriesListDetails {
     title: string;
     description: string;
     release_date: string | null;
-    is_series: number; // Use 0 or 1 to represent boolean-like behavior
+    is_series: boolean; // Use 0 or 1 to represent boolean-like behavior
     backdrop_path: string;
     poster_path: string;
     seasons: Season[];

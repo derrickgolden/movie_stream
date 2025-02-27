@@ -22,17 +22,22 @@ export const getSeriesList = async (path: string, data: string, navigate: Naviga
     return await makeApiCall("videos/get-series", 'get', data, navigate, tokenString);
 };
 
+export const getMovieSeriesByID = async (movie_id: string, data: string, navigate: NavigateFunction, tokenString: string | null): Promise<SeriesData> => {
+    return await makeApiCall(`videos/get-movie-series`, 'post', data, navigate, tokenString);
+};
+
 const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction, tokenString: string | null) =>{
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);
     } else {
         navigate("/")
+        return {success: false, details: []};
     }
 
     let config = {
         method: method,
         maxBodyLength: Infinity,
-        url: `${server_baseurl}/${url}/${data}`,
+        url: `${server_baseurl}/${url}`,
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bear ${token}`

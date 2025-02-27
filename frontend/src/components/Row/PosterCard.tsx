@@ -1,16 +1,21 @@
 import { playMovie } from "./playMovie";
 import { baseUrl } from "./Row";
 
-const PosterCard = ({movie, clickCount, navigate, setClickCount, setHoveredMovie, setIsVideoReady,
-    handleMovieHover, isLargeRow
-}) =>{
+const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow}) =>{
+    const handleClick = () =>{
+        console.log(clickCount)
+        if(clickCount.id === movie.video_id && clickCount.count > 0){
+            movie.is_series?
+            navigate(`/watch/series/${movie.title}/${movie.video_id}`):
+            navigate(`/watch/movie/${movie.title}/${movie.video_id}`);
+        };
+    };
     return(
         <div className="div_poster">
             <img
                 key={movie.video_id}
-                onClick={() => playMovie({
-                    movie, clickCount, navigate, setClickCount, setHoveredMovie, setIsVideoReady
-                })}
+                loading="lazy"
+                onClick={handleClick}
                 onMouseEnter={() =>handleMovieHover(movie)}
                 className={`row__poster ${isLargeRow && "row__posterLarge"} `}
                 src={`${baseUrl}${

@@ -18,12 +18,16 @@ export const sendSMS = async (to: string[], message: string) => {
             message, // Message text
             from: 'JAP_TECH' // Sender ID (optional, requires approval)
         });
-
-        // console.log('SMS Sent:', response);
-        return ({success: true, msg: "", response})
+        
+        const {statusCode, status} = response.SMSMessageData.Recipients[0];
+        if(statusCode === 101){
+            return ({success: true, msg: "", response});
+        }else{
+            return ({success: false, msg: `Client did not receive the message. Africa's talking returns with status ${status}.`, response});
+        }
     } catch (error) {
         console.error('Error Sending SMS:', error);
-        return ({success: false, msg: "", error});
+        return ({success: false, msg: "Something went wrong while sendng the message to client.", error});
     }
 };
 
