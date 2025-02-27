@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendSMS = void 0;
 const africastalking = require('africastalking');
+require('dotenv').config();
 // Initialize the Africa's Talking SDK
+const apiKey = process.env.SMS_APIKEY;
+const username = process.env.SMS_USERNAME;
 const credentials = {
-    apiKey: '426e9abef19709e4bfa2fea62381f54c1636b0379a8eb22c958a407d8c2400ba', // Replace with your API key
-    username: 'Japtech' // Use 'sandbox' for testing or your username for production
+    apiKey, // Replace with your API key
+    username // Use 'sandbox' for testing or your username for production
 };
 const AT = africastalking(credentials);
 // Get the SMS service
@@ -19,7 +22,8 @@ const sendSMS = async (to, message) => {
             from: 'JAP_TECH' // Sender ID (optional, requires approval)
         });
         const { statusCode, status } = response.SMSMessageData.Recipients[0];
-        if (statusCode === 101) {
+        console.log(response.SMSMessageData.Recipients[0]);
+        if (statusCode === 100) {
             return ({ success: true, msg: "", response });
         }
         else {

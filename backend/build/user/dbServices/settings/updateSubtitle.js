@@ -12,7 +12,6 @@ const updateSubtitles = async (user) => {
             UPDATE settings 
             SET show_subtitles = NOT show_subtitles
             WHERE user_id = ?`, [id]);
-        console.log({ id });
         await connection.commit();
         return {
             success: true,

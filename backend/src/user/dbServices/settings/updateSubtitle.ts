@@ -17,7 +17,7 @@ export const updateSubtitles = async (user: TokenUser): Promise<universalRespons
             WHERE user_id = ?`, 
             [id]
         );
-console.log({id})
+
         await connection.commit();
 
         return {
