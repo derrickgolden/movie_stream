@@ -179,10 +179,10 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
         >
 
           {show.overlay ?(
-            <div className="position-absolute top-0 left-0 bottom-0 player-banner ">
+            <div className="position-absolute col-12 top-0 left-0 bottom-0 player-banner ">
               <div className=" h-100 d-flex d-md-block flex-column justify-content-between p-2 p-sm-3 p-md-5 col-12 col-md-5 ">
                 <div className="col-12">
-                  <h1 className="ms-4 text-warning ">{movie?.title}</h1>
+                  <h1 className="ms-4 text-warning banner-title">{movie?.title}</h1>
                   <h1 className="banner__description lead col-12">{movie?.description}</h1>
                 </div>
                 <div className="banner-buttons d-flex mt-5 flex-column gap-4">

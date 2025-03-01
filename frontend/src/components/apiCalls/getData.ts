@@ -30,10 +30,9 @@ const makeApiCall = async(url: string, method: string, data: string, navigate: N
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);
     } else {
-        navigate("/")
+        navigate("/");
         return {success: false, details: []};
     }
-
     let config = {
         method: method,
         maxBodyLength: Infinity,

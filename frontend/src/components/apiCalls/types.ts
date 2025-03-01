@@ -54,4 +54,15 @@ export  interface TvSeries {
     }
   }
   
+  export interface WatchedMovieOrSeries {
+    movie_id: number;
+    title: string;
+    is_series: boolean;
+    progress: number;
+    completed: boolean;
+    updated_at: string;
+    season_order: number | null;
+    episode_order: number | null;
+}
+
   

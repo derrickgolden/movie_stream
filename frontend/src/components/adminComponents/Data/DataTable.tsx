@@ -1,14 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
 import DataTable from 'react-data-table-component'
-export default function DataTable_Component({ apidata, columns, search }) {
+
+type DataTableComponentProps = {
+  apidata, columns, search: string
+}
+export default function DataTable_Component({ apidata, columns, search }: DataTableComponentProps) {
   const [data, setData] = useState([])
   const [datafilter, setFilter] = useState('')
   const [datafinals, setFinals] = useState([])
 
   useEffect(() => {
     let result = data.filter(val => {
-      if (search == 'name') {
-        return val?.title.toLowerCase().match(datafilter?.toLowerCase())
+      if (search == 'title') {
+        return val?.title?.toLowerCase().match(datafilter?.toLowerCase());
+      }else if(search == 'name'){
+        return val?.name?.toLowerCase().match(datafilter?.toLowerCase());
+      }else if(search == 'phone'){
+        return val?.phone.match(datafilter);
+      }else if(search == 'movie name'){
+        return val?.movie_name?.toLowerCase().match(datafilter?.toLowerCase());
+      }else if(search == 'movie status'){
+        return val?.status?.toLowerCase().match(datafilter?.toLowerCase());
       }
     })
 

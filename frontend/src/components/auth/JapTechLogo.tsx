@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { RingLoader } from "react-spinners";
 
 export default function JaptechLogo({ isReady }: { isReady: boolean }) {
   const [showComponent, setShowComponent] = useState(true);
@@ -21,7 +22,7 @@ export default function JaptechLogo({ isReady }: { isReady: boolean }) {
 
   return (
     <div
-      className="bg-black d-flex justify-content-center align-items-center overflow-hidden position-fixed w-100 h-100"
+      className="bg-black d-flex flex-column justify-content-center align-items-center overflow-hidden position-fixed w-100 h-100"
       style={{ minHeight: "100vh", zIndex: "99" }}
     >
       <motion.div
@@ -47,6 +48,9 @@ export default function JaptechLogo({ isReady }: { isReady: boolean }) {
       >
         JAPTECH
       </motion.div>
+        <RingLoader color="#3498db" loading={!isReady} size={150} />
+      {/* <div className="d-flex flex-column align-items-center justify-content-center h-100 col-12">
+</div> */}
     </div>
   );
 }

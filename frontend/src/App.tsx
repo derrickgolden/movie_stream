@@ -21,7 +21,7 @@ import AllUsers from './components/adminComponents/Users/AllUsers';
 import RequestMovie from './sections/RequestMovie';
 import SearchMovie from './sections/SearchMovie';
 import SideBar from './components/Navbar/SideBar';
-import JaptechLogo from './components/auth/JapTechLogo';
+import ClientWatchedMovies from './components/adminComponents/Users/ClientWatchedMovies';
 
 
 function App() {
@@ -71,6 +71,7 @@ function App() {
               <Route path='movie-upload' element ={<UploadMovie />} />
               <Route path='add-client' element ={<AddUsers />} />
               <Route path='all-clients' element ={<AllUsers />} />
+              <Route path=':user_id/watched-movies' element ={<ClientWatchedMovies />} />
               <Route path='seasons-manage' element ={<SeasonsManage />} />
               <Route path='episodes-manage' element ={<EpisodeManage />} />
               <Route path='movie-request' element ={<MovieRequests />} />

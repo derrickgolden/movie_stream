@@ -12,6 +12,12 @@
     scrollbar-color: #888 transparent; /* Firefox */
 }
 
+@media (min-width: 768px) {
+    .search {
+        max-height: none;
+    }
+}
+
 /* WebKit Scrollbar (Chrome, Edge, Safari) */
 .search::-webkit-scrollbar {
     width: 8px; /* Adjust scrollbar width */

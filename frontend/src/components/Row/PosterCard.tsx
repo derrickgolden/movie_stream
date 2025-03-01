@@ -3,7 +3,6 @@ import { baseUrl } from "./Row";
 
 const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow}) =>{
     const handleClick = () =>{
-        console.log(clickCount)
         if(clickCount.id === movie.video_id && clickCount.count > 0){
             movie.is_series?
             navigate(`/watch/series/${movie.title}/${movie.video_id}`):

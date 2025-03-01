@@ -22,7 +22,7 @@ export const sendSMS = async (to: string[], message: string) => {
         });
         
         const {statusCode, status} = response.SMSMessageData.Recipients[0];
-        console.log(response.SMSMessageData.Recipients[0]);
+
         if(statusCode === 100){
             return ({success: true, msg: "", response});
         }else{

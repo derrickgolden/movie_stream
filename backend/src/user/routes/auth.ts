@@ -11,7 +11,7 @@ const { loginUser, resetPassword, storeLinkToken, signupUser, getCode,
 // const { sendText } = require('../controllers/sendText');
 // const { generateRandomVerificationCode } = require('../controllers/randomCode');
 import { generateAuthToken } from '../controllers/auth/generateToken';
-import { UserDetailsRes } from '../dbServices/users';
+import { UserDetailsRes } from '../dbServices/users/getUsersByPhone';
 import { SendEmailRes } from 'user/controllers/auth/sendEmail';
 import { StoreLinkTokenRes } from 'user/dbServices/auth';
 import { authenticateToken } from '../middlewares/authenticateToken';
@@ -19,7 +19,7 @@ import { ModifiedReq, universalResponse } from 'user/types/universalResponse';
 import { sendSMS } from '../../user/controllers/auth/sendText';
 import { checkActivePPPoEUser } from '../middlewares/validateMacAddress';
 
-const { getUserDetailsByPhone } = require('../dbServices/users');
+const { getUserDetailsByPhone } = require('../dbServices/users/getUsersByPhone');
 const { sendEmail } = require('../controllers/auth/sendEmail');
 const { hashCode } = require('../controllers/auth/genResetPassLink');
 

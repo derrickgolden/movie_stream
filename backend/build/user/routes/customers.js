@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const addCustomer_1 = require("../dbServices/customers/addCustomer");
 const editCustomerDetails_1 = require("../dbServices/customers/editCustomerDetails");
 const getCustomers_1 = require("../dbServices/customers/getCustomers");
+const getClientWatchedMovies_1 = require("../dbServices/users/getClientWatchedMovies");
 const router = express_1.default.Router();
 router.post('/add-customer', async (req, res) => {
     const body = req.body;
@@ -24,6 +25,19 @@ router.post('/add-customer', async (req, res) => {
 router.get('/get-list', async (req, res) => {
     try {
         const response = await (0, getCustomers_1.getUserWatchStats)();
+        response.success ?
+            res.status(200).json(response) :
+            res.status(302).json(response);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(302).json({ success: false, msg: "sever side error", err: error.message });
+    }
+});
+router.get('/watched-movies/:user_id', async (req, res) => {
+    const { user_id } = req.params;
+    try {
+        const response = await (0, getClientWatchedMovies_1.getClientWatchedMovies)(user_id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

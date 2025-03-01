@@ -11,9 +11,21 @@
         rgba(0, 0, 0, 0)        /* Fully transparent at the end */
     );
   }
+
+  .banner-title {
+    font-size: 3rem;
+    font-weight: 800;
+    padding-bottom: 0.3rem;
+    min-width: 40rem;
+  }
+
   @media (max-width: 768px) {
     .player-banner{
       background-image: none;
+    }
+    .banner-title {
+      min-width: unset;
+      font-size: 2rem;
     }
   }
 
@@ -22,15 +34,6 @@
     padding-top: 80px;
     position: relative;
     z-index: 10;
-  }
-  .banner-title {
-    font-size: 3rem;
-    font-weight: 800;
-    padding-bottom: 0.3rem;
-    text-wrap: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    min-width: 40rem;
   }
 
   .banner-button {

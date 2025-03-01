@@ -3,6 +3,7 @@ import { universalResponse } from 'user/types/universalResponse';
 import { addCustomer } from '../dbServices/customers/addCustomer';
 import { editCustomerDetails } from '../dbServices/customers/editCustomerDetails';
 import { getUserWatchStats } from '../dbServices/customers/getCustomers';
+import { getClientWatchedMovies } from '../dbServices/users/getClientWatchedMovies';
 
 const router = express.Router();
 
@@ -25,6 +26,20 @@ router.post('/add-customer', async(req: Request, res: Response) =>{
 router.get('/get-list', async(req: Request, res: Response) =>{
     try {
         const response:universalResponse = await getUserWatchStats();
+        response.success ? 
+            res.status(200).json(response):
+            res.status(302).json(response);
+        
+    } catch (error) {
+        console.log(error)
+        res.status(302).json({success: false, msg: "sever side error", err: error.message})
+    }
+});
+
+router.get('/watched-movies/:user_id', async(req: Request, res: Response) =>{
+    const {user_id} = req.params;
+    try {
+        const response:universalResponse = await getClientWatchedMovies(user_id);
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response);

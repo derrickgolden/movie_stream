@@ -1,4 +1,4 @@
-const { pool } = require("../../mysqlSetup");
+const { pool } = require("../../../mysqlSetup");
 import { RowDataPacket } from 'mysql2/promise';
 import { DBServicesRes } from 'user/type';
 

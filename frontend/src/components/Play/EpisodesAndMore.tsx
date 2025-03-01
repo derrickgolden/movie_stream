@@ -29,8 +29,6 @@ interface EpisodesAndMoreProps{
 }
 
 const EpisodesAndMore = ({movie, lastSavedTime, setShow, setPlayingVideo}: EpisodesAndMoreProps) => {
-    const navigate = useNavigate();
-
     // Create refs for each season section
     const seasonRefs = useRef<(HTMLDivElement | null)[]>([]);
 

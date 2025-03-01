@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { addEpisodeDetails } from "../apiCalls/postData";
 import { Episode } from "../../apiCalls/types";
@@ -20,7 +20,8 @@ const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
         {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", 
             episode_order: "", subtitles_url: "", credits_start: 30000, runtime: ""}
-    )
+    );
+    const addEpisodeRef = useRef<HTMLHeadingElement | null>(null);
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const callApi = useSelector((state: RootState) => state.callApi);
     const location = useLocation();
@@ -97,8 +98,17 @@ const EpisodeManage = () =>{
          });
     }
 
+    const handleEditEpisode = (episode: Episode) =>{
+        setEpisodeDetails((obj) =>({...obj, ...episode,
+            credits_start: episode.credits_start || "", isEdit: true}));
+         // Scroll to the "Add Episode" section
+         if (addEpisodeRef.current) {
+            addEpisodeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }   
+    }
+
     return(  
-        <div className="col-10 bg-light p-4">
+        <div className="w-100 bg-light p-4">
             <h3>Episodes For {seriesDetails?.title} - {season?.season_name}</h3>
             <div className="bg-white p-4">
                 <div className="d-flex justify-content-between">
@@ -111,7 +121,7 @@ const EpisodeManage = () =>{
                         <label  className="form-check-label fw-4 text-warning" htmlFor="isEdit">Edit Video</label>
                     </div>
                 </div>
-                <div className="mt-4">
+                <div className="pt-4" ref={addEpisodeRef} >
                     <h5 className="w-100 bg-info p-1">Add Episode</h5>
                     <div className="d-flex gap-5 align-items-center">
                         <div className={`form-floating mb-3 col-10 `}>
@@ -205,12 +215,11 @@ const EpisodeManage = () =>{
                                         value={episode.episode_order} style={{width: "60px"}} /></td> */}
                                     <td className="text-primary">{episode.episode_order}</td>
                                     <td className="text-info">{episode.credits_start}</td>
-                                    <td>{episode.url}</td>
-                                    <td>{episode.subtitles_url}</td>
+                                    <td className=" text-wrap text-break">{episode.url}</td>
+                                    <td className=" text-wrap text-break">{episode.subtitles_url}</td>
                                     <td>
                                         <span className="d-flex">
-                                            <FaEdit size={32} onClick={() =>setEpisodeDetails((obj) =>({...obj, ...episode,
-                                            credits_start: episode.credits_start || "", isEdit: true}))} 
+                                            <FaEdit size={32} onClick={() => handleEditEpisode(episode)}
                                                 role="button" className="text-warning me-2 border border-warning p-1"/>
                                             <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}&subtitlesUrl=${episode.subtitles_url}`}
                                                  target="_blank">

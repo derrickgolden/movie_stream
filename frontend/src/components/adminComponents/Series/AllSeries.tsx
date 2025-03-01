@@ -132,7 +132,7 @@ const AllSeries = () =>{
                             <div className="card-body">
                                 {/* <div className="card-title text-center bg-warning py-2 rounded">All Data stored from the APK</div> */}
 
-                                <DataTable_Component search="name" title_btn="All Tv Series" title={title} apidata={filter_apistate} columns={apicol} />
+                                <DataTable_Component search="title" title_btn="All Tv Series" title={title} apidata={filter_apistate} columns={apicol} />
 
                             </div>
                         </div>

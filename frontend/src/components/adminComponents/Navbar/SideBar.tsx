@@ -1,11 +1,16 @@
 import './navbar.css'
-import React, { useState } from "react";
-import { FaHome, FaFilm, FaTv, FaBell, FaMoneyBill, FaExclamationTriangle, FaUsers } from "react-icons/fa";
+import { useState } from "react";
+import { FaHome, FaFilm, FaTv, FaBell, FaMoneyBill, FaExclamationTriangle, FaUsers,
+  FaAddressCard
+ } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
 import { JAP_logo } from "../../../assets";
+import { IoPersonAddSharp } from "react-icons/io5";
+import { MdAddCard, MdAddToQueue, MdFormatListBulleted, MdListAlt, MdMenu } from "react-icons/md";
 
 const Sidebar = () => {
   const [toggle, setToggle] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState(true);
 
   const admintoken = sessionStorage.getItem("adminToken");
 
@@ -16,24 +21,24 @@ const Sidebar = () => {
       name: "Movie",
       icon: <FaFilm />,
       sublinks: [
-        { name: "New Movie", href: "/admin/new-movie" },
-        { name: "All Movies", href: "/admin/all-movies" },
+        { name: "New Movie", href: "/admin/new-movie", icon: <MdAddCard /> },
+        { name: "All Movies", href: "/admin/all-movies", icon: <MdFormatListBulleted /> },
       ],
     },
     {
       name: "Series",
       icon: <FaTv />,
       sublinks: [
-        { name: "New TV Series", href: "/admin/new-series" },
-        { name: "All TV Series", href: "/admin/all-series" },
+        { name: "New TV Series", href: "/admin/new-series", icon: <MdAddToQueue /> },
+        { name: "All TV Series", href: "/admin/all-series", icon: <MdListAlt /> },
       ],
     },
     {
       name: "Clients",
       icon: <FaUsers />,
       sublinks: [
-        { name: "Add Client", href: "/admin/add-client" },
-        { name: "All Clients", href: "/admin/all-clients" },
+        { name: "Add Client", href: "/admin/add-client", icon: <IoPersonAddSharp /> },
+        { name: "All Clients", href: "/admin/all-clients", icon: <FaAddressCard /> },
       ],
     },
     { name: "Movie Request", icon: <FaExclamationTriangle />, href: "/admin/movie-request" },
@@ -47,9 +52,10 @@ const Sidebar = () => {
     <div className="d-flex "  style={{position: "relative"}}>
       {
         admintoken && (
-          <div className="bg-dark text-light vh-100 p-3 a-sidebar" style={{minWidth: "250px"}}>
-            <div className="text-center mb-4">
-                <img className="nav__logo" src={JAP_logo} alt="jap-logo" />
+          <div className="bg-dark text-light vh-100 p-3 a-sidebar" >
+            <div role='button' className="text-cente" onClick={() =>setShowMenu(!showMenu)}>
+            <MdMenu size={24} />
+                {/* <img className="nav__logo" src={JAP_logo} alt="jap-logo" /> */}
             </div>
             <ul className="list-unstyled pt-5">
               {links.map((link, index) => (
@@ -57,32 +63,37 @@ const Sidebar = () => {
                   {
                     !link?.href ? (
                       <span
-                        className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
+                        className="nav-link d-flex align-items-center text-light text-decoration-none fs-5 
+                        fw-bolder text-uppercase"
                         onClick={() => link.sublinks && setToggle(toggle === link.name ? null : link.name)}
                       >
-                        {link.icon} <span className="ms-2">{link.name}</span>
+                        <span className='py-1'>{link.icon}</span> 
+                        {showMenu? <span className="ms-2 text-nowrap">{link.name}</span> : null}
                       </span>
                     ):(
                       <Link
                         to={link.href || "#"}
-                        className="nav-link text-light text-decoration-none fs-5 fw-bolder text-uppercase"
+                        className="nav-link d-flex align-items-center text-light text-decoration-none fs-5 
+                        fw-bolder text-uppercase"
                         onClick={() => link.sublinks && setToggle(toggle === link.name ? null : link.name)}
                       >
-                        {link.icon} <span className="ms-2">{link.name}</span>
+                        <span className='py-1'>{link.icon}</span>
+                        {showMenu? <span className="ms-2 text-nowrap">{link.name}</span> : null}
                       </Link>
                     )
                   }
 
                   {/* Sublinks */}
                   {link.sublinks && toggle === link.name && (
-                    <ul className="list-unstyled ms-3 fs-4 text-uppercase">
+                    <ul className="list-unstyled ms- fs-4 text-uppercase">
                       {link.sublinks.map((sublink, subIndex) => (
                         <li key={subIndex}>
                           <Link
                             to={sublink.href}
-                            className="nav-link text-light text-decoration-none"
+                            className="nav-link d-flex align-items-center text-secondary text-decoration-none"
                           >
-                            {sublink.name}
+                            <span className='py-1'>{sublink.icon}</span>
+                            {showMenu? <span className="ms-2 text-nowrap">{sublink.name}</span> : null}
                           </Link>
                         </li>
                       ))}

@@ -1,43 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
 import DataTable_Component from '../Data/DataTable'
-import Update_data_modal from '../Data/UpdateDataModal'
-// import Breadcrumb from '../Data/BreadCrumb'
-// import Status_modal from '../Data/StatusModal'
-// import Add_data_modal from '../Data/UpdateDataModal'
-import axios from 'axios'
 import { useSelector } from 'react-redux'
-import Swal from 'sweetalert2'
 import { RootState } from '../../../redux/store'
 import { FaRegEdit } from "react-icons/fa";
 import { FiDelete } from "react-icons/fi";
-import { useNavigate } from 'react-router-dom'
-import { deleteSeriesApi } from '../../apiCalls/updateData'
-import { useDispatch } from 'react-redux'
-import { setCallApi } from '../../../redux/callApi'
 import { getUsersList } from '../apiCalls/getData'
 import { UserWatchStats } from '../apiCalls/type'
+import { Link } from 'react-router-dom';
 
 const AllUsers= () =>{
     const title = "All Users"
     const [apistate, setApiState] = useState<UserWatchStats[]>([])
-    // pass status model render
-    const [openModal, setOpenModal] = useState(true)
-    // open update data modal
-    const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false })
-    const [update_modal_data, setUpdate_modal_data] = useState('')
     const [rerendarApi, setRerendarApi] = useState(false)
-    {/* all data for view */ }
-    const [selectVal_details, setSelectVal_details] = useState([])
-    {/* see all details modal(view) */ }
-    const [details_modal_show, set_details_modal_Show] = useState(false);
-    // open add data modal
-    const [open_add_modal, setOpen_add_modal] = useState({ render: true, modal_open: false });
     const [apicol, setApiCol] = useState([]);
     const callApi = useSelector((state: RootState) =>state.callApi);
     const [usersList, setUsersList] = useState<UserWatchStats[]>([]);
-
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const [search, setSearch] = useState('name')
 
     const columns = [
         { name: "Name", selector: (row: UserWatchStats) => row.name, sortable: true },
@@ -45,7 +23,10 @@ const AllUsers= () =>{
         { name: "Phone", selector: (row: UserWatchStats) => row.phone, sortable: true },
         { name: "Last Login", selector: (row: UserWatchStats) => row.last_login, sortable: true },
         { name: "Last Online", selector: (row: UserWatchStats) => row.last_watched_at, sortable: true },
-        { name: "Watched Movies", selector: (row: UserWatchStats) => row.total_watched, sortable: true },
+        { name: "Watched Movies", selector: (row: UserWatchStats) => 
+        <Link to={`/admin/${row.user_id}/watched-movies`} className="btn btn-outline-info">
+            {row.total_watched}
+        </Link> },
         {
         name: "action", cell: (row: UserWatchStats) => <>{
             <span>
@@ -66,12 +47,10 @@ const AllUsers= () =>{
     useEffect(() =>{
         getUsersList().then((data) =>{
             if(data.success){
-                console.log(data.details);
                 setUsersList(data.details);
             }
         });
     }, [callApi]);
-
 
     return(
         <div className='bg-light w-100 px-2 py-4'>
@@ -94,12 +73,17 @@ const AllUsers= () =>{
                         <div className="card" style={{ borderTop: "2px solid #4723d9" }}>
                             <div className="card-header d-flex justify-content-between border-bottom pb-1">
                                 <h4>{title}</h4>
-                                {/* <div className="btn btn-info btn-sm " onClick={setStoreBtn}>Add store data</div> */}
+                                <div>
+                                    <select onChange={(e) =>{setSearch(e.target.value)}} className="form-select" aria-label="Default select example">
+                                        <option value="name">Name</option>
+                                        <option value="phone">Phone</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="card-body">
                                 {/* <div className="card-title text-center bg-warning py-2 rounded">All Data stored from the APK</div> */}
 
-                                <DataTable_Component search="name" title_btn="User Details" title={title} apidata={apistate} columns={apicol} />
+                                <DataTable_Component search={search} apidata={apistate} columns={apicol} />
 
                             </div>
                         </div>
