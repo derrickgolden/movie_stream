@@ -22,6 +22,19 @@ router.post('/add/movie-details', async (req, res) => {
         res.status(302).json({ success: false, msg: "sever side error", err: error.message });
     }
 });
+router.patch('/update-genres', async (req, res) => {
+    const movieDetails = req.body;
+    try {
+        const response = await (0, addMovieDetails_1.updateGenres)(movieDetails);
+        response.success ?
+            res.status(200).json(response) :
+            res.status(302).json(response);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(302).json({ success: false, msg: "sever side error", err: error.message });
+    }
+});
 router.post('/add/movie-path', async (req, res) => {
     const movieDetails = req.body;
     try {

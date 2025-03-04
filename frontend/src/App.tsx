@@ -22,6 +22,8 @@ import RequestMovie from './sections/RequestMovie';
 import SearchMovie from './sections/SearchMovie';
 import SideBar from './components/Navbar/SideBar';
 import ClientWatchedMovies from './components/adminComponents/Users/ClientWatchedMovies';
+import Categories from './components/categories/Categories';
+import JaptechLogo from './components/auth/JapTechLogo';
 
 
 function App() {
@@ -38,15 +40,14 @@ function App() {
             <Route path='watch/:type/:title/:movie_id' element={<MoviePlayer /> } />
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
             <Route path='/viewer' element ={<SideBar setIsLandingReady = {setIsLandingReady}
-                toggle = {toggle}  setToggle ={setToggle}
-              />}>
-              <Route path='dashboard' element={<LandingPage 
-                toggle = {toggle}  setToggle ={setToggle}
-                setIsLandingReady = {setIsLandingReady}
-              />} />
+                toggle = {toggle}  setToggle ={setToggle} />}>
+              <Route path='dashboard' element={<LandingPage toggle = {toggle}  
+                setToggle ={setToggle} setIsLandingReady = {setIsLandingReady} />} />
               <Route path='request-movie' element={<RequestMovie /> } />
               <Route path='search-movie' element={<SearchMovie /> } />
-            </Route>
+              <Route path='categories' element={<Categories toggle = {toggle}  
+                setToggle ={setToggle} setIsLandingReady = {setIsLandingReady}/> } />
+          </Route>
 
             <Route path="/" element={<Login setIsLogin = {setIsLogin} 
                                             prevelages="viewer"

@@ -27,17 +27,17 @@ const Navbar: React.FC<ToggleProps> = ({toggle, setToggle}) => {
   return (
     <div className={`nav ${show ? "nav__black" : ""} d-flex justify-content-between flex-sm-row-reverse col-11 px-sm-2`}>
       {/* <img className="nav__logo" src={JAP_logo} alt="netflix-logo" /> */}
-       <div className={`${toggle.isOpen} mt-2 d-sm-none`}>
-                      <Link to="#" className="text-warning text-center   rounded px-1" 
-                        onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
-                      {
-                        toggle.isOpen? 
-                        <RiMenuFold3Fill size={42} className="fs-1 "  />:
-                        <RiMenuUnfold3Fill size={42} className="fs- " />
-                      }
-                      </Link>
+       <div className={`${toggle.isOpen} mt-1 d-sm-none`}>
+          <Link to="#" className="text-warning text-center   rounded px-1" 
+            onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
+          {
+            toggle.isOpen? 
+            <RiMenuFold3Fill size={42} className="fs-1 "  />:
+            <RiMenuUnfold3Fill size={42} className="fs- " />
+          }
+          </Link>
         </div>
-      <span className="text-primary h1 p-0 m-0">J<span className="text-warning px-sm-2">A</span>P</span>
+      <span className="text-primary  display-3 display-md-6 h1 p-0 m-0">J<span className="text-warning px-sm-2">A</span>P</span>
     </div>
   );
 };

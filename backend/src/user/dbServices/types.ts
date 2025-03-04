@@ -9,6 +9,8 @@ export interface MovieDetails {
     backdrop_path: string;
     poster_path: string;
     release_date: string;
+    is_series: boolean;
+    genres: {id: number, name: string}[]
     type: "movie" | "series";
   }
   

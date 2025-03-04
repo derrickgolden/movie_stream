@@ -2,6 +2,9 @@ import axios from "axios";
 import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
 import { MovieFile } from "../../apiCalls/types";
+import { MovieListDetails } from "../../../redux/movieList";
+
+export const API_KEY = "086cfe05dd16828e37291d2f37293a38";
 
 interface UploadMovieRes {
     success: boolean;
@@ -66,3 +69,21 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
         return {success: false, msg: error.response.data?.msg, details: []};
     })
 };
+
+export const updateGenre = (row: MovieListDetails) =>{
+    async function fetchData() {
+        const {is_series} = row;
+        const url = row.is_series ? 
+            `https://api.themoviedb.org/3/tv/${row.video_id}?api_key=${API_KEY}&language=en-US`:
+            `https://api.themoviedb.org/3/movie/${row.video_id}?api_key=${API_KEY}&language=en-US`;
+        const request = await axios.get(url);
+        if(request.status === 200){
+            const {genres, id} = request.data;
+            const data = JSON.stringify({genres, is_series, id});
+            return await makeApiCall('videos/update-genres', 'patch', data)
+        }
+    }
+    fetchData().then((data) =>{
+        Swal.fire(`${data?.msg || 'error'}`);
+    });
+}

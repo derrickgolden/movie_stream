@@ -65,4 +65,17 @@ export  interface TvSeries {
     episode_order: number | null;
 }
 
+export interface MoviesSeriesCategories {
+  genre_id: number;
+  genre_name: string;
+  movies_series?: {
+      video_id: number;
+      title: string;
+      is_series: number;
+      description: string;
+      backdrop_path: string;
+  }[];
+}
+
+
   

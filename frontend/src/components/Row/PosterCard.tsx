@@ -1,4 +1,3 @@
-import { playMovie } from "./playMovie";
 import { baseUrl } from "./Row";
 
 const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow}) =>{

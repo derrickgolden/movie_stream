@@ -9,7 +9,9 @@ export const API_KEY = "086cfe05dd16828e37291d2f37293a38";
 
 const AddNewMovie: React.FC<{type: "movie" | "series"}> = ({type}) =>{
     const [movieid, setMovieid] = useState<string | null>();
-    const [movieDetails, setMovieDetails] = useState({title: "", slug: "", adult: true,runtime: 0, type});
+    const [movieDetails, setMovieDetails] = useState({title: "", slug: "", adult: true,runtime: 0, type,
+        genres: []
+    });
     const navigate = useNavigate();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
@@ -34,10 +36,10 @@ const AddNewMovie: React.FC<{type: "movie" | "series"}> = ({type}) =>{
                         type === "series"? `https://api.themoviedb.org/3/tv/${movieid}?api_key=${API_KEY}&language=en-US`: "";
             const request = await axios.get(url);
             if(request.status === 200){
-                const {title, id, overview, tagline, adult, runtime, backdrop_path, poster_path, release_date, name} = request.data;
+                const {title, id, overview, tagline, adult, runtime, backdrop_path, poster_path, release_date, name, genres} = request.data;
                 setMovieDetails((obj) => ({
                     ...obj, title: title || name, id, description: overview, slug: tagline, adult: adult,
-                   runtime, backdrop_path, poster_path, release_date
+                   runtime, backdrop_path, poster_path, release_date, genres
                 }));
             }
             return request;

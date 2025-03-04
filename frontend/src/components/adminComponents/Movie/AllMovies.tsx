@@ -18,23 +18,13 @@ import { MovieListDetails } from '../../../redux/movieList'
 import { deleteMovieApi } from '../../apiCalls/updateData'
 import { useDispatch } from 'react-redux'
 import { setCallApi } from '../../../redux/callApi'
+import { updateGenre } from '../apiCalls/patchData'
 
 const AllMovies = () =>{
-    const title = "All Movies"
-    const [apistate, setApiState] = useState<MovieListDetails[]>([])
-    const [selectVal, setSelectval] = useState([])
-    // pass status model render
-    const [openModal, setOpenModal] = useState(true)
-    // open update data modal
-    const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false })
-    const [update_modal_data, setUpdate_modal_data] = useState('')
-    const [rerendarApi, setRerendarApi] = useState(false)
-    {/* all data for view */ }
-    const [selectVal_details, setSelectVal_details] = useState([])
-    {/* see all details modal(view) */ }
-    const [details_modal_show, set_details_modal_Show] = useState(false);
-    // open add data modal
-    const [open_add_modal, setOpen_add_modal] = useState({ render: true, modal_open: false });
+    const title = "All Movies";
+    const [apistate, setApiState] = useState<MovieListDetails[]>([]);
+    const [rerendarApi, setRerendarApi] = useState(false);
+
     const [apicol, setApiCol] = useState<MovieListDetails>();
     const callApi = useSelector((state: RootState) =>state.callApi);
     const [seriesList, setSeriesList] = useState<MovieListDetails[]>([]);
@@ -62,6 +52,8 @@ const AllMovies = () =>{
                     className=" text-warning mx-1"  size={24}/>
                 <FiDelete role='button' onClick={() => deleteMovie(row)}
                 className=" text-danger mx-1"  size={24}/>
+                <FaRegEdit role='button' onClick={() => updateGenre(row)}
+                    className=" text-danger mx-1"  size={20}/>
             </span>
         }</>,
     }];
@@ -105,36 +97,25 @@ const AllMovies = () =>{
         <div className='bg-light w-100 px-2 py-4'>
             <h3>Movies Management</h3>
             <div>
-                 {/* status modal component */}
-            {/* <Status_modal rerendar={(e) => rerender_status(e)} row={selectVal} openModal={openModal} />  */}
-            {/* add data modal */}
-            {/* <Add_data_modal rerendar={(e) => rerender(e)} openAddDataModal={open_add_modal} /> */}
-            {/* add data modal */}
-            {/* <Update_data_modal rerendar={(e) => rerender_update(e)} 
-                select_data={update_modal_data} open_update_data_modal={open_update_modal}
-                data_type = "usersDetails" 
-            /> */}
-            <div className="container-fluid" >
-                {/* <Breadcrumb title={title} brad={brad} /> */}
-
-                <div className="row my-3">
-                    <div className="col-12">
-                        <div className="card" style={{ borderTop: "2px solid #4723d9" }}>
-                            <div className="card-header d-flex justify-content-between border-bottom pb-1">
-                                <h4>{title}</h4>
-                                {/* <div className="btn btn-info btn-sm " onClick={setStoreBtn}>Add store data</div> */}
-                            </div>
-                            <div className="card-body">
-                                {/* <div className="card-title text-center bg-warning py-2 rounded">All Data stored from the APK</div> */}
-
-                                <DataTable_Component search="title" title_btn="All Tv Series" title={title} apidata={filter_apistate} columns={apicol} />
-
+                <div className="container-fluid" >
+                    <div className="row my-3">
+                        <div className="col-">
+                            <div className="card" style={{ borderTop: "2px solid #4723d9" }}>
+                                <div className="card-header d-flex 
+                                justify-content-between border-bottom pb-1">
+                                    <h4>{title}</h4>
+                                </div>
+                                <div className="card-body">
+                                    <DataTable_Component 
+                                        search="title"
+                                        apidata={filter_apistate} 
+                                        columns={apicol} 
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
             </div>
         </div>
     )

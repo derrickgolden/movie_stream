@@ -2,9 +2,10 @@ import { FaExclamationTriangle, FaHome } from "react-icons/fa";
 import { BsFillChatSquareQuoteFill } from "react-icons/bs";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import { avatar } from "../../assets";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RiMenuFold3Fill, RiMenuUnfold3Fill } from "react-icons/ri";
+import { MdCategory } from "react-icons/md";
 import { ToggleProps } from "../../sections/type";
 import Swal from "sweetalert2";
 
@@ -12,15 +13,16 @@ import Swal from "sweetalert2";
   const links = [
     { name: "Search", icon: <CiSearch size={32}/>, href: "/viewer/search-movie" },
     { name: "Home", icon: <FaHome size={32}/>, href: "/viewer/dashboard" },
+    { name: "Categories", icon: <MdCategory size={32} />, href: "/viewer/categories" },  
     { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={32} />, href: "/viewer/request-movie" },  
   ];
 
 const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
   const navigate = useNavigate();
-    const [logOut, setLogOut] = useState(false);
-    const [viewer, setViewer] = useState("")
+  const [logOut, setLogOut] = useState(false);
+  const [viewer, setViewer] = useState("")
 
-    useEffect(() =>{
+  useEffect(() =>{
       const viewer = localStorage.getItem("viewer");
       viewer ? setViewer(JSON.parse(viewer)) : setLogOut(true);
       logOut? navigate("/"): null

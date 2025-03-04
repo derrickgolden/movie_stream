@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express';
 import { ModifiedReq, universalResponse } from 'user/types/universalResponse';
-import { addMovieDetails } from '../../dbServices/Movies/addMovieDetails';
+import { addMovieDetails, updateGenres } from '../../dbServices/Movies/addMovieDetails';
 import { addMoviePath } from '../../dbServices/Movies/addMoviePath';
 import { addSeasonInfo } from '../../dbServices/series/addSeasonInfo';
 import { addEpisodeData } from '../../dbServices/series/addEpisodeData';
@@ -12,6 +12,19 @@ router.post('/add/movie-details', async(req: ModifiedReq, res: Response) =>{
     const movieDetails = req.body;
     try {
         const response:universalResponse = await addMovieDetails(movieDetails);
+        response.success ? 
+            res.status(200).json(response):
+            res.status(302).json(response)
+        
+    } catch (error) {
+        console.log(error)
+        res.status(302).json({success: false, msg: "sever side error", err: error.message})
+    }
+});
+router.patch('/update-genres', async(req: ModifiedReq, res: Response) =>{
+    const movieDetails = req.body;
+    try {
+        const response:universalResponse = await updateGenres(movieDetails);
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response)
