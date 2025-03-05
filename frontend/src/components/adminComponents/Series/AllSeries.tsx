@@ -48,11 +48,9 @@ const AllSeries = () =>{
         name: "action", cell: (row: SeriesListDetails) => <>{
             <span>
                 <FaRegEdit role='button' onClick={() => manageSeasonsEpisodes(row)}
-                    className=" text-warning mx-1"  size={24}/>
+                    className=" text-warning mx-1"  size={24} />
                 <FiDelete role='button' onClick={() => handleDeleteSeries(row)}
-                    className=" text-danger mx-1"  size={24}/>
-                <FiDelete role='button' onClick={() => updateGenre(row)}
-                    className=" text-danger mx-1"  size={16}/>
+                    className=" text-danger mx-1"  size={24} />
             </span>
         }</>,
     }];

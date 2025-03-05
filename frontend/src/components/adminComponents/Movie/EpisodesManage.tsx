@@ -15,12 +15,14 @@ import { MdOutlinePreview } from "react-icons/md";
 import { deleteEpisodeApi } from "../../apiCalls/updateData";
 import { getSerieSeasonsEpisodes } from "../apiCalls/getData";
 import { timeToSeconds } from "../quickFuctions";
+import Preview from "../Preview";
 
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
         {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", 
             episode_order: "", subtitles_url: "", credits_start: 30000, runtime: ""}
     );
+    const [previewEpisode, setPreviewEpisode] = useState<Episode>();
     const addEpisodeRef = useRef<HTMLHeadingElement | null>(null);
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const callApi = useSelector((state: RootState) => state.callApi);
@@ -221,10 +223,14 @@ const EpisodeManage = () =>{
                                         <span className="d-flex">
                                             <FaEdit size={32} onClick={() => handleEditEpisode(episode)}
                                                 role="button" className="text-warning me-2 border border-warning p-1"/>
-                                            <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}&subtitlesUrl=${episode.subtitles_url}`}
+                                            {/* <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}&subtitlesUrl=${episode.subtitles_url}`}
                                                  target="_blank">
-                                                <MdOutlinePreview size={32} className="text-success me-2 border border-success p-1"/>
-                                            </Link>
+                                            </Link> */}
+                                            <MdOutlinePreview size={32} onClick={() =>{
+                                                setPreviewEpisode(episode);
+                                                window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                                            }}
+                                            className="text-success me-2 border border-success p-1"/>
                                             <FaDeleteLeft onClick={() =>deleteEpisode (episode)} role="button" 
                                                 size={32} className="text-danger border border-danger p-1"/>
                                         </span>
@@ -240,6 +246,13 @@ const EpisodeManage = () =>{
                     <button className="btn btn-success btn-sm me-4">Save Order</button>
                 </div>
             </div>
+            {previewEpisode &&
+                <Preview 
+                    video = {previewEpisode}
+                    setVideoDetails = {setEpisodeDetails}
+                    addEpisodeRef={addEpisodeRef}
+                />
+            }
         </div>
     )
 }

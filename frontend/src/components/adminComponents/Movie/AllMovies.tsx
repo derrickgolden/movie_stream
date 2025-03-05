@@ -51,9 +51,7 @@ const AllMovies = () =>{
                 <FaRegEdit role='button' onClick={() => manageMovies(row)}
                     className=" text-warning mx-1"  size={24}/>
                 <FiDelete role='button' onClick={() => deleteMovie(row)}
-                className=" text-danger mx-1"  size={24}/>
-                <FaRegEdit role='button' onClick={() => updateGenre(row)}
-                    className=" text-danger mx-1"  size={20}/>
+                    className=" text-danger mx-1"  size={24}/>
             </span>
         }</>,
     }];
