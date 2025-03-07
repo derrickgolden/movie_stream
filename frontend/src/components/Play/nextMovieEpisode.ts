@@ -1,14 +1,15 @@
-import { Episode, Season, SeriesListDetails } from "../../redux/seriesList";
+import { NavigateFunction } from "react-router-dom";
+import { Episode, Season, TvSeries } from "../apiCalls/types";
 import { PlayVideoProps } from "../Row/playMovie";
 interface NextMovieEpisodeProps{
-    movie: SeriesListDetails;
-    currentSeason: Season ,
+    movie: TvSeries
+    currentSeason: Season,
     order: number;
     lastSavedTime: React.MutableRefObject<number>;
 }
 export const nextMovieEpisode = ({
   movie, currentSeason, order, lastSavedTime}: NextMovieEpisodeProps): PlayVideoProps | undefined => {
-        const nextEpisode = currentSeason?.episodes.find(
+        const nextEpisode = currentSeason.episodes.find(
           (episode: Episode) => episode.episode_order === order
         );
 
@@ -23,7 +24,7 @@ export const nextMovieEpisode = ({
             episode_id,
             backdrop_path: thumbnail_path,
             is_series: true,
-            season_order: currentSeason?.season_order,
+            season_order: currentSeason.season_order,
             episode_order,
             credits_start,
             show_details: false,
@@ -35,7 +36,7 @@ export const nextMovieEpisode = ({
           // });
           return nextVideo;
         }else{
-            const nextSession = movie.seasons.find((season) => season.season_order === currentSeason?.season_order + 1);
+            const nextSession = movie.seasons.find((season) => season.season_order === currentSeason.season_order + 1);
             if(nextSession){
                 return nextMovieEpisode({movie, currentSeason: nextSession, order: 1, lastSavedTime});
             }

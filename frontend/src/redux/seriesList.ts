@@ -1,7 +1,7 @@
 
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-export interface Episode {
+interface Episode {
     id: number;
     video_url: string;
     runtime: number;
@@ -15,7 +15,7 @@ export interface Episode {
     credits_start: number;
 }
 
-export interface Season {
+interface Season {
     season_id: number;
     season_name: string;
     season_order: number;

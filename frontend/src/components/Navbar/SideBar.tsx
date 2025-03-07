@@ -15,7 +15,6 @@ import Swal from "sweetalert2";
     { name: "Home", icon: <FaHome size={32}/>, href: "/viewer/dashboard" },
     { name: "Categories", icon: <MdCategory size={32} />, href: "/viewer/categories" },  
     { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={32} />, href: "/viewer/request-movie" },  
-    // { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={32} />, href: "/viewer/request-movie" },  
   ];
 
 const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
