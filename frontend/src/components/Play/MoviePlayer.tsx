@@ -5,12 +5,12 @@ import { FaPlay } from "react-icons/fa";
 import { AiOutlinePicLeft } from "react-icons/ai";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { MdReplayCircleFilled, MdSubtitlesOff } from "react-icons/md";
-import { Season } from "../apiCalls/types";
+import { Season } from "../../redux/seriesList";
 import { getSettingsApi, postWatchProgressApi } from "../apiCalls/noWarningApi";
 import { nextMovieEpisode } from "./nextMovieEpisode";
 import { exitFullscreen } from "./quickFunctions";
 import { MdSubtitles } from "react-icons/md";
-import { handleShowSubtitles } from "./handles";
+import { handleShowSubtitles, handleUserInteraction, resetOverlayTimeout } from "./handles";
 import { FaCheckDouble } from "react-icons/fa6";
 import { setCallApi } from "../../redux/callApi";
 import { useSelector } from "react-redux";
@@ -19,12 +19,14 @@ import { useDispatch } from "react-redux";
 import { getMovieSeriesByID } from "../apiCalls/getData";
 import { playMovie } from "../Row/playMovie";
 import EpisodesAndMore from "./EpisodesAndMore";
+import { SeriesListDetails } from "../../redux/seriesList";
 
 interface MoviePlayerProps {}
 
 const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const callApi = useSelector((state: RootState) => state.callApi);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const overlayTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<number | null>(null);
   const { type, title, movie_id } = useParams();
   const navigate = useNavigate();
@@ -32,14 +34,14 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   const lastSavedTime = useRef<number>(0);
   const [show, setShow] = useState({overlay: true, subtitles: false, completed: false, episodes: false});
   const [review, setReview] = useState(10);
-  const [movie, setMovie] = useState({});
+  const [movie, setMovie] = useState<SeriesListDetails>();
   const [playingVideo, setPlayingVideo] = useState({
     subtitles_url: "", video_url: "", backdrop_path: "", video_id: 0, episode_id: 0, credits_start: 1000000,
     is_series: false, episode_order: 0, season_order: 0, show_details: false, progress: 0
   });
 
   const playNextEpisode = () => {
-    if (movie.is_series) {
+    if (movie?.is_series) {
       const currentSeason = movie.seasons.find(
         (season: Season) => season.season_order === playingVideo.season_order
       );
@@ -102,6 +104,17 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     };
   }, [review]);
 
+  // Set initial timeout when component mounts
+  useEffect(() => {
+    resetOverlayTimeout({setShow, overlayTimeout});
+
+    return () => {
+      if (overlayTimeout.current) {
+        clearTimeout(overlayTimeout.current);
+      }
+    };
+  }, []);
+
   const handleAutoplay = () => {
     if (videoRef.current) {
       videoRef.current.play().catch((error) => {
@@ -144,7 +157,6 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     
     // Save progress every 10 seconds
     if (newTime - (lastSavedTime.current | 0) >= 10) {
-      // console.log({newTime, progress: playingVideo.progress});
       lastSavedTime.current = newTime;
       const { video_id, is_series, episode_id, credits_start } = playingVideo;
       const isCompleted = newTime >= credits_start;
@@ -165,7 +177,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
   return (
     <>
     {
-      show.episodes? (
+      show.episodes && movie ? (
         <EpisodesAndMore 
           movie = { movie }
           lastSavedTime={lastSavedTime}
@@ -175,6 +187,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
       ) : (
         <div
           className="position-relative"
+          onMouseMove={() =>handleUserInteraction({setShow, overlayTimeout})}
+          onTouchStart={() =>handleUserInteraction({setShow, overlayTimeout})}
           style={{ maxHeight: "", margin: "auto", textAlign: "center" }}
         >
 

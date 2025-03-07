@@ -24,17 +24,17 @@ const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingRead
         handleLoad();
       } else {
         window.addEventListener("load", handleLoad);
-      }
+      };
 
       return () => {
         window.removeEventListener("load", handleLoad);
       };
     }, []);
 
-      const detectDevice = () => {
-        const userAgent = navigator.userAgent.toLowerCase();
+    const detectDevice = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
       
-        if (userAgent.includes("mobile")) {
+      if (userAgent.includes("mobile")) {
           return "phone";
         } else if (userAgent.includes("tv") || userAgent.includes("smart-tv")) {
           return "tv";
@@ -44,9 +44,9 @@ const LandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandingRead
       };
       
       // console.log(`Device Type: ${detectDevice()}`);
-      useEffect(() =>{
-        setTheDevice(detectDevice());
-      })
+    useEffect(() =>{
+      setTheDevice(detectDevice());
+    });
     
     return(
             <div className="App col-12 col-sm-11 ">

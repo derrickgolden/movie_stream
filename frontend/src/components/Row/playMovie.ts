@@ -5,7 +5,6 @@ import { HoveredMovie } from "../../sections/LandingPage";
 
 interface PlayMovieArg {
     movie: MovieListProps | SeriesListDetails;
-    // clickCount: { count: number; id: number; }
     setClickCount?: React.Dispatch<React.SetStateAction<{
         count: number;
         id: number;
@@ -46,7 +45,6 @@ export const playMovie = ({movie, navigate}: PlayMovieArg): PlayVideoProps | und
             episode_order, show_details: true, credits_start
           };
           video = playVideo;
-          // navigate(`/watch/series/${movie.title}/${movie.video_id}`, {state: {movie, playVideo}});
         }
       })
     }else{
