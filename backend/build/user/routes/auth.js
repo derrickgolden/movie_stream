@@ -38,7 +38,7 @@ router.post('/signup', async (req, res) => {
             (0, sendText_1.sendSMS)([sendPhone], text).then((data) => {
                 data.success ?
                     res.status(200).json(response) :
-                    res.status(200).json({ success: true, msg: "Status updated but the client might have not received a notificaton" });
+                    res.status(200).json({ success: true, msg: "Client added might have not received a notificaton" });
             });
         }
         else

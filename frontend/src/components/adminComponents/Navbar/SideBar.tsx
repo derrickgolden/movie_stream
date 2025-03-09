@@ -4,7 +4,7 @@ import { FaHome, FaFilm, FaTv, FaBell, FaMoneyBill, FaExclamationTriangle, FaUse
   FaAddressCard
  } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
-import { JAP_logo } from "../../../assets";
+import { FcFeedback } from "react-icons/fc";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { MdAddCard, MdAddToQueue, MdFormatListBulleted, MdListAlt, MdMenu } from "react-icons/md";
 
@@ -42,9 +42,9 @@ const Sidebar = () => {
       ],
     },
     { name: "Movie Request", icon: <FaExclamationTriangle />, href: "/admin/movie-request" },
-    { name: "Report", icon: <FaExclamationTriangle />, href: "/admin/report" },
-    { name: "Subscription", icon: <FaMoneyBill />, href: "/admin/subscription" },
-    { name: "Notification", icon: <FaBell />, href: "/admin/notification" },
+    { name: "Feedback", icon: <FcFeedback />, href: "/admin/feedback" },
+    // { name: "Subscription", icon: <FaMoneyBill />, href: "/admin/subscription" },
+    // { name: "Notification", icon: <FaBell />, href: "/admin/notification" },
     { name: "Log Out", icon: <FaBell />, href: "/admin/logout" },
   ];
 

@@ -14,7 +14,7 @@ import AdminDashboard from './sections/AdminDashboard';
 
 import EpisodesAndMore from './components/Play/EpisodesAndMore';
 import { AddNewMovie, AllMovies, AllSeries, EpisodeManage, Logout, MovieRequests, Preview, 
-  Reports, SeasonsManage, Sidebar, UploadMovie 
+  Feedbacks, SeasonsManage, Sidebar, UploadMovie 
 } from './components/adminComponents';
 import AddUsers from './components/adminComponents/Users/AddUsers';
 import AllUsers from './components/adminComponents/Users/AllUsers';
@@ -24,6 +24,7 @@ import SideBar from './components/Navbar/SideBar';
 import ClientWatchedMovies from './components/adminComponents/Users/ClientWatchedMovies';
 import Categories from './components/categories/Categories';
 import JaptechLogo from './components/auth/JapTechLogo';
+import Feedback from './sections/FeedBack';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
               <Route path='search-movie' element={<SearchMovie /> } />
               <Route path='categories' element={<Categories toggle = {toggle}  
                 setToggle ={setToggle} setIsLandingReady = {setIsLandingReady}/> } />
+              <Route path='feedback' element={<Feedback /> } />
           </Route>
 
             <Route path="/" element={<Login setIsLogin = {setIsLogin} 
@@ -76,9 +78,9 @@ function App() {
               <Route path='seasons-manage' element ={<SeasonsManage />} />
               <Route path='episodes-manage' element ={<EpisodeManage />} />
               <Route path='movie-request' element ={<MovieRequests />} />
-              <Route path='report' element ={<Reports />} />
-              <Route path='subscription' element ={<Reports />} />
-              <Route path='notification' element ={<Reports />} />
+              <Route path='feedback' element ={<Feedbacks />} />
+              {/* <Route path='subscription' element ={<Reports />} /> */}
+              {/* <Route path='notification' element ={<Reports />} /> */}
               <Route path="signup" element={<Signup prevelages="admin"/>} />
               <Route path="login" element={<Login setIsLogin = {setIsLogin} 
                                             prevelages="admin"

@@ -97,6 +97,13 @@ export interface RequestMovie {
   description: string,
   notify: boolean;
 }
+
+export interface FeedBackArg {
+  subject: string,
+  message: string,
+  sender_type: 'client' | 'admin'
+}
+
 export interface MovieProgressBody {
   user_id: number, 
   movie_id: number;

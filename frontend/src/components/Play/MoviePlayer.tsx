@@ -10,7 +10,7 @@ import { getSettingsApi, postWatchProgressApi } from "../apiCalls/noWarningApi";
 import { nextMovieEpisode } from "./nextMovieEpisode";
 import { exitFullscreen } from "./quickFunctions";
 import { MdSubtitles } from "react-icons/md";
-import { handleShowSubtitles } from "./handles";
+import { handleShowSubtitles, handleUserInteraction, resetOverlayTimeout } from "./handles";
 import { FaCheckDouble } from "react-icons/fa6";
 import { setCallApi } from "../../redux/callApi";
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import EpisodesAndMore from "./EpisodesAndMore";
 interface MoviePlayerProps {}
 
 const MoviePlayer: React.FC<MoviePlayerProps> = () => {
+  const overlayTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const callApi = useSelector((state: RootState) => state.callApi);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const intervalRef = useRef<number | null>(null);
@@ -102,6 +103,16 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
     };
   }, [review]);
 
+  useEffect(() => {
+    resetOverlayTimeout({setShow, overlayTimeout});
+
+    return () => {
+      if (overlayTimeout.current) {
+        clearTimeout(overlayTimeout.current);
+      }
+    };
+  }, []);
+
   const handleAutoplay = () => {
     if (videoRef.current) {
       videoRef.current.play().catch((error) => {
@@ -175,6 +186,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
       ) : (
         <div
           className="position-relative"
+          onMouseMove={() =>handleUserInteraction({setShow, overlayTimeout})}
+          onTouchStart={() =>handleUserInteraction({setShow, overlayTimeout})}
           style={{ maxHeight: "", margin: "auto", textAlign: "center" }}
         >
 

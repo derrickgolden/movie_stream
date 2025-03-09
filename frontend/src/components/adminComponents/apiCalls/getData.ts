@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { server_baseurl } from "../../../baseUrl";
-import { MovieRequestRes, UserWatchStats } from "./type";
+import { Feedback, MovieRequestRes, UserWatchStats } from "./type";
 import { TvSeries, WatchedMovieOrSeries } from "../../apiCalls/types";
 
 
@@ -22,9 +22,17 @@ interface  WatchedMovieOrSeriesRes {
     success: boolean;
     details: WatchedMovieOrSeries[];
 }
+interface  FeedbackRes {
+    success: boolean;
+    details: Feedback[];
+}
 
 export const getMovieRequests = async (data: string): Promise<ResponseData> => {
     return await makeApiCall("admin/videos/movie-requests", 'get', data);
+};
+
+export const getAllFeedbacks = async (data: string): Promise<FeedbackRes> => {
+    return await makeApiCall("admin/feedback/all", 'get', data);
 };
 
 export const getSerieSeasonsEpisodes = async (movie_id: string): Promise<SeasonEpisode> => {

@@ -14,9 +14,16 @@ export const requestMovieApi = async (data: string, navigate: NavigateFunction):
     // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('user/movie-request', 'post', data, navigate);
 };
+
+export const postFeedBackApi = async (data: string, navigate: NavigateFunction): Promise<UploadMovieRes> => {
+    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
+    return await makeApiCall('user/feedback/post', 'post', data, navigate);
+};
+
 export const markMovieCompleteApi = async (data: string, navigate: NavigateFunction): Promise<UploadMovieRes> => {
     return await makeApiCall('user/watch-progress', 'post', data, navigate);
 };
+
 export const updateShowSubtitlesApi = async (data: string, navigate: NavigateFunction): Promise<UploadMovieRes> => {
     return await makeApiCall('user/settings/subtitle', 'patch', data, navigate);
 };

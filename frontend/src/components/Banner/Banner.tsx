@@ -95,6 +95,14 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
     setIsVideoReady(true);
   };
 
+  const handlePlayClick = () =>{
+    if(movie){
+      movie.is_series?
+      navigate(`/watch/series/${movie.title}/${movie.video_id}`):
+      navigate(`/watch/movie/${movie.title}/${movie.video_id}`);
+    }
+};
+
   return (
     <header
       className="banner col-12 col-sm-11 d-flex flex-column justify-content-between position-fixed top-0 "
@@ -106,9 +114,7 @@ const Banner:React.FC<BannerProps> = ({hoveredMovie, setHoveredMovie, isVideoRea
           </h1>
           <div className="banner__buttons ">
             {movie && (
-              <button className="banner__button" onClick={() => playMovie({
-                movie, navigate, clickCount: {count: 1, id: movie.video_id}
-              })} >
+              <button className="banner__button" onClick={() => handlePlayClick()} >
                 Play
               </button>
             )}

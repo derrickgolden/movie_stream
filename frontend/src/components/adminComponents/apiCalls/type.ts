@@ -9,7 +9,7 @@ export interface MovieRequestRes {
     notify: boolean; // Whether the user wants to be notified
     status: 'pending' | 'inProgress' | 'uploaded' | 'cancelled'
     request_date: string; // ISO string representing the request date
-  }
+  };
   export interface UserWatchStats {
     user_id: number;
     name: string;
@@ -20,3 +20,22 @@ export interface MovieRequestRes {
     total_watched: number;
     last_watched_at: string; // Timestamp or formatted date string
 }
+
+export interface FeedbackMessage {
+  message_id: number;
+  sender_type: "client" | "admin";
+  message: string;
+  sent_at: string;
+}
+
+export interface Feedback {
+  name: string;
+  phone: string;
+  apartment: string;
+  feedback_id: number;
+  subject: string;
+  status: "open" | "closed";
+  created_at: string;
+  messages: FeedbackMessage[];
+}
+

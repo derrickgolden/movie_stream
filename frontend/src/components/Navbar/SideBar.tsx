@@ -1,8 +1,9 @@
-import { FaExclamationTriangle, FaHome } from "react-icons/fa";
+import {  FaHome } from "react-icons/fa";
 import { BsFillChatSquareQuoteFill } from "react-icons/bs";
+import { FcFeedback } from "react-icons/fc";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import { avatar } from "../../assets";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RiMenuFold3Fill, RiMenuUnfold3Fill } from "react-icons/ri";
 import { MdCategory } from "react-icons/md";
@@ -15,13 +16,16 @@ import Swal from "sweetalert2";
     { name: "Home", icon: <FaHome size={32}/>, href: "/viewer/dashboard" },
     { name: "Categories", icon: <MdCategory size={32} />, href: "/viewer/categories" },  
     { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={32} />, href: "/viewer/request-movie" },  
+    { name: "Feedback", icon: <FcFeedback size={32} />, href: "/viewer/feedback" },  
   ];
 
 const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
   const navigate = useNavigate();
+  const location = useLocation();
   const [logOut, setLogOut] = useState(false);
   const [viewer, setViewer] = useState("")
 
+  console.log(location);
   useEffect(() =>{
       const viewer = localStorage.getItem("viewer");
       viewer ? setViewer(JSON.parse(viewer)) : setLogOut(true);
@@ -78,7 +82,7 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
               
                       <ul className="list-unstyled pt-5 ps-2 ps-sm-0">
                           {links.map((link, index) => (
-                            <li key={index} className={`mb-5 ${toggle.isOpen? "text-start ": "text-center "} `}>
+                            <li key={index} className={`mb-4 ${toggle.isOpen? "text-start ": "text-center "} `}>
                               {
                                   <Link
                                     to={link.href || "#"}

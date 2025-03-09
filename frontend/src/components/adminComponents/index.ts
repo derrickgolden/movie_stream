@@ -8,11 +8,11 @@ import SeasonsManage from './Movie/SeasonsManage';
 import EpisodeManage from './Movie/EpisodesManage';
 import Sidebar from './Navbar/SideBar';
 import MovieRequests from './Requests/MovieRequest';
-import Reports from './Reports/Report';
+import Feedbacks from './Feedbacks/Feedbacks';
 
 
 
 export{
     AllMovies, AllSeries, Preview, Logout, AddNewMovie, UploadMovie, SeasonsManage, 
-    Sidebar, EpisodeManage, MovieRequests, Reports
+    Sidebar, EpisodeManage, MovieRequests, Feedbacks
 }

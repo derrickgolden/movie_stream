@@ -15,6 +15,7 @@ const getMoviesList_1 = __importDefault(require("./user/routes/movies/getMoviesL
 const uploadMovie_1 = __importDefault(require("./user/routes/movies/uploadMovie"));
 const deleteMovies_1 = __importDefault(require("./user/routes/movies/deleteMovies"));
 const requestMovie_1 = __importDefault(require("./user/routes/requestMovie"));
+const feedback_1 = __importDefault(require("./user/routes/feedback"));
 const watchProgress_1 = __importDefault(require("./user/routes/watchProgress"));
 const getPosters_1 = __importDefault(require("./user/routes/getPosters"));
 const customers_1 = __importDefault(require("./user/routes/customers"));
@@ -107,11 +108,13 @@ app.use('/posters', getPosters_1.default);
 app.use('/user', authenticateToken_1.authenticateToken, [watchProgress_1.default, requestMovie_1.default]);
 app.use('/user/settings', authenticateToken_1.authenticateToken, settings_1.default);
 app.use('/user/categories', authenticateToken_1.authenticateToken, categories_1.default);
+app.use('/user/feedback', authenticateToken_1.authenticateToken, feedback_1.default);
+app.use('/admin/feedback', authenticateToken_1.authenticateToken, feedback_1.default);
 app.use('/videos', authenticateToken_1.authenticateToken, [getMoviesList_1.default, uploadMovie_1.default, deleteMovies_1.default]);
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, 'uploads')));
 app.use('/admin/videos', authenticateToken_1.authenticateToken, requestMovie_1.default);
 app.use('/admin/clients', authenticateToken_1.authenticateToken, customers_1.default);
-app.listen(PORT, () => {
+app.listen(3000, () => {
     console.log(`Listening on port :${PORT}`);
 });
 //# sourceMappingURL=app.js.map

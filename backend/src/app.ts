@@ -12,6 +12,7 @@ import videos from './user/routes/movies/getMoviesList';
 import alterVideos from './user/routes/movies/uploadMovie';
 import deleteVideos from './user/routes/movies/deleteMovies';
 import requestMovie from './user/routes/requestMovie';
+import feedback from './user/routes/feedback';
 import watchProgress from './user/routes/watchProgress'
 import seriesPosters from "./user/routes/getPosters"
 import clients from "./user/routes/customers";
@@ -117,6 +118,8 @@ app.use('/posters', seriesPosters);
 app.use('/user', authenticateToken, [watchProgress, requestMovie]);
 app.use('/user/settings', authenticateToken,  settings);
 app.use('/user/categories', authenticateToken,  categories);
+app.use('/user/feedback', authenticateToken,  feedback);
+app.use('/admin/feedback', authenticateToken,  feedback);
 app.use('/videos', authenticateToken, [videos, alterVideos, deleteVideos]);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/admin/videos', authenticateToken,  requestMovie);
