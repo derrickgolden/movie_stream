@@ -114,7 +114,7 @@ app.use('/videos', authenticateToken_1.authenticateToken, [getMoviesList_1.defau
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, 'uploads')));
 app.use('/admin/videos', authenticateToken_1.authenticateToken, requestMovie_1.default);
 app.use('/admin/clients', authenticateToken_1.authenticateToken, customers_1.default);
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log(`Listening on port :${PORT}`);
 });
 //# sourceMappingURL=app.js.map

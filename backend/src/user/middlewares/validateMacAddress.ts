@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { RouterOSAPI } from "node-routeros";
 import { ActivePPPoEClient } from "./types";
 require('dotenv').config();
 const RosApi = require("node-routeros").RouterOSAPI;
