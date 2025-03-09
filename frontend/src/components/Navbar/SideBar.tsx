@@ -12,11 +12,11 @@ import Swal from "sweetalert2";
 
 // Sidebar links configuration
   const links = [
-    { name: "Search", icon: <CiSearch size={32}/>, href: "/viewer/search-movie" },
-    { name: "Home", icon: <FaHome size={32}/>, href: "/viewer/dashboard" },
-    { name: "Categories", icon: <MdCategory size={32} />, href: "/viewer/categories" },  
-    { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={32} />, href: "/viewer/request-movie" },  
-    { name: "Feedback", icon: <FcFeedback size={32} />, href: "/viewer/feedback" },  
+    { name: "Search", icon: <CiSearch size={40}/>, href: "/viewer/search-movie" },
+    { name: "Home", icon: <FaHome size={40}/>, href: "/viewer/dashboard" },
+    { name: "Categories", icon: <MdCategory size={40} />, href: "/viewer/categories" },  
+    { name: "Request Movie", icon: <BsFillChatSquareQuoteFill size={40} />, href: "/viewer/request-movie" },  
+    { name: "Feedback", icon: <FcFeedback size={40} />, href: "/viewer/feedback" },  
   ];
 
 const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
@@ -52,7 +52,7 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
     return(
         <div style={{}} className={`  d-flex justify-content-end `} >
             <div className={`${toggle.isOpen? "col-9 col-sm-5 col-md-4 col-lg-3 ": "col-1 d-none d-sm-block" } side-bar col-1 text-center h-100 
-              pt-3 px-md-3  position-fixed top-0 left-0 border vh-100`} style={{zIndex: 30}}>
+              pt-3 px-md-3  position-fixed top-0 left-0 vh-100`} style={{zIndex: 30}}>
               <div className={`d-none d-sm-block`}>
                 <Link to="#" className="text-warning text-start rounded px-1" 
                   onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
