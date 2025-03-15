@@ -280,8 +280,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = () => {
               <track
                   src={playingVideo?.subtitles_url}
                   kind="subtitles"
-                  srcLang="en"
                   label="English"
+                  srcLang="en"
                   default
               />
             }

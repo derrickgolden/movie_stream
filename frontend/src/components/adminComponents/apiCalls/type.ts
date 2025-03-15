@@ -39,3 +39,10 @@ export interface Feedback {
   messages: FeedbackMessage[];
 }
 
+export interface Statistics {
+  total_movies: number,
+  total_tv_series: number,
+  total_episodes: number,
+  active_users: number;
+}
+

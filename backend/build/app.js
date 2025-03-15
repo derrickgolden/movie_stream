@@ -20,6 +20,7 @@ const watchProgress_1 = __importDefault(require("./user/routes/watchProgress"));
 const getPosters_1 = __importDefault(require("./user/routes/getPosters"));
 const customers_1 = __importDefault(require("./user/routes/customers"));
 const settings_1 = __importDefault(require("./user/routes/settings"));
+const statistics_1 = __importDefault(require("./user/routes/statistics"));
 const categories_1 = __importDefault(require("./user/routes/categories"));
 const authenticateToken_1 = require("./user/middlewares/authenticateToken");
 const SERIES_PATH = process.env.SERIES_PATH;
@@ -114,6 +115,7 @@ app.use('/videos', authenticateToken_1.authenticateToken, [getMoviesList_1.defau
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, 'uploads')));
 app.use('/admin/videos', authenticateToken_1.authenticateToken, requestMovie_1.default);
 app.use('/admin/clients', authenticateToken_1.authenticateToken, customers_1.default);
+app.use('/admin/statistics', authenticateToken_1.authenticateToken, statistics_1.default);
 app.listen(PORT, () => {
     console.log(`Listening on port :${PORT}`);
 });

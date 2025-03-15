@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import DataTable from 'react-data-table-component'
 
 type DataTableComponentProps = {
-  apidata, columns, search: string
+  apidata: [], columns: [], search: string
 }
 export default function DataTable_Component({ apidata, columns, search }: DataTableComponentProps) {
   const [data, setData] = useState([])

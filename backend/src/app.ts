@@ -17,6 +17,7 @@ import watchProgress from './user/routes/watchProgress'
 import seriesPosters from "./user/routes/getPosters"
 import clients from "./user/routes/customers";
 import settings from "./user/routes/settings";
+import statistics from "./user/routes/statistics";
 import categories from "./user/routes/categories";
 import { authenticateToken } from './user/middlewares/authenticateToken';
 import { validateIP } from './user/middlewares/validateIP';
@@ -124,6 +125,7 @@ app.use('/videos', authenticateToken, [videos, alterVideos, deleteVideos]);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/admin/videos', authenticateToken,  requestMovie);
 app.use('/admin/clients', authenticateToken,  clients);
+app.use('/admin/statistics', authenticateToken,  statistics);
 
 app.listen(PORT, () => {
   console.log(`Listening on port :${PORT}`);
