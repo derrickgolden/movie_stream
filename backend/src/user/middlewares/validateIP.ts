@@ -10,7 +10,7 @@ export const validateIP = (req: Request, res: Response, next: NextFunction) => {
     if (userIP === allowedIP) {
         next(); // Allow access
     } else {
-        res.status(302).json({success: false, message: "Access denied. Login from JAPTECH network." });
+        res.status(302).json({success: false, msg: "Access denied. Login from JAPTECH network." });
     }
 };
 

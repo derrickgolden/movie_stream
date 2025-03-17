@@ -6,11 +6,13 @@ const RosApi = require("node-routeros").RouterOSAPI;
 const MIKROTIK_HOST = process.env.MIKROTIK_HOST;
 const MIKROTIK_USER = process.env.MIKROTIK_USER;
 const MIKROTIK_PASSWORD = process.env.MIKROTIK_PASSWORD;
+const MIKROTIK_PORT = process.env.MIKROTIK_PORT;
 
 const MIKROTIK_CONFIG = {
     host: MIKROTIK_HOST,
     user: MIKROTIK_USER,
     password: MIKROTIK_PASSWORD,
+    port: MIKROTIK_PORT
 };
 
 /**
