@@ -21,7 +21,6 @@ import Swal from "sweetalert2";
 
 const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
   const navigate = useNavigate();
-  const location = useLocation();
   const [logOut, setLogOut] = useState(false);
   const [viewer, setViewer] = useState("")
 
@@ -53,8 +52,8 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
         <div style={{}} className={`  d-flex justify-content-end `} >
             <div className={`${toggle.isOpen? "col-9 col-sm-5 col-md-4 col-lg-3 ": "col-1 d-none d-sm-block" } side-bar col-1 text-center h-100 
               pt-3 px-md-3  position-fixed top-0 left-0 vh-100`} style={{zIndex: 30}}>
-              <div className={`d-none d-sm-block`}>
-                <Link to="#" className="text-warning text-start rounded px-1" 
+              <div className={`${toggle.isOpen? "text-start ": "text-center "} `}>
+                <Link to="#" className="text-warning text-start rounded px-1 d-none d-sm-block" 
                   onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
                 {
                   toggle.isOpen? 
@@ -64,7 +63,7 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
                 </Link>
               </div>
               <div className={`${toggle.isOpen? "text-start ": "justify-content-center "} d-flex  
-              ps-2 ps-sm-0 my-4 align-items-center `} style={{height: "80px"}}>
+              ps-2 ps-sm-0 my-5 my-sm-4 align-items-center `} style={{height: "80px"}}>
                 <img style={{height: "30px"}}
                     className=""
                     src={avatar}

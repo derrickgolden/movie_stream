@@ -1,3 +1,4 @@
+import { LandingPageMovieDetails } from "../components/apiCalls/types";
 
 export interface ToggleProps{
     toggle: {
@@ -8,5 +9,9 @@ export interface ToggleProps{
         link: string;
         isOpen: boolean;
     }>>;
-    setIsLandingReady: React.Dispatch<React.SetStateAction<boolean>>
+    setIsLandingReady: React.Dispatch<React.SetStateAction<boolean>>;
+    setColumnShow: React.Dispatch<React.SetStateAction<"movies" | "series" | "watching" | "newuploads">>;
+    columnShow: "movies" | "series" | "watching" | "newuploads";
+    pageDetails: LandingPageMovieDetails | undefined
+
 }

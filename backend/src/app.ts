@@ -17,6 +17,7 @@ import watchProgress from './user/routes/watchProgress'
 import seriesPosters from "./user/routes/getPosters"
 import clients from "./user/routes/customers";
 import settings from "./user/routes/settings";
+import landingPageData from "./user/routes/landingPageData";
 import statistics from "./user/routes/statistics";
 import categories from "./user/routes/categories";
 import { authenticateToken } from './user/middlewares/authenticateToken';
@@ -117,6 +118,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/user', adminauth);
 app.use('/posters', seriesPosters);
 app.use('/user', authenticateToken, [watchProgress, requestMovie]);
+app.use('/user/landing_page_data', authenticateToken,  landingPageData);
 app.use('/user/settings', authenticateToken,  settings);
 app.use('/user/categories', authenticateToken,  categories);
 app.use('/user/feedback', authenticateToken,  feedback);

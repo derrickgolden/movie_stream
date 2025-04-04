@@ -25,6 +25,7 @@ import ClientWatchedMovies from './components/adminComponents/Users/ClientWatche
 import Categories from './components/categories/Categories';
 import JaptechLogo from './components/auth/JapTechLogo';
 import Feedback from './sections/FeedBack';
+import ColumnLandingPage from './sections/ColumnLandingPage';
 
 
 function App() {
@@ -42,8 +43,10 @@ function App() {
             <Route path='watch/episodes-more/:id' element={<EpisodesAndMore /> } />
             <Route path='/viewer' element ={<SideBar setIsLandingReady = {setIsLandingReady}
                 toggle = {toggle}  setToggle ={setToggle} />}>
-              <Route path='dashboard' element={<LandingPage toggle = {toggle}  
+              <Route path='dashboard' element={<ColumnLandingPage toggle = {toggle}  
                 setToggle ={setToggle} setIsLandingReady = {setIsLandingReady} />} />
+              {/* <Route path='dashboard' element={<LandingPage toggle = {toggle}  
+                setToggle ={setToggle} setIsLandingReady = {setIsLandingReady} />} /> */}
               <Route path='request-movie' element={<RequestMovie /> } />
               <Route path='search-movie' element={<SearchMovie /> } />
               <Route path='categories' element={<Categories toggle = {toggle}  

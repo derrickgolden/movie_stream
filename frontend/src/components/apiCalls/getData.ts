@@ -1,7 +1,7 @@
 import axios from "axios";
 import { server_baseurl } from "../../baseUrl";
 import Swal from "sweetalert2";
-import { MoviesSeriesCategories } from "./types";
+import { LandingPageMovieDetails, MoviesSeriesCategories } from "./types";
 import { MovieListDetails } from "../../redux/movieList";
 import { SeriesListDetails } from "../../redux/seriesList";
 import { NavigateFunction } from "react-router-dom";
@@ -18,6 +18,10 @@ interface CategoriesData {
     success: boolean;
     details: MoviesSeriesCategories[];
 }
+interface LandingPageData {
+    success: boolean;
+    details: LandingPageMovieDetails;
+}
 
 export const getMoviesList = async (path: string, data: string, navigate: NavigateFunction, tokenString: string | null): Promise<ResponseData> => {
     return await makeApiCall("videos/get-movies", 'get', data, navigate, tokenString);
@@ -31,6 +35,9 @@ export const getMovieSeriesByID = async (movie_id: string, data: string, navigat
 };
 export const getMovieSeriesCategory = async (data: string, navigate: NavigateFunction, tokenString: string | null): Promise<CategoriesData> => {
     return await makeApiCall(`user/categories/get`, 'get', data, navigate, tokenString);
+};
+export const getLandingPageData = async (data: string, navigate: NavigateFunction, tokenString: string | null): Promise<LandingPageData> => {
+    return await makeApiCall(`user/landing_page_data/get`, 'get', data, navigate, tokenString);
 };
 
 const makeApiCall = async(url: string, method: string, data: string, navigate: NavigateFunction, tokenString: string | null) =>{

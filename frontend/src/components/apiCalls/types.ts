@@ -77,5 +77,30 @@ export interface MoviesSeriesCategories {
   }[];
 }
 
+export interface MoviesDetailsRes {
+  video_id: number;
+  title: string;
+  description: string;
+  release_date: string; // ISO string
+  is_series: 0 | 1;
+  backdrop_path: string;
+  poster_path: string;
+  progress: number | null;
+  completed: boolean | number | null;
+  trailer_url: string;
+  watch_progress?: {
+    episode_id: number | null;
+    progress: number;
+    completed: boolean;
+  } | null;
+  total_seasons?: number | null;
+  watch_count: number;
+}
 
+export interface LandingPageMovieDetails{
+  movies: MoviesDetailsRes[];
+  series: MoviesDetailsRes[];
+  watching: MoviesDetailsRes[];
+  newUploads: MoviesDetailsRes[];
+}
   
