@@ -36,10 +36,14 @@ const EpisodeManage = () =>{
         getSerieSeasonsEpisodes(seriesDetails.movie_id).then((data) =>{
             if(data.success){
                 const updatedSeason = data.details[0].seasons.filter((season1) => season1.season_id === season.season_id);
-                if(updatedSeason.length === 1) setEpisodes(updatedSeason[0].episodes);
+                if(updatedSeason.length === 1){
+                    setEpisodes(updatedSeason[0].episodes);
+                    const trailer_url = updatedSeason[0].trailer_url;
+                    const baseurl = trailer_url.substring(0, trailer_url.lastIndexOf('/') + 1);
+                    setEpisodeDetails((obj) => ({...obj, subtitles_url: baseurl, url: baseurl}))
+                } 
             }
         })
-       
     }, [callApi]);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>{
@@ -55,10 +59,12 @@ const EpisodeManage = () =>{
         addEpisodeDetails(episodeData).then((data) =>{
             if(data.success){
                 Swal.fire(data.msg)
-                dispatch(setCallApi(!callApi));
                 setEpisodeDetails((obj) => 
-                    ({...obj, episode_no: obj.episode_no + 1, episode_name: "", isEdit: false, url: "", episode_order: "", subtitles_url: ""})
+                    ({...obj, episode_name: "", isEdit: false, episode_order: "", 
+                        url: "", subtitles_url: "", credits_start: 3000
+                    })
                 );
+                dispatch(setCallApi(!callApi));
             }
         })
     }
@@ -126,13 +132,10 @@ const EpisodeManage = () =>{
                 <div className="pt-4" ref={addEpisodeRef} >
                     <h5 className="w-100 bg-info p-1">Add Episode</h5>
                     <div className="d-flex gap-5 align-items-center">
-                        <div className={`form-floating mb-3 col-10 `}>
+                        <div className={`form-floating mb-3 col-5 `}>
                             <input type='string' className="form-control" id="time" 
                             onChange={(e) => setEpisodeDetails((obj) => ({...obj, credits_start: timeToSeconds(e.target.value)})) } />
                             <label htmlFor="time">Convert to seconds</label>
-                        </div>
-                        <div className="col-1">
-                            <button className="btn btn-primary">{epidodeDetails.runtime}</button>
                         </div>
                     </div>
                     <form onSubmit={handleFetchEpisode}>
@@ -258,5 +261,3 @@ const EpisodeManage = () =>{
 }
 
 export default EpisodeManage;
-
-
