@@ -45,7 +45,7 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> =>{
         if(response.success){
             const {phone, account2} = signupDetails;
             const sendPhone = "+" + phone;
-            const text = `Hi ${account2}. Did you know you can watch any movie from our JapTech site. Click the link below or copy it on a browser to enjoy movies for free and use your phone number ${phone} to login. \n japtech.africa `
+            const text = `Hi ${account2}. You can watch any movie COMPLETELY FREE on our JapTech site. Click the link below or copy it on a browser from your phone, laptop or TV. Use your phone number ${phone} to login. Its completely FREE for being our client. \n https://japtech.africa `
             sendSMS([sendPhone], text).then((data) =>{
                 data.success? 
                     res.status(200).json(response):
