@@ -37,7 +37,7 @@ const ColumnNavbar: React.FC<ToggleProps> = ({toggle, setToggle, columnShow, set
             <RiMenuUnfold3Fill size={42} className="fs- "/>
           }
           </Link>
-          <div className="d-flex gap-sm-5 gap-2 justify-content-between col-9 col-sm-10 col-md-11 px-4">
+          <div className="d-flex gap-sm-5 gap-2 justify-content-between col-9 col-sm-10 col-md-11 px-md-4">
             {
               pageDetails?.watching.length && (
               <button className={`btn btn-sm w-100 fs-6 d-flex justify-content-center ${columnShow === "watching"? 'btn-warning ' : 'btn-outline-warning '}`}

@@ -62,13 +62,12 @@ return (
       className="banner col-12 col-sm-11 d-flex flex-column justify-content-between position-fixed top-0 "
     >
       <div className="d-flex align-items-center col-12 position-relative " style={{backgroundColor: "#000"}}>
-       {
-        hoveredMovie && <>
+       
           <div className="banner__contents ps-3  col-12 col-md-5 ">
             <h1 className="banner__title display-4 mb-0">
               {hoveredMovie?.title }
             </h1>
-            {
+            {    
               hoveredMovie?.is_series? (
                 <div className="d-flex flex-column flex-lg-row ">
                   <div className="d-flex gap-3 mx-2">
@@ -79,22 +78,25 @@ return (
                   <div className="d-flex gap-2">
                     {
                       hoveredMovie?.genres?.map((genre, i) =>(
-                        <span className="bg-dark px-1 rounded text-nowrap">{genre}</span>
+                        <span key={i} className="bg-dark px-1 rounded text-nowrap">{genre}</span>
                       ))
                     }
                   </div>
                 </div>
               ) : (
                 <div className="d-flex flex-column flex-lg-row ">
-                  <div className="d-flex gap-3 mx-2">
-                    <span>{new Date(hoveredMovie?.release_date).toLocaleDateString()}</span>
-                    <span>|</span>
-                    <span className="text-nowrap">{convertMinutes(hoveredMovie?.runtime)}</span>
-                  </div>
+                  {
+                    hoveredMovie &&
+                    <div className="d-flex gap-3 mx-2">
+                      <span>{new Date(hoveredMovie?.release_date).getFullYear()}</span>
+                      <span>|</span>
+                      <span className="text-nowrap">{convertMinutes(hoveredMovie?.runtime)}</span>
+                    </div>
+                  }
                   <div className="d-flex gap-2">
                     {
                       hoveredMovie?.genres.map((genre, i) =>(
-                        <span className="bg-dark px-1 rounded text-nowrap">{genre}</span>
+                        <span key={genre + i} className="bg-dark px-1 rounded text-nowrap">{genre}</span>
                       ))
                     }
                   </div>
@@ -145,8 +147,7 @@ return (
             {/* Optional fade overlay */}
             <div className="position-absolute fade-right top-0 bottom-0 left-0"></div>
           </div>
-        </>
-       } 
+        
       </div>
     </header>
   );
