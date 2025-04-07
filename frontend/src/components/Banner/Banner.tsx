@@ -8,8 +8,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { baseUrl } from "../Row/Row";
 import { HoveredMovie } from "../../sections/LandingPage";
-import { playMovie } from "../Row/playMovie";
-import SideBar from "../Navbar/SideBar";
 
 interface BannerProps {
   hoveredMovie: HoveredMovie;

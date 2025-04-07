@@ -1,56 +1,38 @@
 import { useEffect, useState } from "react";
 import './section.css'
 import PosterCard from "../components/Row/PosterCard";
-import { getMoviesList, getSeriesList } from "../components/apiCalls/getData";
-import { useDispatch } from "react-redux";
+import { getLandingPageData } from "../components/apiCalls/getData";
 import { Link, useNavigate } from "react-router-dom";
-import { MovieListProps } from "../components/apiCalls/types";
-import { SeriesListDetails } from "../redux/seriesList";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { MoviesDetailsRes } from "../components/apiCalls/types";
 import { RingLoader } from "react-spinners";
 
 const SearchMovie =() =>{
-    const [movies, setMovies] = useState<MovieListProps[] | SeriesListDetails[]>([]);
-    const [filteredMovies, setFilteredMovies] = useState<MovieListProps[]>([]);
+    const [movies, setMovies] = useState<MoviesDetailsRes[]>([]);
+    const [filteredMovies, setFilteredMovies] = useState<MoviesDetailsRes[]>([]);
     const [clickCount, setClickCount] = useState({count: 1, id: 0})
-    const seriesList = useSelector((state: RootState) => state.seriesListDetails);
-    const moviesList = useSelector((state: RootState) => state.movieListDetails);
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
     useEffect(() => {
-        if(!(seriesList.length && moviesList.length)){
-            const stringToken = localStorage.getItem('viewerToken');
-            setLoading(true);
-            getMoviesList("videos/get-movies", "", navigate, stringToken).then((res) =>{
-              if(res.success){
-                setMovies(res.details);
-                setFilteredMovies(res.details);
+        const stringToken = localStorage.getItem('viewerToken');
+        setLoading(true);
+         getLandingPageData("", navigate, stringToken).then((data) =>{
+            if(data.success){
+                const allMovies = [...data.details.series, ...data.details.movies]
+                setFilteredMovies(allMovies);
+                setMovies(allMovies)
                 setLoading(false);
-              }
-            });
-            getSeriesList("videos/get-series", "", navigate, stringToken).then((res) =>{
-              if(res.success){
-                setMovies(res.details);
-                setLoading(false)
-              }
-            });
-        }else{
-            setLoading(true);
-            setMovies(seriesList.concat(moviesList));
-            setFilteredMovies(seriesList.concat(moviesList));
-            setLoading(false);
-        }
+            }
+        })
       }, []);
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const value = e.target.value;
         setFilteredMovies(movies.filter(
-            (movie) => movie.title.toLocaleLowerCase().includes(value.toLocaleLowerCase())) as MovieListProps[])
+            (movie) => movie.title.toLocaleLowerCase().includes(value.toLocaleLowerCase())) as MoviesDetailsRes[])
     }
 
-    const handleClick = (movie) =>{
+    const handleClick = (movie: MoviesDetailsRes) =>{
         movie.is_series?
         navigate(`/watch/series/${movie.title}/${movie.video_id}`):
         navigate(`/watch/movie/${movie.title}/${movie.video_id}`);

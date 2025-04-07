@@ -51,33 +51,34 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
     return(
         <div style={{}} className={`  d-flex justify-content-end `} >
             <div className={`${toggle.isOpen? "col-9 col-sm-5 col-md-4 col-lg-3 ": "col-1 d-none d-sm-block" } side-bar col-1 text-center h-100 
-              pt-3 px-md-3  position-fixed top-0 left-0 vh-100`} style={{zIndex: 30}}>
-              <div className={`${toggle.isOpen? "text-start ": "text-center "} `}>
-                <Link to="#" className="text-warning text-start rounded px-1 d-none d-sm-block" 
-                  onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
-                {
-                  toggle.isOpen? 
-                  <RiMenuFold3Fill size={42} className="fs-1 "  />:
-                  <RiMenuUnfold3Fill size={42} className="fs-1 " />
-                }
-                </Link>
-              </div>
-              <div className={`${toggle.isOpen? "text-start ": "justify-content-center "} d-flex  
-              ps-2 ps-sm-0 my-5 my-sm-4 align-items-center `} style={{height: "80px"}}>
-                <img style={{height: "30px"}}
-                    className=""
-                    src={avatar}
-                    alt="netflix-avatar"
-                />
-                {
-                  toggle.isOpen &&
-                  <div className="">
-                    <h5 className="text-info ms-3 text-truncate">{getGreeting()}</h5>
-                    <h6 className="text-info ms-3 text-truncate">{viewer?.account2}</h6>
-                  </div>
-                }
-              </div>
-                      <ul className=" list-unstyled  pt-5 ps-2 ps-sm-0 ">
+               px-md-3 position-fixed top-0 left-0 vh-100`} style={{zIndex: 30}}>
+              <div className="d-flex flex-column justify-content-between" style={{height: "100%"}}>
+                <div className={`${toggle.isOpen? "text-start ": "text-center "} `}>
+                  <Link to="#" className="text-warning text-start rounded px-1 d-none d-sm-block" 
+                    onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
+                  {
+                    toggle.isOpen? 
+                    <RiMenuFold3Fill size={42} className="fs-1 "/>:
+                    <RiMenuUnfold3Fill size={42} className="fs-1 " />
+                  }
+                  </Link>
+                <div className={`${toggle.isOpen? "text-start ": "justify-content-center "} d-flex  
+                ps-2 ps-sm-0 my-5 my-sm-4 align-items-centerh `} style={{height: "80px"}}>
+                  <img style={{height: "30px"}}
+                      className=""
+                      src={avatar}
+                      alt="netflix-avatar"
+                  />
+                  {
+                    toggle.isOpen &&
+                    <div className="">
+                      <h5 className="text-info ms-3 text-truncate">{getGreeting()}</h5>
+                      <h6 className="text-info ms-3 text-truncate">{viewer?.account2}</h6>
+                    </div>
+                  }
+                </div>
+                </div>
+                      <ul className=" list-unstyled pt-5 ps-2 ps-sm-0 ">
                           {links.map((link, index) => (
                             <li key={index} className={`mb-4 ${toggle.isOpen? "text-start ": "text-center "} `}>
                               {
@@ -96,6 +97,8 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
                               }
                             </li>
                           ))}
+                      </ul>
+                      <ul className=" list-unstyled mb-5 ps-2 ps-sm-0 ">
                             <li key="100" className={`mb-5 ${toggle.isOpen? "text-start ": "text-center "} `}>
                               {
                                 <Link to="#"
@@ -111,6 +114,7 @@ const  SideBar: React.FC<ToggleProps> = ({toggle, setToggle}) =>{
                               }
                             </li>
                       </ul>
+              </div>
             </div>
           <Outlet />
         </div>

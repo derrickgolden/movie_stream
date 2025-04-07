@@ -23,7 +23,6 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
         const token = localStorage.getItem("viewerToken");
         getLandingPageData("", navigate, token).then((data) =>{
             if(data.success){
-                console.log(data.details)
                 setPageDetails(data.details);
             }
         })

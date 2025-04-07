@@ -26,15 +26,15 @@ const ColumnNavbar: React.FC<ToggleProps> = ({toggle, setToggle, columnShow, set
 
   return (
     <div className={`nav pb-5  col-12 col-sm-11 px-sm-2`}
-    style={{backgroundColor: "rgb(7, 7, 7)"}}>
+    style={{backgroundColor: "rgba(7, 7, 7, .3)"}}>
         <div className="d-flex wrap-none justify-content-between align-items-center w-100 text-center"
         style={{marginTop: "1px"}}>
           <Link to="#" className="text-warning text-center d-sm-none rounded px-1" 
             onClick={() =>setToggle((obj) =>({...obj, isOpen: !obj.isOpen}))}>
           {
             toggle.isOpen? 
-            <RiMenuFold3Fill size={42} className="fs-1 "  />:
-            <RiMenuUnfold3Fill size={42} className="fs- " />
+            <RiMenuFold3Fill size={42} className="fs-1 "/>:
+            <RiMenuUnfold3Fill size={42} className="fs- "/>
           }
           </Link>
           <div className="d-flex gap-sm-5 gap-2 justify-content-between col-9 col-sm-10 col-md-11 px-4">

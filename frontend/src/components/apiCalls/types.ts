@@ -88,6 +88,8 @@ export interface MoviesDetailsRes {
   progress: number | null;
   completed: boolean | number | null;
   trailer_url: string;
+  runtime: number;
+  genres: string[];
   watch_progress?: {
     episode_id: number | null;
     progress: number;

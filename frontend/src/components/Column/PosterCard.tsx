@@ -1,6 +1,6 @@
 import { baseUrl } from "./Column";
 
-const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow}) =>{
+const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow, handleImageLoad}) =>{
     const handleClick = () =>{
         if(clickCount.id === movie.video_id && clickCount.count > 0){
             movie.is_series?
@@ -12,9 +12,10 @@ const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow})
         <div className="div_poster">
             <img
                 key={movie.video_id}
-                loading="lazy"
                 onClick={handleClick}
                 onMouseEnter={() =>handleMovieHover(movie)}
+                onLoad={handleImageLoad}
+                onError={handleImageLoad}
                 className={`row__poster ${isLargeRow && "row__posterLarge"} `}
                 src={`${baseUrl}${
                     isLargeRow ? movie.poster_path : movie.backdrop_path

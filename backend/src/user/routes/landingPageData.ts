@@ -9,8 +9,8 @@ export interface LandingPageDataResponse {
         msg: string;
         details?: {movies: [], series: [], watching: [], newUploads: []};
         err?: string;
-}
-router.get('/get', async(req: ModifiedReq, res: Response) =>{
+    }
+    router.get('/get', async(req: ModifiedReq, res: Response) =>{
     const {id} = req.user
     try {
         const response:LandingPageDataResponse = await getLandingPageData(id);

@@ -1,4 +1,4 @@
-import { baseUrl } from "./Row";
+import { baseUrl } from "../Column/Column";
 
 const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow}) =>{
     const handleClick = () =>{

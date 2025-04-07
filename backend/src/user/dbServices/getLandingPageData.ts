@@ -1,6 +1,5 @@
 import { RowDataPacket } from "mysql2";
 import { LandingPageDataResponse } from "user/routes/landingPageData";
-import { universalResponse } from "user/types/universalResponse";
 const { pool } = require("../../mysqlSetup");
 
 export const getLandingPageData = async (user_id: number): Promise<LandingPageDataResponse> => {
@@ -17,10 +16,12 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                 m.is_series,
                 m.backdrop_path,
                 m.poster_path,
+                m.runtime,
                 COALESCE(mwp.progress, 0) AS progress, 
                 COALESCE(mwp.completed, FALSE) AS completed,
                 COALESCE(watch_counts.watch_count, 0) AS watch_count,
-                mf.trailer_url
+                mf.trailer_url,
+                COALESCE(genres.genre_list, JSON_ARRAY()) AS genres
             FROM movies m
             LEFT JOIN movie_watch_progress mwp 
                 ON m.movie_id = mwp.movie_id AND mwp.user_id = ?
@@ -30,9 +31,17 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                 GROUP BY movie_id
             ) AS watch_counts ON m.movie_id = watch_counts.movie_id
             LEFT JOIN movie_files mf ON m.movie_id = mf.movie_id
+            LEFT JOIN (
+                SELECT 
+                    c.movie_id,
+                    JSON_ARRAYAGG(g.name) AS genre_list
+                FROM categories c
+                JOIN genres g ON c.genre_id = g.id
+                GROUP BY c.movie_id
+            ) AS genres ON m.movie_id = genres.movie_id
             ORDER BY watch_counts.watch_count DESC, m.updated_at DESC;
         `;
-
+    
         const seriesQuery = `
             SELECT 
                 ts.movie_id AS video_id,
@@ -62,7 +71,17 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                 ) AS watch_progress,
                 COALESCE(season_counts.total_seasons, 0) AS total_seasons,
                 COALESCE(watch_counts.watch_count, 0) AS watch_count,
-                MAX(trailers.trailer_url) AS trailer_url
+                (
+                    SELECT MAX(trailer_url)
+                    FROM season_info
+                    WHERE movie_id = ts.movie_id
+                ) AS trailer_url,
+                (
+                    SELECT JSON_ARRAYAGG(g.name)
+                    FROM categories c
+                    JOIN genres g ON c.genre_id = g.id
+                    WHERE c.series_id = ts.movie_id
+                ) AS genres
             FROM tv_series ts
             LEFT JOIN (
                 SELECT 
@@ -80,8 +99,6 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                 JOIN season_info si ON e.season_id = si.season_id
                 GROUP BY si.movie_id
             ) AS watch_counts ON ts.movie_id = watch_counts.movie_id
-            LEFT JOIN season_info trailers ON ts.movie_id = trailers.movie_id
-            GROUP BY ts.movie_id
             ORDER BY watch_count DESC, ts.updated_at DESC;
         `;
 
@@ -95,12 +112,19 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                     m.is_series,
                     m.backdrop_path,
                     m.poster_path,
+                    m.runtime,
                     mwp.progress,
                     mwp.completed,
                     NULL AS watch_progress,
                     NULL AS total_seasons,
                     mwp.updated_at,
-                    mf.trailer_url
+                    mf.trailer_url,
+                    (
+                        SELECT JSON_ARRAYAGG(g.name)
+                        FROM categories c
+                        JOIN genres g ON c.genre_id = g.id
+                        WHERE c.movie_id = m.movie_id
+                    ) AS genres
                 FROM movies m
                 JOIN movie_watch_progress mwp ON m.movie_id = mwp.movie_id
                 LEFT JOIN movie_files mf ON m.movie_id = mf.movie_id AND mf.trailer_url IS NOT NULL
@@ -116,6 +140,7 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                     ts.is_series,
                     ts.backdrop_path,
                     ts.poster_path,
+                    NULL AS runtime,
                     NULL AS progress,
                     NULL AS completed,
                     JSON_OBJECT(
@@ -125,7 +150,13 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
                     ) AS watch_progress,
                     season_counts.total_seasons,
                     swp.updated_at,
-                    trailers.trailer_url
+                    trailers.trailer_url,
+                    (
+                        SELECT JSON_ARRAYAGG(g.name)
+                        FROM categories c
+                        JOIN genres g ON c.genre_id = g.id
+                        WHERE c.series_id = ts.movie_id
+                    ) AS genres
                 FROM tv_series ts
                 JOIN series_watch_progress swp ON ts.movie_id IN (
                     SELECT si.movie_id FROM season_info si
@@ -154,54 +185,68 @@ export const getLandingPageData = async (user_id: number): Promise<LandingPageDa
         `;
 
         const latestUploadsQuery = `
-    SELECT * FROM (
-        SELECT 
-            m.movie_id AS video_id,
-            m.title,
-            m.description,
-            m.release_date,
-            m.is_series,
-            m.backdrop_path,
-            m.poster_path,
-            NULL AS total_seasons,
-            mf.trailer_url,
-            m.updated_at
-        FROM movies m
-        LEFT JOIN movie_files mf ON m.movie_id = mf.movie_id AND mf.trailer_url IS NOT NULL
+            SELECT * FROM (
+                SELECT 
+                    m.movie_id AS video_id,
+                    m.title,
+                    m.description,
+                    m.release_date,
+                    m.is_series,
+                    m.backdrop_path,
+                    m.poster_path,
+                    m.runtime,
+                    NULL AS total_seasons,
+                    mf.trailer_url,
+                    m.updated_at,
+                    (
+                        SELECT JSON_ARRAYAGG(g.name)
+                        FROM categories c
+                        JOIN genres g ON c.genre_id = g.id
+                        WHERE c.movie_id = m.movie_id
+                    ) AS genres
+                FROM movies m
+                LEFT JOIN movie_files mf ON m.movie_id = mf.movie_id AND mf.trailer_url IS NOT NULL
 
-        UNION ALL
+                UNION ALL
 
-        SELECT 
-            ts.movie_id AS video_id,
-            ts.title,
-            ts.description,
-            ts.release_date,
-            ts.is_series,
-            ts.backdrop_path,
-            ts.poster_path,
-            season_counts.total_seasons,
-            trailers.trailer_url,
-            ts.updated_at
-        FROM tv_series ts
-        JOIN (
-            SELECT 
-                movie_id, 
-                COUNT(*) AS total_seasons
-            FROM season_info
-            GROUP BY movie_id
-        ) AS season_counts ON ts.movie_id = season_counts.movie_id
-        LEFT JOIN (
-            SELECT 
-                movie_id,
-                MIN(trailer_url) AS trailer_url
-            FROM season_info
-            WHERE trailer_url IS NOT NULL
-            GROUP BY movie_id
-        ) AS trailers ON ts.movie_id = trailers.movie_id
-    ) AS combined_uploads
-    ORDER BY updated_at DESC
-    LIMIT 20;
-`;
+                SELECT 
+                    ts.movie_id AS video_id,
+                    ts.title,
+                    ts.description,
+                    ts.release_date,
+                    ts.is_series,
+                    ts.backdrop_path,
+                    ts.poster_path,
+                    NULL AS runtime,
+                    season_counts.total_seasons,
+                    trailers.trailer_url,
+                    ts.updated_at,
+                    (
+                        SELECT JSON_ARRAYAGG(g.name)
+                        FROM categories c
+                        JOIN genres g ON c.genre_id = g.id
+                        WHERE c.series_id = ts.movie_id
+                    ) AS genres
+                FROM tv_series ts
+                JOIN (
+                    SELECT 
+                        movie_id, 
+                        COUNT(*) AS total_seasons
+                    FROM season_info
+                    GROUP BY movie_id
+                ) AS season_counts ON ts.movie_id = season_counts.movie_id
+                LEFT JOIN (
+                    SELECT 
+                        movie_id,
+                        MIN(trailer_url) AS trailer_url
+                    FROM season_info
+                    WHERE trailer_url IS NOT NULL
+                    GROUP BY movie_id
+                ) AS trailers ON ts.movie_id = trailers.movie_id
+            ) AS combined_uploads
+            ORDER BY updated_at DESC
+            LIMIT 30;
+        `;
 
         // Execute all queries in parallel
         const [movies] = await connection.query(moviesQuery, [user_id]);
