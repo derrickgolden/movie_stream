@@ -13,6 +13,21 @@ export const addRequestMovie = async (body: RequestMovie, user: TokenUser ): Pro
 
         await connection.beginTransaction();
 
+            // Check if movie already exists
+            const [existing] = await connection.query(`
+                SELECT movie_name FROM movie_requests 
+                WHERE user_id = ? AND movie_name = ? AND movie_type = ? LIMIT 1
+            `, [id, movieName, movieType]);
+
+            if (Array.isArray(existing) && existing.length > 0) {
+                connection.release();
+                return {
+                    success: false,
+                    msg: `The movie "${movieName}" has already been requested. 
+                    Will be uploaded soon.`,
+                };
+            }
+
             // Insert movies
             var [res] = await connection.query(`
                 INSERT INTO movie_requests

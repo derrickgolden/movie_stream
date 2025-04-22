@@ -53,9 +53,11 @@ const EpisodeManage = () =>{
         setEpisodeDetails((obj) => ({...obj, [name]: value}))
     }
 
+    console.log(epidodeDetails);
     const handleSubmitEpisode = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
         const episodeData = JSON.stringify({epidodeDetails, season});
+        return;
         addEpisodeDetails(episodeData).then((data) =>{
             if(data.success){
                 Swal.fire(data.msg)

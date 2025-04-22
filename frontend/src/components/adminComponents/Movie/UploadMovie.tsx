@@ -57,8 +57,9 @@ const UploadMovie = () =>{
     }
 
     const handleEditMovie = (movie: MovieFile) =>{
-        const {label, order, title, url, credits_start, video_id, trailer_url, subtitles_url} = movie;
-        setMovieDetails({ label, order, url, isEdit: true, credits_start, movie_id:video_id, video_id, title, trailer_url, subtitles_url  });
+        const {label, order, title, url, credits_start, video_id, movie_id, trailer_url, subtitles_url} = movie;
+        console.log(video_id)
+        setMovieDetails({ label, order, url, isEdit: true, credits_start, movie_id:video_id || movie_id, video_id, title, trailer_url, subtitles_url  });
     }
 
     const deleteVideo = (movie: MovieFile) =>{

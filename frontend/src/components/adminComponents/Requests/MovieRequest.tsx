@@ -13,14 +13,20 @@ import { updateRequestedMovieStatus } from "../apiCalls/patchData"
 
 const MovieRequests = () =>{
     const title = "Movie Request";
+    const dispatch = useDispatch();
     const [apistate, setApiState] = useState<MovieRequestRes[]>([]);
     const [rerendarApi, setRerendarApi] = useState(false);
     const [apicol, setApiCol] = useState<MovieRequestRes>();
+    const [filterState, setFilterState] = useState('pending')
     const callApi = useSelector((state: RootState) =>state.callApi);
     const [requestedMovies, setRequestedMovies] = useState<MovieRequestRes[]>([]);
 
     const filter_apistate = apistate.filter((val) => {
-        return val.status !== "trash";
+        if(filterState !== "all"){
+            return val.status === filterState;
+        }else{
+            return val;
+        }
     })
 
     const columns = [
@@ -101,6 +107,7 @@ const MovieRequests = () =>{
                         text: response.msg,
                         icon: "success"
                     });
+                    dispatch(setCallApi(true));
                 }
             } catch (error) {
                 console.error("Error updating movie status:", error);
@@ -126,7 +133,17 @@ const MovieRequests = () =>{
                                 <div className="card" style={{ borderTop: "2px solid #4723d9" }}>
                                     <div className="card-header d-flex justify-content-between border-bottom pb-1">
                                         <h4>{title}</h4>
-                                        {/* <div className="btn btn-info btn-sm " onClick={setStoreBtn}>Add store data</div> */}
+                                        <div className="d-flex gap-2">
+                                            {
+                                                ["inProgress", 'pending', 'cancelled', 'all'].map((status, i) =>(
+                                                    <div key={i} 
+                                                    className={`btn btn-sm ${status === filterState? "btn-info ": "btn-primary "}`} 
+                                                    onClick={()=>setFilterState(status)}>
+                                                        {status}
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
                                     </div>
                                     <div className="card-body">
                                         {/* <div className="card-title text-center bg-warning py-2 rounded">All Data stored from the APK</div> */}

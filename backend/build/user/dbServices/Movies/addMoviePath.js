@@ -9,6 +9,7 @@ const addMoviePath = async (movieFile) => {
         await connection.beginTransaction();
         if (isEdit) {
             // update
+            console.log(movie_id);
             var [res] = await connection.query(`
                 UPDATE movie_files
                 SET label = ?, \`order\` = ?, url = ?, trailer_url = ?, subtitles_url = ?, credits_start = ?
