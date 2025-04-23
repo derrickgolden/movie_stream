@@ -74,11 +74,14 @@ const MovieRequests = () =>{
         
         let message = "";
         if (status === "uploaded") {
-            message = `Hi ${name}, your movie ${row.movie_name.toUpperCase()} is now available to enjoy at japtech.africa. Click the link below to access the movie directly. Thank you for choosing JAPTECH! \n`;
+            message = `Hi ${name}, your movie ${row.movie_name.toUpperCase()} is now available to enjoy at japtech.africa. 
+            Click the link below to access the movie directly. Thank you for choosing JAPTECH! \n`;
         } else if (status === "inProgress") {
-            message = `Hi ${name}, your movie ${row.movie_name.toUpperCase()} has been partly uploaded. You can start enjoying at japtech.africa or you can click the link below to access the movie directly \n `;
+            message = `Hi ${name}, your movie ${row.movie_name.toUpperCase()} has been partly uploaded. 
+            You can start enjoying at japtech.africa or you can click the link below to access the movie directly \n `;
         } else if (status === "cancelled") {
-            message = `Hi ${name}, we regret to inform you that your movie ${row.movie_name.toUpperCase()} has been canceled. The main reason for canceling is that we were unable to find the movie. Thank you for choosing JAPTECH! \n`;
+            message = `Hi ${name}, we regret to inform you that your movie ${row.movie_name.toUpperCase()} has been canceled. 
+            The main reason for canceling is that we were unable to find the movie. Thank you for choosing JAPTECH! \n`;
         }
     
         // Show confirmation dialog

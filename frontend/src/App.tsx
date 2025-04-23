@@ -23,7 +23,6 @@ import SearchMovie from './sections/SearchMovie';
 import SideBar from './components/Navbar/SideBar';
 import ClientWatchedMovies from './components/adminComponents/Users/ClientWatchedMovies';
 import Categories from './components/categories/Categories';
-import JaptechLogo from './components/auth/JapTechLogo';
 import Feedback from './sections/FeedBack';
 import ColumnLandingPage from './sections/ColumnLandingPage';
 
