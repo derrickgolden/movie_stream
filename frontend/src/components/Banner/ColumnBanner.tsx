@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../Row/Row";
 import { MoviesDetailsRes } from "../apiCalls/types";
+import Swal from "sweetalert2";
 
 interface BannerProps {
   hoveredMovie: MoviesDetailsRes | undefined;
@@ -51,8 +52,15 @@ const ColumnBanner:React.FC<BannerProps> = ({hoveredMovie, isVideoReady, setIsVi
 
   const handlePlayClick = () =>{
     if(hoveredMovie){
-      hoveredMovie.is_series?
-      navigate(`/watch/series/${hoveredMovie.title}/${hoveredMovie.video_id}`):
+      if(hoveredMovie.is_series){
+        if(hoveredMovie?.is_series){
+          Swal.fire({
+            text: "We're currently experiencing issues with playing TV Series, but you can continue enjoying Movies as we work to resolve it. We Apologize."
+          });
+        }
+      }
+      // navigate(`/watch/series/${hoveredMovie.title}/${hoveredMovie.video_id}`):
+    }else{
       navigate(`/watch/movie/${hoveredMovie.title}/${hoveredMovie.video_id}`);
     }
 };
