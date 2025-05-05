@@ -22,7 +22,7 @@ const getMoviesSeriesCategoriesList = async (user_id) => {
                         )
                         FROM categories c
                         LEFT JOIN movies m ON c.movie_id = m.movie_id
-                        LEFT JOIN tv_series s ON c.series_id = s.movie_id
+                        LEFT JOIN tv_series s ON c.series_id = s.movie_id AND s.is_active = TRUE
                         WHERE c.genre_id = g.id
                     ),
                     JSON_ARRAY()

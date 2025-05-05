@@ -30,6 +30,7 @@ const Categories: React.FC<ToggleProps>= ({toggle, setToggle, setIsLandingReady}
             if(data.success){
                 setCategories(data.details);
                 setCategory(data.details[0]);
+                console.log(data.details);
             }
         });
 
@@ -72,16 +73,20 @@ const Categories: React.FC<ToggleProps>= ({toggle, setToggle, setIsLandingReady}
                     </div>
                     <div className="d-flex flex-wrap py-2 justify-content-center">
                         {
-                            category?.movies_series?.map((MS, i) =>(
-                                <PosterCard 
-                                    key={i}
-                                    movie ={MS}
-                                    clickCount ={{id: MS.video_id, count: 1}}
-                                    navigate ={navigate}
-                                    handleMovieHover ={() =>{}}
-                                    isLargeRow ={true}
-                                />
-                            ))
+                            category?.movies_series?.map((MS, i) =>{
+                                if(MS.title){
+                                    return(
+                                        <PosterCard 
+                                            key={i}
+                                            movie ={MS}
+                                            clickCount ={{id: MS.video_id, count: 1}}
+                                            navigate ={navigate}
+                                            handleMovieHover ={() =>{}}
+                                            isLargeRow ={true}
+                                        />
+                                    )
+                                }
+                            })
                         }
                     </div>
                     </>

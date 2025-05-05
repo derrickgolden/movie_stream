@@ -96,6 +96,7 @@ const getLandingPageData = async (user_id) => {
                 JOIN season_info si ON e.season_id = si.season_id
                 GROUP BY si.movie_id
             ) AS watch_counts ON ts.movie_id = watch_counts.movie_id
+            WHERE ts.is_active = TRUE
             ORDER BY watch_count DESC, ts.updated_at DESC;
         `;
         const watchingQuery = `
@@ -175,7 +176,7 @@ const getLandingPageData = async (user_id) => {
                     WHERE trailer_url IS NOT NULL
                     GROUP BY movie_id
                 ) AS trailers ON ts.movie_id = trailers.movie_id
-                WHERE swp.completed = FALSE
+                WHERE swp.completed = FALSE AND ts.is_active = TRUE
             ) AS watching_combined
             ORDER BY updated_at DESC;
         `;
@@ -238,6 +239,7 @@ const getLandingPageData = async (user_id) => {
                     WHERE trailer_url IS NOT NULL
                     GROUP BY movie_id
                 ) AS trailers ON ts.movie_id = trailers.movie_id
+                 WHERE ts.is_active = TRUE
             ) AS combined_uploads
             ORDER BY updated_at DESC
             LIMIT 30;
