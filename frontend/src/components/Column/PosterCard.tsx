@@ -5,13 +5,10 @@ const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow, 
     const handleClick = () =>{
         if(clickCount.id === movie.video_id && clickCount.count > 0){
             if(movie.is_series){
-                Swal.fire({
-                  text: "We're currently experiencing issues with playing TV Series, but you can continue enjoying Movies as we work to resolve it. We Apologize."
-                });
+                navigate(`/watch/series/${movie.title}/${movie.video_id}`);
             }else{
                 navigate(`/watch/movie/${movie.title}/${movie.video_id}`);
             }
-            // navigate(`/watch/series/${movie.title}/${movie.video_id}`):
         };
     };
     return(
