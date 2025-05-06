@@ -53,15 +53,10 @@ const ColumnBanner:React.FC<BannerProps> = ({hoveredMovie, isVideoReady, setIsVi
   const handlePlayClick = () =>{
     if(hoveredMovie){
       if(hoveredMovie.is_series){
-        if(hoveredMovie?.is_series){
-          Swal.fire({
-            text: "We're currently experiencing issues with playing TV Series, but you can continue enjoying Movies as we work to resolve it. We Apologize."
-          });
-        }
+        navigate(`/watch/series/${hoveredMovie.title}/${hoveredMovie.video_id}`);
+      }else{
+        navigate(`/watch/movie/${hoveredMovie.title}/${hoveredMovie.video_id}`);
       }
-      // navigate(`/watch/series/${hoveredMovie.title}/${hoveredMovie.video_id}`):
-    }else{
-      navigate(`/watch/movie/${hoveredMovie.title}/${hoveredMovie.video_id}`);
     }
 };
 
@@ -103,7 +98,7 @@ return (
                   }
                   <div className="d-flex gap-2">
                     {
-                      hoveredMovie?.genres.map((genre, i) =>(
+                      hoveredMovie?.genres?.map((genre, i) =>(
                         <span key={genre + i} className="bg-dark px-1 rounded text-nowrap">{genre}</span>
                       ))
                     }
