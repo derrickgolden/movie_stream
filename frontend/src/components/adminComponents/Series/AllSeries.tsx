@@ -15,7 +15,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { FiDelete } from "react-icons/fi";
 import { baseUrl } from '../../Row/Row'
 import { useNavigate } from 'react-router-dom'
-import { deleteSeriesApi } from '../../apiCalls/updateData'
+import { deleteSeriesApi, updateActiveSeries } from '../../apiCalls/updateData'
 import { useDispatch } from 'react-redux'
 import { setCallApi } from '../../../redux/callApi';
 import { updateGenre } from '../apiCalls/patchData';
@@ -44,8 +44,17 @@ const AllSeries = () =>{
         }</> },
         { name: "Title", selector: (row: SeriesListDetails) => row.title, sortable: true },
         { name: "Seasons", selector: (row: SeriesListDetails) => row.seasons.length, sortable: true },
-        {
-        name: "action", cell: (row: SeriesListDetails) => <>{
+        { name: "Active",
+            cell: (row: SeriesListDetails) => (
+                <input
+                type="checkbox"
+                checked={row.is_active}
+                onChange={() => handleToggleActive(row)}
+                />
+            ),
+            sortable: true,
+        },
+        { name: "action", cell: (row: SeriesListDetails) => <>{
             <span>
                 <FaRegEdit role='button' onClick={() => manageSeasonsEpisodes(row)}
                     className=" text-warning mx-1"  size={24} />
@@ -75,7 +84,7 @@ const AllSeries = () =>{
         navigate("/admin/seasons-manage", {state});
     };
 
-     const handleDeleteSeries = (series: SeriesListDetails) =>{
+    const handleDeleteSeries = (series: SeriesListDetails) =>{
             Swal.fire({
                 title: `Are you sure you want to delete ${series.title}?`,
                 text: "All seasons and episodes related to the series will be deleted!",
@@ -93,7 +102,27 @@ const AllSeries = () =>{
                     });
                 };
             });
+    };
+
+    const handleToggleActive = async (series: SeriesListDetails) => {
+        const newStatus = !series.is_active;
+
+        try {
+            updateActiveSeries(series.video_id, newStatus).then((data) =>{
+                if(data.success){
+                    Swal.fire("Status updated successfully");
+                    dispatch(setCallApi(!callApi));
+                }else{
+                    Swal.fire(data.msg);
+                };
+            });
+            // Optionally refetch data or update state to reflect the change
+        } catch (error) {
+            console.error("Failed to update status", error);
+            // Optionally show an error message
         }
+    };
+
 
     return(
         <div className='bg-light w-100 px-2 py-4'>

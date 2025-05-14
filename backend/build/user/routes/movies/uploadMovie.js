@@ -8,12 +8,26 @@ const addMovieDetails_1 = require("../../dbServices/Movies/addMovieDetails");
 const addMoviePath_1 = require("../../dbServices/Movies/addMoviePath");
 const addSeasonInfo_1 = require("../../dbServices/series/addSeasonInfo");
 const addEpisodeData_1 = require("../../dbServices/series/addEpisodeData");
+const editActiveSeries_1 = require("../../dbServices/series/editActiveSeries");
 // import { convertToStereo } from '../../middlewares/convertAudio';
 const router = express_1.default.Router();
 router.post('/add/movie-details', async (req, res) => {
     const movieDetails = req.body;
     try {
         const response = await (0, addMovieDetails_1.addMovieDetails)(movieDetails);
+        response.success ?
+            res.status(200).json(response) :
+            res.status(302).json(response);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(302).json({ success: false, msg: "sever side error", err: error.message });
+    }
+});
+router.patch('/update-active-series', async (req, res) => {
+    const activeDetails = req.body;
+    try {
+        const response = await (0, editActiveSeries_1.updateActiveSeries)(activeDetails);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

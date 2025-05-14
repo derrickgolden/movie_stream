@@ -12,6 +12,7 @@ const getSeriesDetails = async (user_id) => {
                 ts.description,
                 ts.release_date,
                 ts.is_series,
+                ts.is_active,
                 ts.backdrop_path,
                 ts.poster_path,
                 COALESCE(

@@ -21,7 +21,10 @@ export const deleteSeasonApi = async (season_id: number): Promise<UploadMovieRes
 export const deleteSeriesApi = async (series_id: number): Promise<UploadMovieRes> => {
     return await makeApiCall(`videos/delete-series/${series_id}`, 'get', "");
 };
-
+export const updateActiveSeries = async (series_id: number, newStatus: boolean): Promise<UploadMovieRes> => {
+    const data = JSON.stringify({id: series_id, is_active: newStatus});
+    return await makeApiCall(`videos/update-active-series`, 'patch', data);
+};
 
 const makeApiCall = async(url: string, method: string, data: string) =>{
     const tokenString = sessionStorage.getItem("adminToken");

@@ -4,6 +4,7 @@ import { addMovieDetails, updateGenres } from '../../dbServices/Movies/addMovieD
 import { addMoviePath } from '../../dbServices/Movies/addMoviePath';
 import { addSeasonInfo } from '../../dbServices/series/addSeasonInfo';
 import { addEpisodeData } from '../../dbServices/series/addEpisodeData';
+import { updateActiveSeries } from '../../dbServices/series/editActiveSeries';
 // import { convertToStereo } from '../../middlewares/convertAudio';
 
 const router = express.Router();
@@ -21,6 +22,21 @@ router.post('/add/movie-details', async(req: ModifiedReq, res: Response) =>{
         res.status(302).json({success: false, msg: "sever side error", err: error.message})
     }
 });
+
+router.patch('/update-active-series', async(req: ModifiedReq, res: Response) =>{
+    const activeDetails = req.body;
+    try {
+        const response:universalResponse = await updateActiveSeries(activeDetails);
+        response.success ? 
+            res.status(200).json(response):
+            res.status(302).json(response)
+        
+    } catch (error) {
+        console.log(error)
+        res.status(302).json({success: false, msg: "sever side error", err: error.message})
+    }
+});
+
 router.patch('/update-genres', async(req: ModifiedReq, res: Response) =>{
     const movieDetails = req.body;
     try {

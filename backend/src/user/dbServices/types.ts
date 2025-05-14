@@ -1,5 +1,6 @@
 
 export interface MovieDetails {
+    is_active: boolean;
     title: string;
     slug: string;
     adult: boolean;

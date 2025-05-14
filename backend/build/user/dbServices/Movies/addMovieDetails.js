@@ -50,7 +50,6 @@ const updateGenres = async (movieDetails) => {
         await connection.beginTransaction();
         if (genres && genres.length > 0) {
             const values = genres.map(({ id: genre_id }) => `(${genre_id}, ${is_series ? id : "NULL"}, ${is_series ? "NULL" : id})`).join(", ");
-            console.log(values);
             const [res] = await connection.query(`
                     INSERT INTO categories (genre_id, series_id, movie_id)
                     VALUES ${values};

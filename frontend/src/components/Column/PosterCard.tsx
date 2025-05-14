@@ -1,5 +1,4 @@
 import { baseUrl } from "./Column";
-import Swal from "sweetalert2";
 
 const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow, handleImageLoad}) =>{
     const handleClick = () =>{
@@ -11,6 +10,7 @@ const PosterCard = ({movie, clickCount, navigate, handleMovieHover, isLargeRow, 
             }
         };
     };
+    
     return(
         <div className="div_poster">
             <img

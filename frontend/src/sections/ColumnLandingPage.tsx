@@ -16,7 +16,7 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
     const navigate = useNavigate();
     const [hoveredMovie, setHoveredMovie] = useState<MoviesDetailsRes>();
     const [isVideoReady, setIsVideoReady] = useState(false);
-    const [columnShow, setColumnShow] = useState<"movies" | "series" | "watching" | "newuploads">("movies");
+    const [columnShow, setColumnShow] = useState<"movies" | "series" | "watching" | "newuploads">("series");
     const [pageDetails, setPageDetails] = useState<LandingPageMovieDetails>();
 
     useEffect(() => {
