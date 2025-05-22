@@ -30,11 +30,27 @@ const MovieRequests = () =>{
     })
 
     const columns = [
-        { name: "Movie Name", selector: (row: MovieRequestRes) => row.movie_name, sortable: true },
+        {
+            name: "Movie Name",
+            selector: (row: MovieRequestRes) => row.movie_name, // used for sorting
+            cell: (row: MovieRequestRes) => (
+              <span className="text-wrap text-break">{row.movie_name}</span>
+            ),
+            sortable: true
+        },          
         { name: "Type", selector: (row: MovieRequestRes) => row.movie_type, sortable: true },
-        { name: "Description", selector: (row: MovieRequestRes) => row.description },
+        { name: "Description", selector: (row: MovieRequestRes) =><>{
+            <span className={` text-wrap text-break`}>{row.description}</span>
+        }</> },
         { name: "Request Date", selector: (row: MovieRequestRes) => new Date(row.request_date).toLocaleDateString(), sortable: true },
-        { name: "Client Name", selector: (row: MovieRequestRes) => row.name, sortable: true },
+        {
+            name: "Client Name",
+            selector: (row: MovieRequestRes) => row.name, // used for sorting
+            cell: (row: MovieRequestRes) => (
+              <span className="text-wrap text-break">{row.name}</span>
+            ),
+            sortable: true
+        },
         { name: "Phone", selector: (row: MovieRequestRes) => row.phone, sortable: true },
         { name: "Apartment", selector: (row: MovieRequestRes) => row.apartment, sortable: true },
         { name: "Status", cell: (row: MovieRequestRes) => <>{

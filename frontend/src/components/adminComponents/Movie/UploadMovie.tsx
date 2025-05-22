@@ -1,5 +1,5 @@
 import axios from "axios"; 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TbCircleLetterM } from "react-icons/tb";
 import { TbCircleLetterT } from "react-icons/tb";
 import { UploadMovieInput } from "./movieDetailsInputs";
@@ -13,10 +13,12 @@ import Swal from "sweetalert2";
 import { deleteMovieApi } from "../../apiCalls/updateData";
 import ConvertSrtToVtt from "../ConvertSrtVtt";
 import { timeToSeconds } from "../quickFuctions";
+import Preview from "../Preview";
 
 const API_KEY = "086cfe05dd16828e37291d2f37293a38";
 
 const UploadMovie = () =>{
+    const addEpisodeRef = useRef<HTMLHeadingElement | null>(null);
     const [movieDetails, setMovieDetails] = useState({title: "", label: "", order: 1, 
         url: "https://japtech.africa/video/", trailer_url: "https://japtech.africa/video/", credits_start: 0,
         subtitles_url: "", isEdit: false, video_id: 0   
@@ -56,10 +58,14 @@ const UploadMovie = () =>{
         })
     }
 
-    const handleEditMovie = (movie: MovieFile) =>{
+    const handleEditMovie = (movie: MovieFile, scroll: boolean) =>{
         const {label, order, title, url, credits_start, video_id, movie_id, trailer_url, subtitles_url} = movie;
-        console.log(video_id)
-        setMovieDetails({ label, order, url, isEdit: true, credits_start, movie_id:video_id || movie_id, video_id, title, trailer_url, subtitles_url  });
+        setMovieDetails({ label, order, url, isEdit: true, credits_start, movie_id:video_id || movie_id,
+            video_id, title, trailer_url, subtitles_url, is_series: false  
+        });
+        if(scroll){
+            setTimeout(() =>window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 1000);
+        }
     }
 
     const deleteVideo = (movie: MovieFile) =>{
@@ -107,7 +113,7 @@ const UploadMovie = () =>{
                         <label  className="form-check-label fw-4 text-warning" htmlFor="isEdit">Edit Video</label>
                     </div>
                 </div>
-                <div className="col-12 px-4">
+                <div className="col-12 px-4" ref={addEpisodeRef}>
                     <p className="bg-success text-white text-uppercase p-2">Upload Movie</p>
 
                     <div className={`form-floating mb-3 col-12 `}>
@@ -173,15 +179,14 @@ const UploadMovie = () =>{
                                     <td className=" text-wrap text-break">{movie.subtitles_url}</td>
                                     <td className="d-flex flex-column gap-1" >
                                         <span className="d-flex">
-                                            <Link to={`/preview?movieUrl=${encodeURIComponent(movie.url || "")}&subtitlesUrl=${movie.subtitles_url}`} target="_blank">
-                                                <TbCircleLetterM size={32} className="text-success me-2 border border-success p-1"/>
-                                            </Link>
+                                            <TbCircleLetterM onClick={() =>handleEditMovie(movie, true)}
+                                                size={32} className="text-success me-2 border border-success p-1"/>
                                             <Link to={`/preview?movieUrl=${encodeURIComponent(movie.trailer_url || "")}`} target="_blank">
                                                 <TbCircleLetterT size={32} className="text-info me-2 border border-info p-1"/>
                                             </Link>
                                         </span>
                                         <span className="d-flex">
-                                            <FaEdit size={32} onClick={() =>handleEditMovie(movie)} role="button"
+                                            <FaEdit size={32} onClick={() =>handleEditMovie(movie, false)} role="button"
                                                 className="text-warning me-2 border border-warning p-1"/>
                                             <FaDeleteLeft onClick={() =>deleteVideo(movie)} role="button" 
                                                 size={32} className="text-danger border border-danger p-1"/>
@@ -196,7 +201,15 @@ const UploadMovie = () =>{
                 </div>
                 {/* <ConvertSrtToVtt /> */}
             </div>
-    
+            
+            {movieDetails.title &&
+                <Preview 
+                    is_series = {false}
+                    video = {movieDetails}
+                    setVideoDetails = {setMovieDetails}
+                    addEpisodeRef={addEpisodeRef}
+                />
+            }
         </div>
 
     )

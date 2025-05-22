@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SeasonInfo from "./SeasonInfo";
 import { Season, TvSeries } from "../../apiCalls/types";
 import { FaEdit } from "react-icons/fa";
@@ -11,6 +11,7 @@ import { RootState } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import { setCallApi } from "../../../redux/callApi";
 import { getSerieSeasonsEpisodes } from "../apiCalls/getData";
+import { TbCircleLetterT } from "react-icons/tb";
 
 const SeasonsManage = () =>{
     const [seriesDetails, setSeriesDetails] = useState({title: "", order: 0, url: "", label:"", movie_id: 0});
@@ -103,6 +104,9 @@ const SeasonsManage = () =>{
                                     <td className="d-flex flex-wrap gap-2">
                                         <button onClick={() => handleManageSession(season)}
                                             className="btn btn-info btn-sm me-2 ">Manage Episodes</button>
+                                        <Link to={`/preview?movieUrl=${encodeURIComponent(season.trailer_url || "")}`} target="_blank">
+                                            <TbCircleLetterT size={32} className="text-info me-2 border border-info p-1"/>
+                                        </Link>
                                         <FaEdit size={32} className="text-warning p-1 border border-warning  me-2"
                                             onClick={() =>handleEditSession(season)}/>
                                         <FaDeleteLeft size={32} className="text-danger p-1 border border-danger" 

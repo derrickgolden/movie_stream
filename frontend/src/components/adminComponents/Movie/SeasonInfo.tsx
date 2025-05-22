@@ -61,7 +61,6 @@ const SeasonInfo: React.FC<SeasonInfo> = ({seriesDetails, editSeason, setEditSes
                             <h1 className="modal-title fs-5" id="seasonInfoModalLabel">
                                 {seriesDetails?.title}
                             </h1>
-                            {/* <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
                         </div>
                         <div className="modal-body">
                             <div className="mb-3 ">

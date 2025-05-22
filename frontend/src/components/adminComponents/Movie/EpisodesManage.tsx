@@ -19,8 +19,8 @@ import Preview from "../Preview";
 
 const EpisodeManage = () =>{
     const [epidodeDetails, setEpisodeDetails] = useState(
-        {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "", 
-            episode_order: "", subtitles_url: "", credits_start: 30000, runtime: ""}
+        {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "",
+        episode_order: "", subtitles_url: "", credits_start: 30000, runtime: ""}
     );
     const [previewEpisode, setPreviewEpisode] = useState<Episode>();
     const addEpisodeRef = useRef<HTMLHeadingElement | null>(null);
@@ -32,7 +32,7 @@ const EpisodeManage = () =>{
     const {season, seriesDetails} = location.state;
 
     useEffect(() =>{
-        setEpisodes(season.episodes)
+        setEpisodes(season.episodes);
         getSerieSeasonsEpisodes(seriesDetails.movie_id).then((data) =>{
             if(data.success){
                 const updatedSeason = data.details[0].seasons.filter((season1) => season1.season_id === season.season_id);
@@ -40,10 +40,10 @@ const EpisodeManage = () =>{
                     setEpisodes(updatedSeason[0].episodes);
                     const trailer_url = updatedSeason[0].trailer_url;
                     const baseurl = trailer_url.substring(0, trailer_url.lastIndexOf('/') + 1);
-                    setEpisodeDetails((obj) => ({...obj, subtitles_url: baseurl, url: baseurl}))
-                } 
-            }
-        })
+                    setEpisodeDetails((obj) => ({...obj, subtitles_url: baseurl, url: baseurl}));
+                }; 
+            };
+        });
     }, [callApi]);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>{
@@ -51,7 +51,7 @@ const EpisodeManage = () =>{
         let value;
         name === "isEdit"? value = e.target.checked: value = e.target.value;
         setEpisodeDetails((obj) => ({...obj, [name]: value}))
-    }
+    };
 
     const handleSubmitEpisode = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
@@ -68,7 +68,7 @@ const EpisodeManage = () =>{
                 dispatch(setCallApi(!callApi));
             }
         })
-    }
+    };
 
     const handleFetchEpisode = (e:  React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
@@ -85,7 +85,7 @@ const EpisodeManage = () =>{
                 )
             }
         });
-    }
+    };
 
     const deleteEpisode = (episode: Episode) =>{
         console.log(episode)
@@ -105,7 +105,7 @@ const EpisodeManage = () =>{
                  });
              };
          });
-    }
+    };
 
     const handleEditEpisode = (episode: Episode) =>{
         setEpisodeDetails((obj) =>({...obj, ...episode,
@@ -114,7 +114,7 @@ const EpisodeManage = () =>{
          if (addEpisodeRef.current) {
             addEpisodeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
         }   
-    }
+    };
 
     return(  
         <div className="w-100 bg-light p-4">
@@ -227,9 +227,6 @@ const EpisodeManage = () =>{
                                         <span className="d-flex">
                                             <FaEdit size={32} onClick={() => handleEditEpisode(episode)}
                                                 role="button" className="text-warning me-2 border border-warning p-1"/>
-                                            {/* <Link to={`/preview?movieUrl=${encodeURIComponent(episode.url || "")}&subtitlesUrl=${episode.subtitles_url}`}
-                                                 target="_blank">
-                                            </Link> */}
                                             <MdOutlinePreview size={32} onClick={() =>{
                                                 setPreviewEpisode(episode);
                                                 window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
@@ -252,6 +249,7 @@ const EpisodeManage = () =>{
             </div>
             {previewEpisode &&
                 <Preview 
+                    is_series = {true}
                     video = {previewEpisode}
                     setVideoDetails = {setEpisodeDetails}
                     addEpisodeRef={addEpisodeRef}

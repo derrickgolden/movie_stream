@@ -8,25 +8,29 @@ interface UploadMovieRes {
     msg: string;
     details: MovieFile[];
 }
+interface SyncSubtitlesRes {
+    success: boolean;
+    msg: string;
+    details: {movieUrl: string, subtitlesUrl: string}[];
+}
 
 export const addMovieDetails = async (data: string): Promise<UploadMovieRes> => {
     return await makeApiCall('videos/add/movie-details', 'post', data);
 };
 export const uploadMovieDetails = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('videos/add/movie-path', 'post', data);
 };
 export const addSeasonsInfo = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('videos/add/season-info', 'post', data);
 };
 export const addEpisodeDetails = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('videos/add/episode-info', 'post', data);
 };
 export const addUser = async (data: string): Promise<UploadMovieRes> => {
-    // const data = JSON.stringify({ shop_id, phone, full_name, email, country, address });
     return await makeApiCall('user/signup', 'post', data);
+};
+export const syncSubtitles = async (data: string): Promise<SyncSubtitlesRes> => {
+    return await makeApiCall('admin/subtitles/sync', 'post', data);
 };
 
 const makeApiCall = async(url: string, method: string, data: string) =>{
