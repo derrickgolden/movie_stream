@@ -21,7 +21,9 @@ import landingPageData from "./user/routes/landingPageData";
 import statistics from "./user/routes/statistics";
 import categories from "./user/routes/categories";
 import { authenticateToken } from './user/middlewares/authenticateToken';
+import shiftVTT from './user/controllers/syncSubtitles';
 import { validateIP } from './user/middlewares/validateIP';
+import getSafeFilePath from './user/controllers/getSafeFilePath';
 
 const SERIES_PATH=process.env.SERIES_PATH;
 const VIDEO_PATH=process.env.VIDEO_PATH;
@@ -57,18 +59,6 @@ app.get('/series/:filename(*)', (req, res) => {
   videoStat(videoPath, req, res);
 });
 
-const getSafeFilePath = (rootPath: string, userPath: string) => {
-  const sanitizedPath = path.normalize(userPath).replace(/^(\.\.(\/|\\|$))+/, ''); // Prevent traversal
-  const resolvedPath = path.join(rootPath, sanitizedPath);
-
-  // Ensure the resolved path is within the root directory
-  if (!resolvedPath.startsWith(path.resolve(rootPath))) {
-    console.warn(`Blocked attempt to access: ${resolvedPath}`);
-    return null;
-  }
-  return resolvedPath;
-};
-
 const videoStat = async (videoPath: string, req:Request, res:Response) => {
   try {
     const mime = await loadMime();
@@ -84,7 +74,6 @@ const videoStat = async (videoPath: string, req:Request, res:Response) => {
       const start = parseInt(startStr, 10);
       const end = endStr ? parseInt(endStr, 10) : videoSize - 1;
       const chunkSize = end - start + 1;
-// console.log({start, end});
       const videoStream = fs.createReadStream(videoPath, { start, end });
       res.writeHead(206, {
         'Content-Range': `bytes ${start}-${end}/${videoSize}`,
@@ -105,7 +94,6 @@ const videoStat = async (videoPath: string, req:Request, res:Response) => {
     res.status(404).send('Video not found');
   }
 };
-
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -128,6 +116,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/admin/videos', authenticateToken,  requestMovie);
 app.use('/admin/clients', authenticateToken,  clients);
 app.use('/admin/statistics', authenticateToken,  statistics);
+app.use('/admin/subtitles',  shiftVTT);
 
 app.listen(PORT, () => {
   console.log(`Listening on port :${PORT}`);
