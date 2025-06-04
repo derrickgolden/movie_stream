@@ -5,10 +5,11 @@ import { MoviesDetailsRes } from "../apiCalls/types";
 import { RowProps } from "./type";
 import PosterCard from "./PosterCard";
 import { RingLoader } from "react-spinners";
+import { Link } from 'react-router-dom';
 
 export const baseUrl = "https://image.tmdb.org/t/p/w500";
 
-const Column: React.FC<RowProps> = ({ data, isLargeRow, setHoveredMovie, setIsVideoReady }) => {
+const Column: React.FC<RowProps> = ({ data, isLargeRow, setHoveredMovie, setIsVideoReady, setColumnShow, columnShow }) => {
   const navigate = useNavigate();
   const rowRef = useRef<HTMLDivElement>(null);
   const [clickCount, setClickCount] = useState({count: 0, id: 0});
@@ -42,7 +43,7 @@ const Column: React.FC<RowProps> = ({ data, isLargeRow, setHoveredMovie, setIsVi
   };
 
   return (
-    <div className="row2 bg-black col-12 h-100">
+    <div className="row2 bg-black col-12 h-100 pb-5">
       <div className="d-fle position-relative w-100 ">
         <div className="row__posters " ref={rowRef}
         // style={{opacity: allLoaded ? 1 : 0, transition: 'opacity 0.5s ease'}}
@@ -69,6 +70,18 @@ const Column: React.FC<RowProps> = ({ data, isLargeRow, setHoveredMovie, setIsVi
             )
           }
         </div> */}
+        <h3 className="text-center">Also Check out &nbsp;
+          {columnShow !== "movies" &&
+            <Link to="#" onClick={() =>setColumnShow("movies")}>Movies,</Link>
+          } &nbsp;
+          {columnShow !== "series" &&
+            <Link to="#" onClick={() =>setColumnShow("series")}>Series,</Link>
+          } &nbsp;
+          {columnShow !== "newuploads" &&
+            <Link to="#" onClick={() =>setColumnShow("newuploads")}>New Uploads</Link>
+          } &nbsp;
+           section for more.
+        </h3>
       </div>
     </div>
   );

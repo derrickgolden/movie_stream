@@ -16,7 +16,7 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
     const navigate = useNavigate();
     const [hoveredMovie, setHoveredMovie] = useState<MoviesDetailsRes>();
     const [isVideoReady, setIsVideoReady] = useState(false);
-    const [columnShow, setColumnShow] = useState<"movies" | "series" | "watching" | "newuploads">("series");
+    const [columnShow, setColumnShow] = useState<"movies" | "series" | "watching" | "newuploads">("newuploads");
     const [pageDetails, setPageDetails] = useState<LandingPageMovieDetails>();
 
     useEffect(() => {
@@ -70,6 +70,8 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
                                     isLargeRow= {true}
                                     setHoveredMovie ={setHoveredMovie}
                                     setIsVideoReady = {setIsVideoReady}
+                                    setColumnShow = {setColumnShow} 
+                                    columnShow = {columnShow}
                                 />;
                             case "series":
                                 return <Column 
@@ -77,6 +79,8 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
                                     isLargeRow={true}
                                     setHoveredMovie ={setHoveredMovie} 
                                     setIsVideoReady = {setIsVideoReady}
+                                    setColumnShow = {setColumnShow} 
+                                    columnShow = {columnShow}
                                 />;
                             case "watching":
                                 return <Column 
@@ -84,6 +88,8 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
                                     isLargeRow= {true}
                                     setHoveredMovie ={setHoveredMovie}
                                     setIsVideoReady = {setIsVideoReady}
+                                    setColumnShow = {setColumnShow} 
+                                    columnShow = {columnShow}
                                 />;
                             case "newuploads":
                                 return <Column 
@@ -91,6 +97,8 @@ const ColumnLandingPage: React.FC<ToggleProps> = ({toggle, setToggle, setIsLandi
                                     isLargeRow= {true}
                                     setHoveredMovie ={setHoveredMovie}
                                     setIsVideoReady = {setIsVideoReady}
+                                    setColumnShow = {setColumnShow} 
+                                    columnShow = {columnShow}
                                 />;
                             default:
                                 return null;
