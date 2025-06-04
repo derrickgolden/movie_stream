@@ -79,16 +79,24 @@ const EpisodeManage = () =>{
         request.then((data) =>{
             if(data.status === 200){
                 const {name, overview, runtime, still_path, id} = data.data;
-                // const credits_start = runtime * 60;
                 setEpisodeDetails((obj) =>({...obj, episode_order: obj.episode_no,
                     episode_name: name, overview, runtime, still_path, id})
                 )
+            }
+        }).catch((error) => {
+            console.error(error); // Optional: helpful for debugging
+            setEpisodeDetails((obj) =>({...obj, overview: "No General Description", 
+                runtime: "", still_path:"", id: 0})
+            );
+            if (error.response && error.response.status === 404) {
+                Swal.fire("Episode not found. Please confirm the series ID, season, and episode number.");
+            } else {
+                Swal.fire("An error occurred while fetching episode details. Please try again.");
             }
         });
     };
 
     const deleteEpisode = (episode: Episode) =>{
-        console.log(episode)
         Swal.fire({
              title: `Are you sure you want to delete ${episode.episode_name} from ${seriesDetails.title}?`,
              showCancelButton: true,
@@ -158,17 +166,22 @@ const EpisodeManage = () =>{
                         </div>
                     </form>
                     <form onSubmit={handleSubmitEpisode} className="d-flex flex-wrap justify-content-between">
-                        <div className="mb-3 col-3">
+                        <div className="mb-3 col-2">
                             <label htmlFor="episode_name" className="form-label ms-2">Episode Name</label>
                             <input type="text" onChange={handleInput} value={epidodeDetails.episode_name}
                             className="form-control" id="episode_name" placeholder="Episode 1" required/>
                         </div>
-                        <div className="mb-3 col-3">
+                        <div className="mb-3 col-2">
                             <label htmlFor="episode_order" className="form-label ms-2">Episode Order</label>
                             <input type="number" onChange={handleInput} value={epidodeDetails.episode_order}
                             className="form-control" id="episode_order" placeholder="1" required/>
                         </div>
-                        <div className="mb-3 col-3">
+                        <div className="mb-3 col-2">
+                            <label htmlFor="runtime" className="form-label ms-2">Runtime</label>
+                            <input type="number" onChange={handleInput} value={epidodeDetails.runtime}
+                            className="form-control" id="runtime" placeholder="0" required/>
+                        </div>
+                        <div className="mb-3 col-2">
                             <label htmlFor="credits_start" className="form-label ms-2">Credits Start</label>
                             <input type="number" onChange={handleInput} value={epidodeDetails.credits_start}
                             className="form-control" id="credits_start" placeholder="0" required/>
