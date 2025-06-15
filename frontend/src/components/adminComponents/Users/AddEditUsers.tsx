@@ -1,91 +1,52 @@
-import axios from 'axios';
 import { useState, useEffect } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
-import { left_arrow, logoIcon, register_illus, show_hide,  } from '../../../assets/index';
-
-import { countries as countriesList } from 'countries-list'
-import { server_baseurl } from '../../../baseUrl';
+import { Link } from "react-router-dom";
 
 import Swal from 'sweetalert2'
 import { formFields } from './userInputs';
-import { formattedData, user } from './users';
 import { addUser } from '../apiCalls/postData';
 
 type UserAcc = "viewer" | "admin";
 
-const AddUsers: React.FC<{}> = ({}) =>{
-    const navigate = useNavigate()
-
-    const [showPassword, setShowPassword] = useState(false);
+const AddEditUsers: React.FC<{}> = ({}) =>{
     const [user_type, setUser_type] =  useState<UserAcc>("viewer");
     // admin_email and admin_pass are only used when signing up a user.
     const [signupDetails, setSignupDetails] = useState({
-        remember_me: true, password: "JAP_movies", phone: "", location: "", apartment: "", account2: "", mac: "",
-        name: ""
-    })
+        remember_me: true, password: "JAP_movies", phone: "", location: "Naivas", 
+        apartment: "", account2: "", mac: "", name: ""
+    });
     useEffect(() =>{
         setSignupDetails((obj) => ({...obj, user_type}));
-
     }, [user_type]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>{
         const name = e.target.name
         const value = e.target.value
         
-        if(name !== "remember_me"){
+        if(name !== "name"){
             setSignupDetails((obj) =>({...obj, [name]: value}))
         }else{
-            setSignupDetails((obj) =>({...obj, [name]: !obj.remember_me}))
+            const parts = value.split(" ");
+
+            setSignupDetails((obj) =>({...obj, name: value, account2: parts[1]}));
         }
-    }
+    };
 
     // normal signup
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) =>{
-        e.preventDefault()
+        e.preventDefault();
         
-        const phone = "254" + signupDetails.phone
-        let data = JSON.stringify({...signupDetails, phone, auth_with: "app"});        
-
-        let config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: `${server_baseurl}/user/signup`,
-            headers: { 
-                'Content-Type': 'application/json'
-            },
-            data : data
-        };
-
-        axios.request(config)
-        .then((response) => {
-            if(response.data.msg === "User Registered"){
-                Swal.fire(`${response.data.msg}`);
+        const phone = "254" + signupDetails.phone;
+        let data = JSON.stringify({...signupDetails, phone, auth_with: "app"});
+        
+        addUser(data).then((res) =>{
+            if(res.success){
+                Swal.fire(`${res.msg}`);
                 setSignupDetails({
-                    remember_me: true, password: "JAP_movies", phone: "", location: "", apartment: "", 
+                    remember_me: true, password: "JAP_movies", phone: "", location: "Naivas", apartment: "", 
                     account2: "", mac: "", name: ""
-                })
-            }else{
-                Swal.fire({
-                    text: `${response.data.msg}`,
-                    showCloseButton: true,
-                    showConfirmButton: false,
-                    animation: false,
-                    color: "#dc3545",
-                    padding: "5px"
-                })
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            Swal.fire({
-                text: `Server Side Error: ${error?.response?.data?.msg}`,
-                showCloseButton: true,
-                showConfirmButton: false,
-                animation: false,
-                color: "#dc3545",
-                padding: "5px"
-            })
+                });
+            };
         });
     }
 
@@ -142,4 +103,4 @@ const AddUsers: React.FC<{}> = ({}) =>{
     )
 }
 
-export default AddUsers;
+export default AddEditUsers;

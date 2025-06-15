@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 
-// import LandingPageHeader from './user/sections/LandingPageHeader';
-// import RegisterShop from './user/sections/shop/RegisterShop';
-// import ChangePassword from './user/pages/ChangePassword';
 import Login from './components/auth/Login';
 import { ForgotPassword, ResetPassword, Signup } from './components/auth';
 import ChangePassword from './components/auth/ChangePassword';
@@ -16,7 +13,7 @@ import EpisodesAndMore from './components/Play/EpisodesAndMore';
 import { AddNewMovie, AllMovies, AllSeries, EpisodeManage, Logout, MovieRequests, Preview, 
   Feedbacks, SeasonsManage, Sidebar, UploadMovie 
 } from './components/adminComponents';
-import AddUsers from './components/adminComponents/Users/AddUsers';
+import AddEditUsers from './components/adminComponents/Users/AddEditUsers';
 import AllUsers from './components/adminComponents/Users/AllUsers';
 import RequestMovie from './sections/RequestMovie';
 import SearchMovie from './sections/SearchMovie';
@@ -74,7 +71,7 @@ function App() {
               <Route path='new-series' element ={<AddNewMovie type="series"/>} />
               <Route path='all-series' element ={<AllSeries />} />
               <Route path='movie-upload' element ={<UploadMovie />} />
-              <Route path='add-client' element ={<AddUsers />} />
+              <Route path='add-client' element ={<AddEditUsers />} />
               <Route path='all-clients' element ={<AllUsers />} />
               <Route path=':user_id/watched-movies' element ={<ClientWatchedMovies />} />
               <Route path='seasons-manage' element ={<SeasonsManage />} />

@@ -3,34 +3,64 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt = require('bcryptjs');
 const { pool } = require("../../mysqlSetup");
 const signupUser = async (signupDetails) => {
-    const phone = signupDetails.phone;
+    var { account, account2, apartment, email, expiry, house_number, ip, location, mac, name, hash, phone, edit, id } = signupDetails;
     const connection = await pool.getConnection();
     try {
-        // Check if the user already exists
-        const [existingUser] = await connection.query(`
-            SELECT * FROM users
-            WHERE phone = ? 
-        `, [phone]);
-        if (existingUser.length > 0) {
+        if (edit) {
+            const [conflictUsers] = await connection.query(`SELECT id, phone, mac FROM users WHERE (phone = ? OR mac = ?) AND id != ?`, [phone, mac, id]);
+            if (conflictUsers.length > 0) {
+                const isPhoneTaken = conflictUsers.some((u) => u.phone === phone);
+                const isMacTaken = conflictUsers.some((u) => u.mac === mac);
+                if (isPhoneTaken) {
+                    return { success: false, rejectInput: "phone", msg: "Phone already registered by another user" };
+                }
+                if (isMacTaken) {
+                    return { success: false, rejectInput: "mac", msg: "MAC address already registered by another user" };
+                }
+            }
+            const [updateUser] = await connection.query(`UPDATE users SET
+                account = ?, account2 = ?, phone = ?, apartment = ?, email = ?,
+                expiry = ?, house_number = ?, ip = ?, location = ?, mac = ?, name = ?, password = ?
+                WHERE id = ?`, [account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, hash, id]);
             connection.release();
-            return { success: true, rejectInput: "phone", msg: "Phone already registered" };
+            if (updateUser.affectedRows === 1) {
+                return {
+                    success: true,
+                    msg: "User updated successfully",
+                    details: [{ name, phone, account, account2, apartment }]
+                };
+            }
+            else {
+                return { success: false, msg: "No changes were made or user not found" };
+            }
         }
-        // Insert user details
-        if ("phone" in signupDetails) {
-            var { account, account2, apartment, email, expiry, house_number, house_number, ip, location, mac, name, password, hash } = signupDetails;
+        else {
+            // Check if the user already exists
+            const [existingUser] = await connection.query(`SELECT * FROM users WHERE phone = ? OR mac = ?`, [phone, mac]);
+            if (existingUser.length > 0) {
+                const isPhoneTaken = existingUser.some((user) => user.phone === phone);
+                const isMacTaken = existingUser.some((user) => user.mac === mac);
+                if (isPhoneTaken) {
+                    return { success: false, rejectInput: "phone", msg: "Phone already registered" };
+                }
+                if (isMacTaken) {
+                    return { success: false, rejectInput: "mac", msg: "MAC address already registered" };
+                }
+            }
+            // Insert user details
             var [insertUser] = await connection.query(`
                 INSERT INTO users (account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, password)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, hash]);
+            connection.release();
+            const userId = insertUser.insertId;
+            return {
+                success: true,
+                admin_id: userId,
+                msg: "User Registered",
+                details: [{ name, phone, account, account2, apartment }]
+            };
         }
-        connection.release();
-        const userId = insertUser.insertId;
-        return {
-            success: true,
-            admin_id: userId,
-            msg: "User Registered",
-            details: [{ name, phone, account, account2, apartment }]
-        };
     }
     catch (error) {
         console.error('Error:', error.message);
@@ -41,7 +71,9 @@ const signupUser = async (signupDetails) => {
         else {
             return { success: false, msg: error.message };
         }
+        ;
     }
+    ;
 };
 const loginUser = async (email, phone, prevelages) => {
     const connection = await pool.getConnection();

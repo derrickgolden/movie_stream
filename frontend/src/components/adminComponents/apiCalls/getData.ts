@@ -7,9 +7,9 @@ import { TvSeries, WatchedMovieOrSeries } from "../../apiCalls/types";
 
 interface ResponseData {
     success: boolean;
+    msg: string;
     details: MovieRequestRes[];
 }
-
 interface SeasonEpisode {
     success: boolean;
     details: TvSeries[];
@@ -55,6 +55,10 @@ export const getStatistics = async (): Promise<StatisticsRes> => {
     return await makeApiCall('admin/statistics/get', 'get', "");
 };
 
+export const deleteUser = async (data: string): Promise<ResponseData> => {
+    return await makeApiCall('admin/clients/delete-user', 'get', data);
+};
+
 const makeApiCall = async(url: string, method: string, data: string) =>{
     const tokenString = sessionStorage.getItem("adminToken");
 
@@ -81,7 +85,7 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
     return await axios.request(config)
     .then((response) => {
         if(response.data.success){
-            return {success: true, details: response.data.details};
+            return {success: true, msg: response.data.msg, details: response.data.details};
         }else{
             Swal.fire({
                 text: `${response.data.msg}`,
@@ -91,7 +95,7 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
                 color: "#dc3545",
                 padding: "5px"
             })
-            return {success: false, details: []};
+            return {success: false, msg: "", details: []};
         };
     })
     .catch((error) => {
@@ -104,6 +108,6 @@ const makeApiCall = async(url: string, method: string, data: string) =>{
             color: "#dc3545",
             padding: "0px 0px 10px 0px"
         })
-        return {success: false, details: []};
+        return {success: false, msg: "", details: []};
     })
 };

@@ -30,6 +30,7 @@ export interface User {
     house_number: string;
     auth_with: string;
     hash: string;
+    edit: boolean;
   }
 
 

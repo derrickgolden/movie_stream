@@ -4,15 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const addCustomer_1 = require("../dbServices/customers/addCustomer");
+const deleteUser_1 = require("../dbServices/customers/deleteUser");
 const editCustomerDetails_1 = require("../dbServices/customers/editCustomerDetails");
 const getCustomers_1 = require("../dbServices/customers/getCustomers");
 const getClientWatchedMovies_1 = require("../dbServices/users/getClientWatchedMovies");
 const router = express_1.default.Router();
-router.post('/add-customer', async (req, res) => {
-    const body = req.body;
+router.get('/delete-user/:user_id', async (req, res) => {
+    const { user_id } = req.params;
     try {
-        const response = await (0, addCustomer_1.addCustomer)(body);
+        const response = await (0, deleteUser_1.deleteUser)(user_id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express';
 import { universalResponse } from 'user/types/universalResponse';
-import { addCustomer } from '../dbServices/customers/addCustomer';
+import { deleteUser } from '../dbServices/customers/deleteUser';
 import { editCustomerDetails } from '../dbServices/customers/editCustomerDetails';
 import { getUserWatchStats } from '../dbServices/customers/getCustomers';
 import { getClientWatchedMovies } from '../dbServices/users/getClientWatchedMovies';
@@ -8,11 +8,11 @@ import { getClientWatchedMovies } from '../dbServices/users/getClientWatchedMovi
 const router = express.Router();
 
 
-router.post('/add-customer', async(req: Request, res: Response) =>{
-    const body = req.body;
+router.get('/delete-user/:user_id', async(req: Request, res: Response) =>{
+    const {user_id} = req.params;
 
     try {
-        const response:universalResponse = await addCustomer(body)
+        const response:universalResponse = await deleteUser(user_id)
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response);

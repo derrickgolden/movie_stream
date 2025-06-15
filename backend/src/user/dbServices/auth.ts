@@ -11,47 +11,88 @@ export interface StoreLinkTokenRes extends DBServicesRes{
     }]
 }
 
-
 const signupUser = async (signupDetails: User): Promise<SignupResponse> => {
 
-    const phone = signupDetails.phone;
+    var {account, account2, apartment, email, expiry, house_number, ip, location,
+            mac, name, hash, phone, edit, id
+        } = signupDetails
 
     const connection: RowDataPacket = await pool.getConnection();
     try {
 
-        // Check if the user already exists
-        const [existingUser] = await connection.query(`
-            SELECT * FROM users
-            WHERE phone = ? 
-        `, [phone]);
+        if(edit){
+            const [conflictUsers]: [RowDataPacket[], any] = await connection.query(
+                `SELECT id, phone, mac FROM users WHERE (phone = ? OR mac = ?) AND id != ?`,
+                [phone, mac, id]
+            );
 
-        if (existingUser.length > 0) {
+            if (conflictUsers.length > 0) {
+                const isPhoneTaken = conflictUsers.some((u: any) => u.phone === phone);
+                const isMacTaken = conflictUsers.some((u: any) => u.mac === mac);
+
+                if (isPhoneTaken) {
+                return { success: false, rejectInput: "phone", msg: "Phone already registered by another user" };
+                }
+
+                if (isMacTaken) {
+                return { success: false, rejectInput: "mac", msg: "MAC address already registered by another user" };
+                }
+            }
+
+            const [updateUser]: [{ affectedRows: number }] = await connection.query(
+                `UPDATE users SET
+                account = ?, account2 = ?, phone = ?, apartment = ?, email = ?,
+                expiry = ?, house_number = ?, ip = ?, location = ?, mac = ?, name = ?, password = ?
+                WHERE id = ?`,
+                [account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, hash, id]
+            );
+
             connection.release();
-            return { success: true, rejectInput: "phone", msg: "Phone already registered" };
-        }
-        
-        // Insert user details
-        if( "phone" in signupDetails){
-            var {account, account2, apartment, email, expiry, house_number, house_number, ip, location,
-                mac, name, password, hash
-            } = signupDetails
 
+            if (updateUser.affectedRows === 1) {
+                return {
+                    success: true,
+                    msg: "User updated successfully",
+                    details: [{ name, phone, account, account2, apartment }]
+                };
+            } else {
+                return { success: false, msg: "No changes were made or user not found" };
+            }
+        }else{
+            // Check if the user already exists
+            const [existingUser]: [RowDataPacket[], any] = await connection.query(
+                `SELECT * FROM users WHERE phone = ? OR mac = ?`,
+            [phone, mac]);
+
+            if (existingUser.length > 0) {
+                const isPhoneTaken = existingUser.some((user: any) => user.phone === phone);
+                const isMacTaken = existingUser.some((user: any) => user.mac === mac);
+
+                if (isPhoneTaken) {
+                    return { success: false, rejectInput: "phone", msg: "Phone already registered" };
+                }
+
+                if (isMacTaken) {
+                    return { success: false, rejectInput: "mac", msg: "MAC address already registered" };
+                }
+            }
+        
+            // Insert user details
             var [insertUser] = await connection.query(`
                 INSERT INTO users (account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, password)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [account, account2, phone, apartment, email, expiry, house_number, ip, location, mac, name, hash]);
             
+            connection.release();
+
+            const userId: number = insertUser.insertId;
+            return {
+                success: true,
+                admin_id: userId,
+                msg: "User Registered",
+                details: [{ name, phone, account, account2, apartment }]
+            };
         }
-
-        connection.release();
-
-        const userId: number = insertUser.insertId;
-        return {
-            success: true,
-            admin_id: userId,
-            msg: "User Registered",
-            details: [{ name, phone, account, account2, apartment }]
-        };
     } catch (error) {
         console.error('Error:', error.message);
         connection.release();
@@ -60,8 +101,8 @@ const signupUser = async (signupDetails: User): Promise<SignupResponse> => {
             return { success: false, msg: error.sqlMessage };
         } else {
             return { success: false, msg: error.message };
-        }
-    }
+        };
+    };
 };
 
 const loginUser = async(email: string, phone: string, prevelages: "admin" | "viewer" ): Promise<LoginResponse> => {
@@ -106,9 +147,7 @@ const loginUser = async(email: string, phone: string, prevelages: "admin" | "vie
     }
 }
 
-const updateLogin = async( wrong_pass: boolean, phone: string, prevelages: "admin" | "viewer" ): Promise<{
-
-}> => {
+const updateLogin = async( wrong_pass: boolean, phone: string, prevelages: "admin" | "viewer" ): Promise<{}> => {
 
     const connection: RowDataPacket = await pool.getConnection();
     try {
@@ -145,6 +184,7 @@ const updateLogin = async( wrong_pass: boolean, phone: string, prevelages: "admi
         }
     }
 }
+
 const getCode = async(id: string, user_id: string, ) => {
 
     const connection: RowDataPacket = await pool.getConnection();
