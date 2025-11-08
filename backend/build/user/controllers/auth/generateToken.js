@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateAuthToken = void 0;
+exports.generateAuthToken = generateAuthToken;
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 function generateAuthToken(id, account, account2, phone, mac, prevelages, expiresInDays) {
@@ -19,5 +19,4 @@ function generateAuthToken(id, account, account2, phone, mac, prevelages, expire
     });
     return { token, exp_date };
 }
-exports.generateAuthToken = generateAuthToken;
 //# sourceMappingURL=generateToken.js.map

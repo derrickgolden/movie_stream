@@ -14,6 +14,11 @@ interface SyncSubtitlesRes {
     details: {movieUrl: string, subtitlesUrl: string}[];
 }
 
+interface  NextEpisodeAddRes {
+    success: boolean;
+    details: {subtitleFile: string, videoFile: string}[];
+}
+
 export const addMovieDetails = async (data: string): Promise<UploadMovieRes> => {
     return await makeApiCall('videos/add/movie-details', 'post', data);
 };
@@ -31,6 +36,10 @@ export const addUser = async (data: string): Promise<UploadMovieRes> => {
 };
 export const syncSubtitles = async (data: string): Promise<SyncSubtitlesRes> => {
     return await makeApiCall('admin/subtitles/sync', 'post', data);
+};
+
+export const getNextEpisodeAddName = async (data: string): Promise<NextEpisodeAddRes> => {
+    return await makeApiCall(`videos/next-episode-addname`, 'post', data);
 };
 
 const makeApiCall = async(url: string, method: string, data: string) =>{

@@ -52,6 +52,7 @@ app.get('/video/:filename(*)', (req, res) => {
 
 app.get('/series/:filename(*)', (req, res) => {
   const { filename } = req.params;
+  console.log({filename})
   const videoPath = getSafeFilePath(SERIES_PATH, filename);
   if (!videoPath) {
     return res.status(400).send('Invalid file path');
@@ -94,6 +95,46 @@ const videoStat = async (videoPath: string, req:Request, res:Response) => {
     res.status(404).send('Video not found');
   }
 };
+
+// app.get('/admin/episode', (req, res) => {
+//   const { baseurl, num } = req.query as { baseurl?: string; num?: string };
+//   if (!baseurl || !num) {
+//     return res.status(400).json({ success: false, error: 'Missing baseurl or num' });
+//   }
+
+//   try {
+//     const urlParts = new URL(baseurl);
+//     const pathnameParts = urlParts.pathname.split('/').filter(Boolean);
+//     const seriesIndex = pathnameParts.findIndex(p => p.toLowerCase() === 'series');
+//     if (seriesIndex === -1 || !pathnameParts[seriesIndex + 1] || !pathnameParts[seriesIndex + 2]) {
+//       return res.status(400).json({ success: false, error: 'Invalid series URL format' });
+//     }
+
+//     const seriesName = decodeURIComponent(pathnameParts[seriesIndex + 1]);
+//     const season = pathnameParts[seriesIndex + 2];
+
+//     const episodeTag = `S${season.substring(1).padStart(2, '0')}E${parseInt(num).toString().padStart(2, '0')}`;
+//     const basePath = path.join(SERIES_PATH, seriesName, season);
+
+//     const files = fs.readdirSync(basePath);
+
+//     // Find the video file
+//     const videoFile = files.find(f => f.includes(episodeTag) && /\.(mp4|mkv|avi)$/i.test(f)) || "";
+
+//     // Find the subtitle file (prefer .vtt, fallback to .srt)
+//     const subtitleFile = files.find(f => f.includes(episodeTag) && /\.(vtt|srt)$/i.test(f)) || "";
+
+//     res.json({
+//       success: true, msg: "", details:[{
+//       episode: num,
+//       videoFile,
+//       subtitleFile, }]// will be null if none found
+//     });
+//   } catch (err) {
+//     res.status(500).json({ success: false, error: (err as Error).message });
+//   }
+// });
+
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

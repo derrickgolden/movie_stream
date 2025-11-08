@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { addEpisodeDetails } from "../apiCalls/postData";
+import { addEpisodeDetails, getNextEpisodeAddName } from "../apiCalls/postData";
 import { Episode } from "../../apiCalls/types";
 import { FaEdit } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
@@ -22,6 +22,7 @@ const EpisodeManage = () =>{
         {episode_no:"", season_no: "", episode_name: "", isEdit: false, url: "",
         episode_order: "", subtitles_url: "", credits_start: 30000, runtime: ""}
     );
+    const [espBaseUrl, setEspBaseUrl] = useState("");
     const [previewEpisode, setPreviewEpisode] = useState<Episode>();
     const addEpisodeRef = useRef<HTMLHeadingElement | null>(null);
     const [episodes, setEpisodes] = useState<Episode[]>([]);
@@ -40,6 +41,7 @@ const EpisodeManage = () =>{
                     setEpisodes(updatedSeason[0].episodes);
                     const trailer_url = updatedSeason[0].trailer_url;
                     const baseurl = trailer_url.substring(0, trailer_url.lastIndexOf('/') + 1);
+                    setEspBaseUrl(baseurl);
                     setEpisodeDetails((obj) => ({...obj, subtitles_url: baseurl, url: baseurl}));
                 }; 
             };
@@ -73,9 +75,9 @@ const EpisodeManage = () =>{
     const handleFetchEpisode = (e:  React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
         const {episode_no, season_no} = epidodeDetails;
-        const url =  `https://api.themoviedb.org/3/tv/${seriesDetails.movie_id}/season/${season_no}/episode/${episode_no}?api_key=${API_KEY}&language=en-US`
+        const db_url =  `https://api.themoviedb.org/3/tv/${seriesDetails.movie_id}/season/${season_no}/episode/${episode_no}?api_key=${API_KEY}&language=en-US`
 
-        const request = axios.get(url);
+        const request = axios.get(db_url);
         request.then((data) =>{
             if(data.status === 200){
                 const {name, overview, runtime, still_path, id} = data.data;
@@ -92,6 +94,18 @@ const EpisodeManage = () =>{
                 Swal.fire("Episode not found. Please confirm the series ID, season, and episode number.");
             } else {
                 Swal.fire("An error occurred while fetching episode details. Please try again.");
+            }
+        });
+
+        // fetch next episode and subtitle name;
+        const episodeData = JSON.stringify({baseurl: espBaseUrl, num: episode_no})
+        getNextEpisodeAddName(episodeData).then((data)=>{
+            if(data.success){
+                setEpisodeDetails((obj) =>({...obj,
+                    url: espBaseUrl + data.details[0].videoFile, subtitles_url: espBaseUrl + data.details[0].subtitleFile})
+                )
+            }else{
+                setEpisodeDetails((obj) =>({...obj, url: espBaseUrl, subtitles_url: espBaseUrl }))
             }
         });
     };

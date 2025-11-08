@@ -9,6 +9,7 @@ const addMoviePath_1 = require("../../dbServices/Movies/addMoviePath");
 const addSeasonInfo_1 = require("../../dbServices/series/addSeasonInfo");
 const addEpisodeData_1 = require("../../dbServices/series/addEpisodeData");
 const editActiveSeries_1 = require("../../dbServices/series/editActiveSeries");
+const getNextEpisodeAddName_1 = require("../../controllers/getNextEpisodeAddName");
 // import { convertToStereo } from '../../middlewares/convertAudio';
 const router = express_1.default.Router();
 router.post('/add/movie-details', async (req, res) => {
@@ -87,6 +88,19 @@ router.post('/add/episode-info', async (req, res) => {
     catch (error) {
         console.log(error);
         res.status(302).json({ success: false, msg: "sever side error", err: error.message });
+    }
+});
+router.post('/next-episode-addname', (req, res) => {
+    const { baseurl, num } = req.body;
+    if (!baseurl || !num) {
+        return res.status(400).json({ success: false, error: 'Missing baseurl or num' });
+    }
+    const result = (0, getNextEpisodeAddName_1.getEpisode)(baseurl, num);
+    if (result.success) {
+        res.json(result);
+    }
+    else {
+        res.status(500).json(result);
     }
 });
 exports.default = router;

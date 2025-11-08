@@ -59,7 +59,6 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> =>{
 
 router.post('/login', async (req: Request, res: Response): Promise<void> =>{
     const { email, prevelages, phone, password, auth_with}: PersonDetails = req.body;
-
     const response: LoginResponse = await loginUser(email, phone, prevelages);
     const { passwordHash, userAvailable, details } = response;
 
